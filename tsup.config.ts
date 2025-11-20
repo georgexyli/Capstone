@@ -7,7 +7,7 @@ export default defineConfig({
   sourcemap: true,
   clean: false, // Don't clean dist folder before building
   format: ['esm'], // Ensure you're targeting CommonJS
-  dts: true, // Generate TypeScript declaration files (.d.ts) for better type support
+  dts: false, // Disable declaration generation during Docker build to avoid tsc/dts issues
   external: [
     'dotenv', // Externalize dotenv to prevent bundling
     '@reflink/reflink',
@@ -30,3 +30,4 @@ export default defineConfig({
     'zod',
   ],
 });
+ 

@@ -90,9 +90,11 @@ services:
     ports:
       - '3002:3000'
       - '50000-50100:50000-50100/udp'
+      - '2096:2096'
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
+    command: ["sh", "-c", "elizaos start"]
     depends_on:
       mysql:
         condition: service_healthy
