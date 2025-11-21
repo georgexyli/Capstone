@@ -42,13 +42,13 @@ export const character: Character = {
   name: 'Spartan',
   plugins: [
     //'@elizaos/plugin-sql', // ensure we still compatible with postgres
-    '@elizaos/plugin-mysql',
+    //'@elizaos/plugin-mysql', // Not available on npm, commented out for now
     // we need it to be smart and self-reliant
-    '@elizaos/plugin-anthropic',
-    //'@elizaos/plugin-groq',
+    //'@elizaos/plugin-anthropic', // Disabled - zod v4 dependency issue
+    //'@elizaos/plugin-groq', // Disabled - zod/v3 export issue
     //'@elizaos/plugin-ollama', // local models + embeddings
     //'@elizaos/plugin-local-ai', // local embeddings
-    '@elizaos/plugin-openai', // better embeddings
+    '@elizaos/plugin-openai', // Using OpenAI - works in Docker
     //'@elizaos/plugin-openrouter',
     //...(process.env.GROQ_API_KEY ? ['@elizaos/plugin-groq'] : []),
     //...(process.env.ANTHROPIC_API_KEY ? ['@elizaos/plugin-anthropic'] : []),
@@ -60,8 +60,8 @@ export const character: Character = {
     //'@elizaos/plugin-farcaster', // optional
     '@elizaos/plugin-bootstrap', // required
     '@elizaos/plugin-solana', // required
-    '@elizaos/plugin-jupiter', // required
-    '@elizaos/plugin-evm', // optional
+    //'@elizaos/plugin-jupiter', // Not available on npm
+    //'@elizaos/plugin-evm', // Not available on npm
     //'@elizaos/plugin-rolodex', // optional
     //'@elizaos/plugin-trust', // optional
     //'@elizaos/plugin-memory', // optional
@@ -75,7 +75,7 @@ export const character: Character = {
     //'@elizaos/plugin-goals', // optional
     //'@elizaos/plugin-orca',
     //'@elizaos/plugin-action-bench',
-    '@elizaos/plugin-birdeye', // required
+    //'@elizaos/plugin-birdeye', // Not available on npm
     '@elizaos/plugin-coinmarketcap', // optional
     // still 0.x stuff
     //'@elizaos-plugins/plugin-coingecko', // optional

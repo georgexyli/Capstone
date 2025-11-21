@@ -43,6 +43,7 @@
     "@coingecko/coingecko-typescript": "^2.2.0",
     "@elizaos/cli": "latest",
     "@elizaos/plugin-anthropic": "latest",
+    "@elizaos/plugin-groq": "latest",
     "@elizaos/plugin-bootstrap":"latest",
     "@elizaos/plugin-sql":"latest",
     "@elizaos/plugin-solana":"latest",
@@ -98,7 +99,7 @@
     "typescript": "5.8.2",
     "vitest": "2.1.9",
     "ws": "8.18.0",
-    "zod": "3.24.2"
+    "zod": "^4.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
