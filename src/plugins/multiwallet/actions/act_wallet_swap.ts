@@ -258,7 +258,9 @@ export default {
     validate: async (runtime: IAgentRuntime, message: Memory) => {
         // DEMO MODE: Skip validation if Jupiter service not available
         const isDemoMode = !runtime.getService('JUPITER_SERVICE');
+        console.log('🎭 SWAP VALIDATE - isDemoMode:', isDemoMode);
         if (isDemoMode) {
+            console.log('🎭 DEMO MODE: Skipping account validation for swap');
             logger.log('🎭 DEMO MODE: Skipping account validation for swap');
             return true;
         }
