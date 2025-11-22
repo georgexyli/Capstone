@@ -3,6 +3,7 @@ import type { Plugin } from '@elizaos/core';
 // actions
 import { walletCreate } from "./actions/act_wallet_create";
 //import { userMetawalletDelete } from "./actions/act_wallet_delete";
+import demoSetup from "./actions/act_demo_setup";
 
 import { userMetawalletList } from "./actions/act_wallet_list";
 import { walletImportAction } from "./actions/act_wallet_import";
@@ -31,6 +32,7 @@ import { tokenProvider } from "./providers/token";
 
 // Services
 import { InterfaceWalletService } from './services/srv_wallets';
+import { MockJupiterService } from './services/mock_jupiter_service';
 
 export const multiwalletPlugin: Plugin = {
   name: 'multitenant wallet',
@@ -38,6 +40,7 @@ export const multiwalletPlugin: Plugin = {
   evaluators: [],
   providers: [multiwalletProvider, walletProvider, tokenProvider],
   actions: [
+    demoSetup, // DEMO MODE - bypass registration
     walletCreate, walletImportAction,
     // userMetawalletDelete, // need a confirmation or something
     userMetawalletXfer, userMetawalletSwap, userMetawalletSweep,
@@ -50,7 +53,7 @@ export const multiwalletPlugin: Plugin = {
     //actionTokenScam, actionTokenRug,
     //spartanNews
   ],
-  services: [InterfaceWalletService],
+  services: [InterfaceWalletService, MockJupiterService],
 };
 
 export default multiwalletPlugin;

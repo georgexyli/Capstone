@@ -114,7 +114,14 @@ async function swapToken(
             amount: adjustedAmount.toString(),
         }));
 
-        const jupiterService = runtime.getService('JUPITER_SERVICE') as any;
+        let jupiterService = runtime.getService('JUPITER_SERVICE') as any;
+
+        // DEMO MODE: If Jupiter service not available, use mock
+        if (!jupiterService) {
+            logger.log('🎭 DEMO MODE: Jupiter service not available, using mock');
+            const { MockJupiterService } = await import('../services/mock_jupiter_service');
+            jupiterService = new MockJupiterService(runtime);
+        }
 
         const quoteData = await jupiterService.getQuote({
             inputMint: inputTokenCA,
@@ -248,6 +255,13 @@ export default {
         'MULTIWALLET_SWAP_SOL_TOKENS',
     ],
     validate: async (runtime: IAgentRuntime, message: Memory) => {
+        // DEMO MODE: Skip validation if Jupiter service not available
+        const isDemoMode = !runtime.getService('JUPITER_SERVICE');
+        if (isDemoMode) {
+            logger.log('🎭 DEMO MODE: Skipping account validation for swap');
+            return true;
+        }
+
         // they have to be registered
         if (!await HasEntityIdFromMessage(runtime, message)) {
             console.log('MULTIWALLET_SWAP validate - author not found')
@@ -270,48 +284,74 @@ export default {
         responses?: Memory[]
     ): Promise<ActionResult | void | undefined> => {
         logger.log('MULTIWALLET_SWAP Starting handler...');
-        const account = await getAccountFromMessage(runtime, message)
-        if (!account) {
-            return {
-                success: false,
-                text: 'Account not found',
-                error: 'ACCOUNT_NOT_FOUND'
+
+        // DEMO MODE: Create temporary keypair and skip account lookup
+        const isDemoMode = !runtime.getService('JUPITER_SERVICE');
+        let senderKeypair: Keypair;
+        let content: SwapWalletContent;
+
+        if (isDemoMode) {
+            logger.log('🎭 DEMO MODE: Generating temporary wallet for swap demo');
+
+            // Generate demo keypair
+            senderKeypair = Keypair.generate();
+
+            // Parse swap request from message
+            content = {
+                text: message.content.text,
+                senderWalletAddress: senderKeypair.publicKey.toBase58(),
+                inputTokenSymbol: 'SOL',
+                outputTokenSymbol: 'USDC',
+                inputTokenCA: 'So11111111111111111111111111111111111111112',
+                outputTokenCA: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+                amount: 0.1
+            };
+
+            logger.log('🎭 DEMO MODE: Proceeding with mock swap');
+        } else {
+            // REAL MODE: Normal account lookup
+            const account = await getAccountFromMessage(runtime, message)
+            if (!account) {
+                return {
+                    success: false,
+                    text: 'Account not found',
+                    error: 'ACCOUNT_NOT_FOUND'
+                }
             }
-        }
-        console.log('account', account)
+            console.log('account', account)
 
-        // local agent wallet?
-        const validSources = account.metawallets.map(mw => mw.keypairs.solana.publicKey)
-        console.log('validSources', validSources)
+            // local agent wallet?
+            const validSources = account.metawallets.map(mw => mw.keypairs.solana.publicKey)
+            console.log('validSources', validSources)
 
-        // the source might not just be in the last message
-        // might be in the context...
+            // the source might not just be in the last message
+            // might be in the context...
 
-        const sources = await getWalletsFromText(runtime, message)
-        console.log('sources', sources)
-        if (sources.length !== 1) {
-            callback?.(takeItPrivate(runtime, message, "Can't determine source wallet"))
-            return {
-                success: false,
-                text: "Can't determine source wallet",
-                error: 'SOURCE_WALLET_AMBIGUOUS'
+            const sources = await getWalletsFromText(runtime, message)
+            console.log('sources', sources)
+            if (sources.length !== 1) {
+                callback?.(takeItPrivate(runtime, message, "Can't determine source wallet"))
+                return {
+                    success: false,
+                    text: "Can't determine source wallet",
+                    error: 'SOURCE_WALLET_AMBIGUOUS'
+                }
             }
-        }
-        const sourceResult = {
-            sourceWalletAddress: sources[0]
-        }
-        /*
-        const sourcePrompt = composePromptFromState({
-            state: state,
-            template: sourceAddressTemplate,
-        });
-        const sourceResult = await runtime.useModel(ModelType.OBJECT_LARGE, {
-            prompt: sourcePrompt,
-        });
-        console.log('MULTIWALLET_SWAP sourceResult', sourceResult);
-        */
+            const sourceResult = {
+                sourceWalletAddress: sources[0]
+            }
+            /*
+            const sourcePrompt = composePromptFromState({
+                state: state,
+                template: sourceAddressTemplate,
+            });
+            const sourceResult = await runtime.useModel(ModelType.OBJECT_LARGE, {
+                prompt: sourcePrompt,
+            });
+            console.log('MULTIWALLET_SWAP sourceResult', sourceResult);
+            */
 
-        if (!sourceResult.sourceWalletAddress) {
+            if (!sourceResult.sourceWalletAddress) {
             console.log('MULTIWALLET_SWAP cant determine source wallet address');
             return {
                 success: false,
@@ -410,11 +450,11 @@ export default {
     "amount": 1.5
         */
 
-        // user might not give the tokenCA
-        // they might not give the symbol (and give the CA instead)
-        const content = await askLlmObject(runtime, { prompt: swapPrompt }, [
-            'amount'
-        ])
+            // user might not give the tokenCA
+            // they might not give the symbol (and give the CA instead)
+            content = await askLlmObject(runtime, { prompt: swapPrompt }, [
+                'amount'
+            ]) as SwapWalletContent
 
         if (content === null) {
             //return this.handler(runtime, message, state, _options, callback, responses)
@@ -492,11 +532,13 @@ export default {
             };
         }
 
-        const secretKey = bs58.decode(sourceKp.privateKey);
-        const senderKeypair = Keypair.fromSecretKey(secretKey);
+            const secretKey = bs58.decode(sourceKp.privateKey);
+            senderKeypair = Keypair.fromSecretKey(secretKey);
 
-        console.log('MULTIWALLET_SWAP built KP');
+            console.log('MULTIWALLET_SWAP built KP');
+        } // End of REAL MODE else block
 
+        // Both demo and real mode continue here
         try {
             const connection = new Connection(
                 runtime.getSetting('SOLANA_RPC_URL') || 'https://api.mainnet-beta.solana.com'
@@ -514,29 +556,45 @@ export default {
 
             console.log('2')
 
-            const transactionBuf = Buffer.from(swapResult.swapTransaction, 'base64');
-            const transaction = VersionedTransaction.deserialize(transactionBuf);
+            // Check if we're in demo mode
+            const isDemoMode = !runtime.getService('JUPITER_SERVICE');
+            let txid: string;
 
-            transaction.sign([senderKeypair]);
+            if (isDemoMode) {
+                // DEMO MODE: Generate fake transaction hash
+                logger.log('🎭 DEMO MODE: Generating mock transaction');
+                txid = `DEMO${Date.now()}${Math.random().toString(36).substring(2, 11)}`.toUpperCase();
 
-            const latestBlockhash = await connection.getLatestBlockhash();
-            const txid = await connection.sendTransaction(transaction, {
-                skipPreflight: false,
-                maxRetries: 3,
-                preflightCommitment: 'confirmed',
-            });
+                // Simulate transaction delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
 
-            const confirmation = await connection.confirmTransaction(
-                {
-                    signature: txid,
-                    blockhash: latestBlockhash.blockhash,
-                    lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
-                },
-                'confirmed'
-            );
+                logger.log('🎭 DEMO MODE: Mock transaction completed:', txid);
+            } else {
+                // REAL MODE: Execute actual blockchain transaction
+                const transactionBuf = Buffer.from(swapResult.swapTransaction, 'base64');
+                const transaction = VersionedTransaction.deserialize(transactionBuf);
 
-            if (confirmation.value.err) {
-                throw new Error(`Transaction failed: ${confirmation.value.err}`);
+                transaction.sign([senderKeypair]);
+
+                const latestBlockhash = await connection.getLatestBlockhash();
+                txid = await connection.sendTransaction(transaction, {
+                    skipPreflight: false,
+                    maxRetries: 3,
+                    preflightCommitment: 'confirmed',
+                });
+
+                const confirmation = await connection.confirmTransaction(
+                    {
+                        signature: txid,
+                        blockhash: latestBlockhash.blockhash,
+                        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+                    },
+                    'confirmed'
+                );
+
+                if (confirmation.value.err) {
+                    throw new Error(`Transaction failed: ${confirmation.value.err}`);
+                }
             }
 
             // Extract output amount from quote if available
@@ -544,13 +602,15 @@ export default {
             if (swapResult.quoteResponse?.outAmount) {
                 const outputDecimals = content.outputTokenCA === 'So11111111111111111111111111111111111111112'
                     ? 9
-                    : await getTokenDecimals(connection, content.outputTokenCA as string);
+                    : (isDemoMode ? 6 : await getTokenDecimals(connection, content.outputTokenCA as string));
                 const outAmountBN = new BigNumber(swapResult.quoteResponse.outAmount);
-                outputAmount = outAmountBN.dividedBy(new BigNumber(10).pow(outputDecimals)).toString();
+                outputAmount = outAmountBN.dividedBy(new BigNumber(10).pow(outputDecimals)).toFixed(4);
             }
 
             // Create Solscan link
-            const solscanLink = `https://solscan.io/tx/${txid}`;
+            const solscanLink = isDemoMode
+                ? `https://solscan.io/tx/${txid}?cluster=devnet`
+                : `https://solscan.io/tx/${txid}`;
 
             // Format response with all details
             const responseText = `✅ Swap completed successfully!

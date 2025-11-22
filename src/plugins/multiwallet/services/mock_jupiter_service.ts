@@ -29,13 +29,17 @@ export class MockJupiterService extends Service {
     await new Promise(resolve => setTimeout(resolve, 500));
 
     // Calculate mock output amount (simulate ~$100 SOL price)
+    // params.amount is already in lamports (e.g., 100000000 for 0.1 SOL with 9 decimals)
     // If swapping SOL to USDC: 1 SOL ≈ 100 USDC
-    const inputAmount = typeof params.amount === 'string'
+    const inputAmountLamports = typeof params.amount === 'string'
       ? parseFloat(params.amount)
-      : params.amount;
+      : parseFloat(params.amount.toString());
 
-    // Assume 6 decimals for USDC, 9 for SOL
-    const mockOutAmount = Math.floor(inputAmount * 0.95 * 100); // 95% due to slippage
+    // Input is in lamports (9 decimals), output should be in USDC base units (6 decimals)
+    // 0.1 SOL = 100000000 lamports → ~10 USDC = 10000000 base units
+    // Conversion: lamports * (10^6 / 10^9) * price * (1 - slippage)
+    // Simplified: lamports / 1000 * price * 0.95
+    const mockOutAmount = Math.floor((inputAmountLamports / 1000) * 100 * 0.95);
 
     return {
       inputMint: params.inputMint,
