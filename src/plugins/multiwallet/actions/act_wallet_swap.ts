@@ -248,6 +248,7 @@ Respond with a JSON markdown block containing only the extracted values. All fie
 export default {
     name: 'MULTIWALLET_SWAP',
     similes: [
+        'SWAP_SOLANA',
         'MULTIWALLET_SWAP_SOL',
         'MULTIWALLET_SWAP_TOKENS',
         'MULTIWALLET_TRADE_TOKENS',
