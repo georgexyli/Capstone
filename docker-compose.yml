@@ -74,6 +74,7 @@ services:
       BOOTSTRAP_KEEP_RESP: ${BOOTSTRAP_KEEP_RESP:-true}
       SERVER_PORT: ${SERVER_PORT:-2096}
       NODE_ENV: ${NODE_ENV:-production}
+      DEV_MODE: ${DEV_MODE:-false}
       PORT: ${PORT:-3000}
 
       # Database configuration

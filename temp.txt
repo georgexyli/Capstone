@@ -1,0 +1,1493 @@
+2025-11-22 05:09:41 spartan-mysql  | 2025-11-22 01:09:41+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 9.1.0-1.el9 started.
+2025-11-22 05:09:41 spartan-mysql  | 2025-11-22 01:09:41+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2025-11-22 05:09:41 spartan-mysql  | 2025-11-22 01:09:41+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 9.1.0-1.el9 started.
+2025-11-22 05:09:42 spartan-mysql  | '/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
+2025-11-22 05:09:42 spartan-mysql  | 2025-11-22T01:09:42.151994Z 0 [System] [MY-015015] [Server] MySQL Server - start.
+2025-11-22 05:09:42 spartan-mysql  | 2025-11-22T01:09:42.567192Z 0 [Warning] [MY-011070] [Server] 'binlog_format' is deprecated and will be removed in a future release.
+2025-11-22 05:09:42 spartan-mysql  | 2025-11-22T01:09:42.572938Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 9.1.0) starting as process 1
+2025-11-22 05:09:42 spartan-mysql  | 2025-11-22T01:09:42.586173Z 0 [Warning] [MY-013907] [InnoDB] Deprecated configuration parameters innodb_log_file_size and/or innodb_log_files_in_group have been used to compute innodb_redo_log_capacity=536870912. Please use innodb_redo_log_capacity instead.
+2025-11-22 05:09:42 spartan-mysql  | 2025-11-22T01:09:42.590471Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2025-11-22 05:09:43 spartan-mysql  | 2025-11-22T01:09:43.495002Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2025-11-22 05:09:43 spartan-mysql  | 2025-11-22T01:09:43.959220Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2025-11-22 05:09:43 spartan-mysql  | 2025-11-22T01:09:43.959286Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2025-11-22 05:09:43 spartan-mysql  | 2025-11-22T01:09:43.968508Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
+2025-11-22 05:09:44 spartan-mysql  | 2025-11-22T01:09:44.036101Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
+2025-11-22 05:09:44 spartan-mysql  | 2025-11-22T01:09:44.036324Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '9.1.0'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
+2025-11-23 01:04:27 spartan-mysql  | 2025-11-22T21:04:27.262875Z 0 [System] [MY-013172] [Server] Received SHUTDOWN from user <via user signal>. Shutting down mysqld (Version: 9.1.0).
+2025-11-23 01:04:30 spartan-mysql  | 2025-11-22T21:04:30.013792Z 0 [System] [MY-010910] [Server] /usr/sbin/mysqld: Shutdown complete (mysqld 9.1.0)  MySQL Community Server - GPL.
+2025-11-23 01:04:30 spartan-mysql  | 2025-11-22T21:04:30.013873Z 0 [System] [MY-015016] [Server] MySQL Server - end.
+2026-01-21 18:31:56 spartan-mysql  | 2026-01-21 14:31:56+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 9.1.0-1.el9 started.
+2026-01-21 18:31:56 spartan-mysql  | 2026-01-21 14:31:56+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2026-01-21 18:31:56 spartan-mysql  | 2026-01-21 14:31:56+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 9.1.0-1.el9 started.
+2026-01-21 18:31:57 spartan-mysql  | '/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
+2026-01-21 18:31:57 spartan-mysql  | 2026-01-21T14:31:57.043673Z 0 [System] [MY-015015] [Server] MySQL Server - start.
+2026-01-21 18:31:57 spartan-mysql  | 2026-01-21T14:31:57.257606Z 0 [Warning] [MY-011070] [Server] 'binlog_format' is deprecated and will be removed in a future release.
+2026-01-21 18:31:57 spartan-mysql  | 2026-01-21T14:31:57.258623Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 9.1.0) starting as process 1
+2026-01-21 18:31:57 spartan-mysql  | 2026-01-21T14:31:57.264299Z 0 [Warning] [MY-013907] [InnoDB] Deprecated configuration parameters innodb_log_file_size and/or innodb_log_files_in_group have been used to compute innodb_redo_log_capacity=536870912. Please use innodb_redo_log_capacity instead.
+2026-01-21 18:31:57 spartan-mysql  | 2026-01-21T14:31:57.267565Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-01-21 18:31:57 spartan-mysql  | 2026-01-21T14:31:57.466706Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2026-01-21 18:31:57 spartan-mysql  | 2026-01-21T14:31:57.652930Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2026-01-21 18:31:57 spartan-mysql  | 2026-01-21T14:31:57.652958Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2026-01-21 18:31:57 spartan-mysql  | 2026-01-21T14:31:57.654847Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
+2026-01-21 18:31:57 spartan-mysql  | 2026-01-21T14:31:57.677921Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
+2026-01-21 18:31:57 spartan-mysql  | 2026-01-21T14:31:57.677971Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '9.1.0'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
+2025-11-22 05:09:41 spartan-redis  | 1:C 22 Nov 2025 01:09:41.515 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+2025-11-22 05:09:41 spartan-redis  | 1:C 22 Nov 2025 01:09:41.516 * Redis version=7.4.7, bits=64, commit=00000000, modified=0, pid=1, just started
+2025-11-22 05:09:41 spartan-redis  | 1:C 22 Nov 2025 01:09:41.516 * Configuration loaded
+2025-11-22 05:09:41 spartan-redis  | 1:M 22 Nov 2025 01:09:41.516 * monotonic clock: POSIX clock_gettime
+2025-11-22 05:09:41 spartan-redis  | 1:M 22 Nov 2025 01:09:41.521 * Running mode=standalone, port=6379.
+2025-11-22 05:09:41 spartan-redis  | 1:M 22 Nov 2025 01:09:41.521 * Server initialized
+2025-11-22 05:09:41 spartan-redis  | 1:M 22 Nov 2025 01:09:41.522 * Reading RDB base file on AOF loading...
+2025-11-22 05:09:41 spartan-redis  | 1:M 22 Nov 2025 01:09:41.522 * Loading RDB produced by version 7.4.7
+2025-11-22 05:09:41 spartan-redis  | 1:M 22 Nov 2025 01:09:41.522 * RDB age 7361 seconds
+2025-11-22 05:09:41 spartan-redis  | 1:M 22 Nov 2025 01:09:41.522 * RDB memory usage when created 0.94 Mb
+2025-11-22 05:09:41 spartan-redis  | 1:M 22 Nov 2025 01:09:41.522 * RDB is base AOF
+2025-11-22 05:09:41 spartan-redis  | 1:M 22 Nov 2025 01:09:41.522 * Done loading RDB, keys loaded: 0, keys expired: 0.
+2025-11-22 05:09:41 spartan-redis  | 1:M 22 Nov 2025 01:09:41.523 * DB loaded from base file appendonly.aof.1.base.rdb: 0.001 seconds
+2025-11-22 05:09:41 spartan-redis  | 1:M 22 Nov 2025 01:09:41.523 * DB loaded from append only file: 0.001 seconds
+2025-11-22 05:09:41 spartan-redis  | 1:M 22 Nov 2025 01:09:41.523 * Opening AOF incr file appendonly.aof.1.incr.aof on server start
+2025-11-22 05:09:41 spartan-redis  | 1:M 22 Nov 2025 01:09:41.523 * Ready to accept connections tcp
+2025-11-23 01:04:08 spartan-redis  | 1:signal-handler (1763845448) Received SIGTERM scheduling shutdown...
+2025-11-23 01:04:08 spartan-redis  | 1:M 22 Nov 2025 21:04:08.359 * User requested shutdown...
+2025-11-23 01:04:08 spartan-redis  | 1:M 22 Nov 2025 21:04:08.360 * Calling fsync() on the AOF file.
+2025-11-23 01:04:08 spartan-redis  | 1:M 22 Nov 2025 21:04:08.361 * Saving the final RDB snapshot before exiting.
+2025-11-23 01:04:08 spartan-redis  | 1:M 22 Nov 2025 21:04:08.370 * DB saved on disk
+2025-11-23 01:04:08 spartan-redis  | 1:M 22 Nov 2025 21:04:08.371 # Redis is now ready to exit, bye bye...
+2026-01-21 18:31:56 spartan-redis  | 1:C 21 Jan 2026 14:31:56.617 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+2026-01-21 18:31:56 spartan-redis  | 1:C 21 Jan 2026 14:31:56.617 * Redis version=7.4.7, bits=64, commit=00000000, modified=0, pid=1, just started
+2026-01-21 18:31:56 spartan-redis  | 1:C 21 Jan 2026 14:31:56.617 * Configuration loaded
+2026-01-21 18:31:56 spartan-redis  | 1:M 21 Jan 2026 14:31:56.617 * monotonic clock: POSIX clock_gettime
+2026-01-21 18:31:56 spartan-redis  | 1:M 21 Jan 2026 14:31:56.619 * Running mode=standalone, port=6379.
+2026-01-21 18:31:56 spartan-redis  | 1:M 21 Jan 2026 14:31:56.619 * Server initialized
+2026-01-21 18:31:56 spartan-redis  | 1:M 21 Jan 2026 14:31:56.620 * Reading RDB base file on AOF loading...
+2026-01-21 18:31:56 spartan-redis  | 1:M 21 Jan 2026 14:31:56.620 * Loading RDB produced by version 7.4.7
+2026-01-21 18:31:56 spartan-redis  | 1:M 21 Jan 2026 14:31:56.620 * RDB age 5239496 seconds
+2026-01-21 18:31:56 spartan-redis  | 1:M 21 Jan 2026 14:31:56.620 * RDB memory usage when created 0.94 Mb
+2026-01-21 18:31:56 spartan-redis  | 1:M 21 Jan 2026 14:31:56.620 * RDB is base AOF
+2026-01-21 18:31:56 spartan-redis  | 1:M 21 Jan 2026 14:31:56.620 * Done loading RDB, keys loaded: 0, keys expired: 0.
+2026-01-21 18:31:56 spartan-redis  | 1:M 21 Jan 2026 14:31:56.620 * DB loaded from base file appendonly.aof.1.base.rdb: 0.001 seconds
+2026-01-21 18:31:56 spartan-redis  | 1:M 21 Jan 2026 14:31:56.620 * DB loaded from append only file: 0.001 seconds
+2026-01-21 18:31:56 spartan-redis  | 1:M 21 Jan 2026 14:31:56.620 * Opening AOF incr file appendonly.aof.1.incr.aof on server start
+2026-01-21 18:31:56 spartan-redis  | 1:M 21 Jan 2026 14:31:56.620 * Ready to accept connections tcp
+2025-11-22 05:09:49 spartan-app    | [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+2025-11-22 05:09:49 spartan-app    | │
+2025-11-22 05:09:49 spartan-app    | ◇  Failed to build project
+2025-11-22 05:09:49 spartan-app    |  Error      Build error: Command execution failed: ENOEXEC: unknown error, posix_spawn 'bun'
+2025-11-22 05:09:49 spartan-app    |  Warn       Build failed, but continuing with start. Some features may not work correctly.
+2025-11-22 05:09:49 spartan-app    |  Info       No character files specified, attempting to load project agents...
+2025-11-22 05:09:50 spartan-app    | bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+2025-11-22 05:09:50 spartan-app    | Applying payment protection to: /api/analytics/trending {
+2025-11-22 05:09:50 spartan-app    |   priceInCents: 10,
+2025-11-22 05:09:50 spartan-app    |   paymentConfigs: [ "base_usdc", "solana_usdc" ],
+2025-11-22 05:09:50 spartan-app    | }
+2025-11-22 05:09:50 spartan-app    | Applying payment protection to: /api/analytics/analyze-token {
+2025-11-22 05:09:50 spartan-app    |   priceInCents: 10,
+2025-11-22 05:09:50 spartan-app    |   paymentConfigs: [ "base_usdc", "solana_usdc" ],
+2025-11-22 05:09:50 spartan-app    | }
+2025-11-22 05:09:50 spartan-app    | Applying payment protection to: /api/analytics/analyze-token {
+2025-11-22 05:09:50 spartan-app    |   priceInCents: 10,
+2025-11-22 05:09:50 spartan-app    |   paymentConfigs: [ "base_usdc", "solana_usdc" ],
+2025-11-22 05:09:50 spartan-app    | }
+2025-11-22 05:09:50 spartan-app    | Applying payment protection to: /api/birdeye/trending {
+2025-11-22 05:09:50 spartan-app    |   priceInCents: 10,
+2025-11-22 05:09:50 spartan-app    |   paymentConfigs: [ "base_usdc", "solana_usdc" ],
+2025-11-22 05:09:50 spartan-app    | }
+2025-11-22 05:09:50 spartan-app    | Applying payment protection to: /api/coingecko/trending {
+2025-11-22 05:09:50 spartan-app    |   priceInCents: 10,
+2025-11-22 05:09:50 spartan-app    |   paymentConfigs: [ "base_usdc", "solana_usdc" ],
+2025-11-22 05:09:50 spartan-app    | }
+2025-11-22 05:09:50 spartan-app    | Applying payment protection to: /api/coingecko/global {
+2025-11-22 05:09:50 spartan-app    |   priceInCents: 10,
+2025-11-22 05:09:50 spartan-app    |   paymentConfigs: [ "base_usdc", "polygon_usdc", "solana_usdc" ],
+2025-11-22 05:09:50 spartan-app    | }
+2025-11-22 05:09:50 spartan-app    | protectedRoutes 67 total routes
+2025-11-22 05:09:50 spartan-app    | [dotenv@17.2.3] injecting env (0) from ../.env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+2025-11-22 05:09:50 spartan-app    |  Info       Loaded project from /app/src/index.ts
+2025-11-22 05:09:50 spartan-app    |  Info       Found 1 agent(s) in project configuration
+2025-11-22 05:09:50 spartan-app    |  Info       Loaded character: Spartan
+2025-11-22 05:09:50 spartan-app    | [dotenv@17.2.3] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+2025-11-22 05:09:50 spartan-app    |  Info       [INIT] Database Dir for SQL plugin: /app/.eliza/.elizadb
+2025-11-22 05:09:50 spartan-app    |  Info       [INIT] Created database directory: /app/.eliza
+2025-11-22 05:09:50 spartan-app    |  Info       [INIT] Running database migrations for messaging tables...
+2025-11-22 05:09:50 spartan-app    |  Info       [RuntimeMigrator] Initializing migration system...
+2025-11-22 05:09:53 spartan-app    |  Info       [RuntimeMigrator] Migration system initialized
+2025-11-22 05:09:53 spartan-app    |  Info       DatabaseMigrationService initialized with database and runtime migrator
+2025-11-22 05:09:53 spartan-app    |  Info       Registered schema for plugin: @elizaos/plugin-sql
+2025-11-22 05:09:53 spartan-app    |  Info       Discovered 1 plugin schemas out of 1 plugins
+2025-11-22 05:09:53 spartan-app    |  Info       [DatabaseMigrationService] Starting migrations
+2025-11-22 05:09:53 spartan-app    |  Info       [DatabaseMigrationService] Environment: DEVELOPMENT
+2025-11-22 05:09:53 spartan-app    |  Info       [DatabaseMigrationService] Plugins to migrate: 1
+2025-11-22 05:09:53 spartan-app    |  Info       [RuntimeMigrator] Starting migration for plugin: @elizaos/plugin-sql
+2025-11-22 05:09:53 spartan-app    |  Info       [RuntimeMigrator] Initializing migration system...
+2025-11-22 05:09:53 spartan-app    |  Info       [RuntimeMigrator] Migration system initialized
+2025-11-22 05:09:54 spartan-app    |  Info       [RuntimeMigrator] Executing 61 SQL statements for @elizaos/plugin-sql
+2025-11-22 05:09:54 spartan-app    |  Info       [RuntimeMigrator] Recorded migration 0000_@elizaos/plugin-sql_mi9ldlnr for @elizaos/plugin-sql
+2025-11-22 05:09:54 spartan-app    |  Info       [RuntimeMigrator] Migration completed successfully for @elizaos/plugin-sql
+2025-11-22 05:09:54 spartan-app    |  Info       [DatabaseMigrationService] ✅ Completed: @elizaos/plugin-sql
+2025-11-22 05:09:54 spartan-app    |  Info       [DatabaseMigrationService] All 1 migrations completed successfully
+2025-11-22 05:09:54 spartan-app    |  Info       [INIT] Ensuring default server exists...
+2025-11-22 05:09:54 spartan-app    |  Info       [AgentServer] Checking for server 00000000-0000-0000-0000-000000000000...
+2025-11-22 05:09:54 spartan-app    |  Info       [AgentServer] Creating server with UUID 00000000-0000-0000-0000-000000000000...
+2025-11-22 05:09:54 spartan-app    |  Info       [INIT] Server uses temporary adapter for migrations only
+2025-11-22 05:09:54 spartan-app    |  Info       [INIT] Initializing ElizaOS...
+2025-11-22 05:09:54 spartan-app    |  Info       [MessageBusService] Global ElizaOS instance set
+2025-11-22 05:09:54 spartan-app    |  Info       [MessageBusService] Global AgentServer instance set
+2025-11-22 05:09:54 spartan-app    |  Info       [Sentry] Initialized Sentry for @elizaos/server
+2025-11-22 05:09:54 spartan-app    |  Info       Public health check endpoints enabled: /healthz and /health (rate limited: 100 req/min)
+2025-11-22 05:09:54 spartan-app    |  Warn       Server authentication is disabled. Set ELIZA_SERVER_AUTH_TOKEN environment variable to enable.
+2025-11-22 05:09:54 spartan-app    |  Info       Web UI enabled
+2025-11-22 05:09:55 spartan-app    |  Info       [STATIC] Found client files at: /app/node_modules/@elizaos/server/dist/client
+2025-11-22 05:09:55 spartan-app    |  Info       [STATIC] Serving static files from: /app/node_modules/@elizaos/server/dist/client
+2025-11-22 05:09:55 spartan-app    |  Info       [Jobs API] Started job cleanup interval
+2025-11-22 05:09:55 spartan-app    |  Info       [SocketIO] Router initialized with 0 agents
+2025-11-22 05:09:55 spartan-app    |  Info       [SocketIO] Setting up Socket.IO event listeners
+2025-11-22 05:09:55 spartan-app    |  Info       [SocketIO] Registered message types: 1: ROOM_JOINING, 2: SEND_MESSAGE, 3: MESSAGE, 4: ACK, 5: THINKING, 6: CONTROL, ROOM_JOINING: 1, SEND_MESSAGE: 2, MESSAGE: 3, ACK: 4, THINKING: 5, CONTROL: 6
+2025-11-22 05:09:55 spartan-app    | AgentServer is listening on port 2096
+2025-11-22 05:09:55 spartan-app    |  Warn       SECRET_SALT is not set or using default value
+2025-11-22 05:09:57 spartan-app    |  Info       Final plugins being loaded: {
+2025-11-22 05:09:57 spartan-app    |   plugins: [
+2025-11-22 05:09:57 spartan-app    |     "openai", "discord", "telegram", "bootstrap", "chain_solana", "coinmarketcap", "account registration",
+2025-11-22 05:09:57 spartan-app    |     "autonomous-trader", "spartan-intel", "multitenant wallet", "trader", "KOL", "coin_marketer",
+2025-11-22 05:09:57 spartan-app    |     "@elizaos/plugin-sql"
+2025-11-22 05:09:57 spartan-app    |   ],
+2025-11-22 05:09:57 spartan-app    | }
+2025-11-22 05:09:57 spartan-app    |  Warn       Discord API Token not provided - Discord plugin is loaded but will not be functional
+2025-11-22 05:09:57 spartan-app    |  Warn       To enable Discord functionality, please provide DISCORD_API_TOKEN in your .eliza/.env file
+2025-11-22 05:09:57 spartan-app    | no trading strategy waiting for TRADER_STRATEGY service...
+2025-11-22 05:09:57 spartan-app    | llm trading strategy waiting for TRADER_STRATEGY service...
+2025-11-22 05:09:57 spartan-app    | KOL init
+2025-11-22 05:09:57 spartan-app    | Coin marketer init
+2025-11-22 05:09:57 spartan-app    |  Info       plugin-sql (node) init starting...
+2025-11-22 05:09:57 spartan-app    |  Info       No pre-registered database adapter detected; registering adapter
+2025-11-22 05:09:57 spartan-app    |  Info       Database adapter created and registered
+2025-11-22 05:09:57 spartan-app    |  Info       #Spartan  Running plugin migrations...
+2025-11-22 05:09:57 spartan-app    |  Info       #Spartan  Found 1 plugins with schemas to migrate.
+2025-11-22 05:09:57 spartan-app    |  Info       [RuntimeMigrator] Initializing migration system...
+2025-11-22 05:09:57 spartan-app    |  Info       [RuntimeMigrator] Migration system initialized
+2025-11-22 05:09:57 spartan-app    |  Info       DatabaseMigrationService initialized with database and runtime migrator
+2025-11-22 05:09:57 spartan-app    |  Info       Registered schema for plugin: @elizaos/plugin-sql
+2025-11-22 05:09:57 spartan-app    |  Info       [DatabaseMigrationService] Starting migrations
+2025-11-22 05:09:57 spartan-app    |  Info       [DatabaseMigrationService] Environment: DEVELOPMENT
+2025-11-22 05:09:57 spartan-app    |  Info       [DatabaseMigrationService] Plugins to migrate: 1
+2025-11-22 05:09:57 spartan-app    |  Info       [RuntimeMigrator] Starting migration for plugin: @elizaos/plugin-sql
+2025-11-22 05:09:57 spartan-app    |  Info       [RuntimeMigrator] Initializing migration system...
+2025-11-22 05:09:57 spartan-app    |  Info       [RuntimeMigrator] Migration system initialized
+2025-11-22 05:09:57 spartan-app    |  Info       [RuntimeMigrator] No changes detected for @elizaos/plugin-sql, skipping migration (hash: 4cf9e2c36eefb44def62bc8f4a2bed351512046129a89ad15dbf55fde82358ca)
+2025-11-22 05:09:57 spartan-app    |  Info       [DatabaseMigrationService] ✅ Completed: @elizaos/plugin-sql
+2025-11-22 05:09:57 spartan-app    |  Info       [DatabaseMigrationService] All 1 migrations completed successfully
+2025-11-22 05:09:57 spartan-app    |  Info       #Spartan  Plugin migrations completed successfully.
+2025-11-22 05:09:57 spartan-app    |  Info       #Spartan  Plugin migrations completed.
+2025-11-22 05:09:57 spartan-app    |  Warn       Telegram Bot Token not provided - Telegram functionality will be unavailable
+2025-11-22 05:09:57 spartan-app    |  Warn       Telegram service started without bot functionality - no bot token provided
+2025-11-22 05:09:57 spartan-app    |  Info       [EmbeddingService] Starting embedding generation service
+2025-11-22 05:09:57 spartan-app    |  Info       [EmbeddingService] Initializing embedding generation service
+2025-11-22 05:09:57 spartan-app    |  Info       [EmbeddingService] Started processing loop
+2025-11-22 05:09:57 spartan-app    |  Info       Starting chain trading service...
+2025-11-22 05:09:57 spartan-app    |  Info       Trading chain service started successfully
+2025-11-22 05:09:57 spartan-app    |  Info       #Spartan  Starting chain trading service...
+2025-11-22 05:09:57 spartan-app    |  Info       #Spartan  Trading chain service started successfully
+2025-11-22 05:09:57 spartan-app    | Multiwallet service waiting for AUTONOMOUS_TRADER_INTERFACE_ACCOUNTS service...
+2025-11-22 05:09:57 spartan-app    |  Info       #Spartan  Starting chain trading service...
+2025-11-22 05:09:57 spartan-app    |  Info       Trading chain service started successfully
+2025-11-22 05:09:57 spartan-app    |  Warn       #Spartan  Discord API Token not provided - Discord functionality will be unavailable
+2025-11-22 05:09:57 spartan-app    |  Info       Starting chain trading service...
+2025-11-22 05:09:57 spartan-app    |  Info       Trading chain service started successfully
+2025-11-22 05:09:57 spartan-app    | INTEL_DATAPROVIDER trying to start
+2025-11-22 05:09:57 spartan-app    |  Info       #Spartan  Starting info trading service...
+2025-11-22 05:09:57 spartan-app    |  Info       #Spartan  Starting strategy trading service...
+2025-11-22 05:09:57 spartan-app    |  Info       Starting LP trading service...
+2025-11-22 05:09:57 spartan-app    |  Info       Trading LP service started successfully
+2025-11-22 05:09:57 spartan-app    |  Info       AUTONOMOUS_TRADER_INTERFACE_POSITIONS trading service...
+2025-11-22 05:09:57 spartan-app    |  Info       AUTONOMOUS_TRADER_INTERFACE_POSITIONS service started successfully
+2025-11-22 05:09:57 spartan-app    |  Warn       [Telegram] Cannot register send handler - bot not initialized.
+2025-11-22 05:09:57 spartan-app    |  Error      #Spartan  Spartan(479233fd-b0e7-0f50-9d88-d4c9ea5b0de0) - Failed to register service JUPITER_SERVICE: Not implemented
+2025-11-22 05:09:57 spartan-app    |  Info       #Spartan  Registered send handler for source: discord
+2025-11-22 05:09:57 spartan-app    |  Info       #Spartan  [Discord] Registered send handler.
+2025-11-22 05:09:57 spartan-app    |  Error      #Spartan  Service registration failed for JUPITER_SERVICE: Not implemented
+2025-11-22 05:09:57 spartan-app    |  Info       #Spartan  discord post enabled
+2025-11-22 05:09:57 spartan-app    |  Info       #Spartan  Trading strategy dependencies acquired
+2025-11-22 05:09:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 05:09:57 spartan-app    | intel:tasks - plugins [
+2025-11-22 05:09:57 spartan-app    |   "openai", "discord", "telegram", "bootstrap", "chain_solana", "coinmarketcap", "account registration",
+2025-11-22 05:09:57 spartan-app    |   "autonomous-trader", "spartan-intel", "multitenant wallet", "trader", "KOL", "coin_marketer",
+2025-11-22 05:09:57 spartan-app    |   "@elizaos/plugin-sql"
+2025-11-22 05:09:57 spartan-app    | ]
+2025-11-22 05:09:57 spartan-app    | postImmediately null
+2025-11-22 05:09:57 spartan-app    |  Info       [AgentServer] Registered MessageBusConnector for agent Spartan
+2025-11-22 05:09:57 spartan-app    |  Info       [Spartan] MessageBusService: Subscribing to internal message bus for 'new_message', 'message_deleted', and 'channel_cleared' events.
+2025-11-22 05:09:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 05:09:57 spartan-app    | intel:DPsrv - boot wallets 0
+2025-11-22 05:09:57 spartan-app    | intel:DPsrv - pubKeys []
+2025-11-22 05:09:57 spartan-app    |  Info       Trading info service started successfully
+2025-11-22 05:09:57 spartan-app    |  Info       [AgentServer] Auto-associated agent Spartan with server ID: 00000000-0000-0000-0000-000000000000
+2025-11-22 05:09:57 spartan-app    |  Info       Started 1 agents
+2025-11-22 05:09:57 spartan-app    |  Info       [SpartanNewsService] World and room initialized successfully
+2025-11-22 05:09:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 05:09:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 05:09:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 05:09:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 05:09:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 05:09:57 spartan-app    | DP:checkPositions - done checking open positions, took 56ms
+2025-11-22 05:09:57 spartan-app    | This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). The promise rejected with the reason:
+2025-11-22 05:09:57 spartan-app    | Error: Not implemented
+2025-11-22 05:09:57 spartan-app    |     at start (/app/node_modules/@elizaos/core/dist/node/index.node.js:25208:15)
+2025-11-22 05:09:57 spartan-app    |     at start (/app/node_modules/@elizaos/core/dist/node/index.node.js:25207:22)
+2025-11-22 05:09:57 spartan-app    |     at registerService (/app/node_modules/@elizaos/core/dist/node/index.node.js:45819:48)
+2025-11-22 05:09:57 spartan-app    |     at processTicksAndRejections (native:7:39)
+2025-11-22 05:09:57 spartan-app    |  Info       [Spartan] MessageBusService: Agent is subscribed to 1 servers (including server 00000000-0000-0000-0000-000000000000)
+2025-11-22 05:09:57 spartan-app    |  Info       [Spartan] MessageBusService: Fetched 0 channels from server 00000000-0000-0000-0000-000000000000
+2025-11-22 05:09:57 spartan-app    |  Info       [Spartan] MessageBusService: Loaded 0 valid channel IDs from 1 servers (including default server)
+2025-11-22 05:09:57 spartan-app    |  Error      Attempt 1 failed: Error: HTTP error! status: 401, message: {"success":false,"message":"Your API key is either suspended or lacks sufficient permissions to access this resource. Please check your account status or upgrade to a higher plan. For assistance, contact bds.support@birdeye.so."}
+2025-11-22 05:09:57 spartan-app    |  Error      Attempt 1 failed {
+2025-11-22 05:09:57 spartan-app    |   error: 797 |             ...options.headers
+2025-11-22 05:09:57 spartan-app    | 798 |           }
+2025-11-22 05:09:57 spartan-app    | 799 |         });
+2025-11-22 05:09:57 spartan-app    | 800 |         if (!response.ok) {
+2025-11-22 05:09:57 spartan-app    | 801 |           const errorText = await response.text();
+2025-11-22 05:09:57 spartan-app    | 802 |           throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+2025-11-22 05:09:57 spartan-app    |                           ^
+2025-11-22 05:09:57 spartan-app    | error: HTTP error! status: 401, message: {"success":false,"message":"Your API key is either suspended or lacks sufficient permissions to access this resource. Please check your account status or upgrade to a higher plan. For assistance, contact bds.support@birdeye.so."}
+2025-11-22 05:09:57 spartan-app    |       at birdeyeFetchWithRetry (/app/node_modules/@elizaos/plugin-solana/dist/index.js:802:21)
+2025-11-22 05:09:57 spartan-app    |       at async updateWalletData (/app/node_modules/@elizaos/plugin-solana/dist/index.js:1459:41)
+2025-11-22 05:09:57 spartan-app    | ,
+2025-11-22 05:09:57 spartan-app    | }
+2025-11-22 05:09:58 spartan-app    | no trading strategy waiting for TRADER_STRATEGY service...
+2025-11-22 05:09:58 spartan-app    | no trading strategy Acquired TRADER_STRATEGY service...
+2025-11-22 05:09:58 spartan-app    | registered No trading strategy as trading strategy #1
+2025-11-22 05:09:58 spartan-app    | llm trading strategy waiting for TRADER_STRATEGY service...
+2025-11-22 05:09:58 spartan-app    | llm trading strategy Acquired TRADER_STRATEGY service...
+2025-11-22 05:09:58 spartan-app    | registered LLM trading strategy as trading strategy #2
+2025-11-22 05:09:58 spartan-app    | Multiwallet service waiting for AUTONOMOUS_TRADER_INTERFACE_ACCOUNTS service...
+2025-11-22 05:09:58 spartan-app    | Multiwallet service Acquired AUTONOMOUS_TRADER_INTERFACE_ACCOUNTS service...
+2025-11-22 05:09:59 spartan-app    |  Error      Attempt 2 failed: Error: HTTP error! status: 401, message: {"success":false,"message":"Your API key is either suspended or lacks sufficient permissions to access this resource. Please check your account status or upgrade to a higher plan. For assistance, contact bds.support@birdeye.so."}
+2025-11-22 05:09:59 spartan-app    |  Error      Attempt 2 failed {
+2025-11-22 05:09:59 spartan-app    |   error: 797 |             ...options.headers
+2025-11-22 05:09:59 spartan-app    | 798 |           }
+2025-11-22 05:09:59 spartan-app    | 799 |         });
+2025-11-22 05:09:59 spartan-app    | 800 |         if (!response.ok) {
+2025-11-22 05:09:59 spartan-app    | 801 |           const errorText = await response.text();
+2025-11-22 05:09:59 spartan-app    | 802 |           throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+2025-11-22 05:09:59 spartan-app    |                           ^
+2025-11-22 05:09:59 spartan-app    | error: HTTP error! status: 401, message: {"success":false,"message":"Your API key is either suspended or lacks sufficient permissions to access this resource. Please check your account status or upgrade to a higher plan. For assistance, contact bds.support@birdeye.so."}
+2025-11-22 05:09:59 spartan-app    |       at birdeyeFetchWithRetry (/app/node_modules/@elizaos/plugin-solana/dist/index.js:802:21)
+2025-11-22 05:09:59 spartan-app    |       at async updateWalletData (/app/node_modules/@elizaos/plugin-solana/dist/index.js:1459:41)
+2025-11-22 05:09:59 spartan-app    | ,
+2025-11-22 05:09:59 spartan-app    | }
+2025-11-22 05:10:00 spartan-app    |  Info       [SocketIO] New connection: 1lxavPbOokqAAZxvAAAB
+2025-11-22 05:10:02 spartan-app    | checking trending
+2025-11-22 05:10:02 spartan-app    | trending registered handlers [
+2025-11-22 05:10:02 spartan-app    |   [AsyncFunction]
+2025-11-22 05:10:02 spartan-app    | ]
+2025-11-22 05:10:02 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 05:10:03 spartan-app    |  Error      Attempt 3 failed: Error: HTTP error! status: 401, message: {"success":false,"message":"Your API key is either suspended or lacks sufficient permissions to access this resource. Please check your account status or upgrade to a higher plan. For assistance, contact bds.support@birdeye.so."}
+2025-11-22 05:10:03 spartan-app    |  Error      Attempt 3 failed {
+2025-11-22 05:10:03 spartan-app    |   error: 797 |             ...options.headers
+2025-11-22 05:10:03 spartan-app    | 798 |           }
+2025-11-22 05:10:03 spartan-app    | 799 |         });
+2025-11-22 05:10:03 spartan-app    | 800 |         if (!response.ok) {
+2025-11-22 05:10:03 spartan-app    | 801 |           const errorText = await response.text();
+2025-11-22 05:10:03 spartan-app    | 802 |           throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+2025-11-22 05:10:03 spartan-app    |                           ^
+2025-11-22 05:10:03 spartan-app    | error: HTTP error! status: 401, message: {"success":false,"message":"Your API key is either suspended or lacks sufficient permissions to access this resource. Please check your account status or upgrade to a higher plan. For assistance, contact bds.support@birdeye.so."}
+2025-11-22 05:10:03 spartan-app    |       at birdeyeFetchWithRetry (/app/node_modules/@elizaos/plugin-solana/dist/index.js:802:21)
+2025-11-22 05:10:03 spartan-app    |       at async updateWalletData (/app/node_modules/@elizaos/plugin-solana/dist/index.js:1459:41)
+2025-11-22 05:10:03 spartan-app    | ,
+2025-11-22 05:10:03 spartan-app    | }
+2025-11-22 05:10:03 spartan-app    | solana::updateWalletData - exception err 797 |             ...options.headers
+2025-11-22 05:10:03 spartan-app    | 798 |           }
+2025-11-22 05:10:03 spartan-app    | 799 |         });
+2025-11-22 05:10:03 spartan-app    | 800 |         if (!response.ok) {
+2025-11-22 05:10:03 spartan-app    | 801 |           const errorText = await response.text();
+2025-11-22 05:10:03 spartan-app    | 802 |           throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+2025-11-22 05:10:03 spartan-app    |                           ^
+2025-11-22 05:10:03 spartan-app    | error: HTTP error! status: 401, message: {"success":false,"message":"Your API key is either suspended or lacks sufficient permissions to access this resource. Please check your account status or upgrade to a higher plan. For assistance, contact bds.support@birdeye.so."}
+2025-11-22 05:10:03 spartan-app    |       at birdeyeFetchWithRetry (/app/node_modules/@elizaos/plugin-solana/dist/index.js:802:21)
+2025-11-22 05:10:03 spartan-app    |       at async updateWalletData (/app/node_modules/@elizaos/plugin-solana/dist/index.js:1459:41)
+2025-11-22 05:10:03 spartan-app    | 
+2025-11-22 05:10:03 spartan-app    | getTokenAccountsByKeypair - getParsedTokenAccountsByOwner 9WudUxm9PSsdyzMRx5HQRcrQ4qyxaU1sMJ1bx7i5A15T
+2025-11-22 05:19:57 spartan-app    | checking trending
+2025-11-22 05:19:57 spartan-app    | trending registered handlers [
+2025-11-22 05:19:57 spartan-app    |   [AsyncFunction]
+2025-11-22 05:19:57 spartan-app    | ]
+2025-11-22 05:19:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 05:19:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 05:19:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 05:19:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 05:19:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 05:19:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 05:19:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 05:19:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 05:19:57 spartan-app    | DP:checkPositions - done checking open positions, took 21ms
+2025-11-22 05:24:57 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 05:24:57 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 05:24:57 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 05:29:57 spartan-app    | checking trending
+2025-11-22 05:29:57 spartan-app    | trending registered handlers [
+2025-11-22 05:29:57 spartan-app    |   [AsyncFunction]
+2025-11-22 05:29:57 spartan-app    | ]
+2025-11-22 05:29:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 05:29:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 05:29:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 05:29:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 05:29:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 05:29:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 05:29:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 05:29:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 05:29:57 spartan-app    | DP:checkPositions - done checking open positions, took 39ms
+2025-11-22 05:39:57 spartan-app    | checking trending
+2025-11-22 05:39:57 spartan-app    | trending registered handlers [
+2025-11-22 05:39:57 spartan-app    |   [AsyncFunction]
+2025-11-22 05:39:57 spartan-app    | ]
+2025-11-22 05:39:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 05:39:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 05:39:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 05:39:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 05:39:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 05:39:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 05:39:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 05:39:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 05:39:57 spartan-app    | DP:checkPositions - done checking open positions, took 37ms
+2025-11-22 05:39:57 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 05:39:57 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 05:39:57 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 05:49:57 spartan-app    | checking trending
+2025-11-22 05:49:57 spartan-app    | trending registered handlers [
+2025-11-22 05:49:57 spartan-app    |   [AsyncFunction]
+2025-11-22 05:49:57 spartan-app    | ]
+2025-11-22 05:49:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 05:49:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 05:49:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 05:49:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 05:49:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 05:49:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 05:49:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 05:49:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 05:49:57 spartan-app    | DP:checkPositions - done checking open positions, took 32ms
+2025-11-22 05:54:58 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 05:54:58 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 05:54:58 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 05:59:57 spartan-app    | checking trending
+2025-11-22 05:59:57 spartan-app    | trending registered handlers [
+2025-11-22 05:59:57 spartan-app    |   [AsyncFunction]
+2025-11-22 05:59:57 spartan-app    | ]
+2025-11-22 05:59:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 05:59:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 05:59:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 05:59:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 05:59:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 05:59:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 05:59:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 05:59:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 05:59:57 spartan-app    | DP:checkPositions - done checking open positions, took 26ms
+2025-11-22 06:09:57 spartan-app    | checking trending
+2025-11-22 06:09:57 spartan-app    | trending registered handlers [
+2025-11-22 06:09:57 spartan-app    |   [AsyncFunction]
+2025-11-22 06:09:57 spartan-app    | ]
+2025-11-22 06:09:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 06:09:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 06:09:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 06:09:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 06:09:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 06:09:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 06:09:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 06:09:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 06:09:57 spartan-app    | DP:checkPositions - done checking open positions, took 20ms
+2025-11-22 06:09:59 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 06:09:59 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 06:09:59 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 06:19:57 spartan-app    | checking trending
+2025-11-22 06:19:57 spartan-app    | trending registered handlers [
+2025-11-22 06:19:57 spartan-app    |   [AsyncFunction]
+2025-11-22 06:19:57 spartan-app    | ]
+2025-11-22 06:19:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 06:19:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 06:19:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 06:19:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 06:19:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 06:19:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 06:19:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 06:19:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 06:19:57 spartan-app    | DP:checkPositions - done checking open positions, took 26ms
+2025-11-22 06:25:00 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 06:25:00 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 06:25:00 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 06:29:57 spartan-app    | checking trending
+2025-11-22 06:29:57 spartan-app    | trending registered handlers [
+2025-11-22 06:29:57 spartan-app    |   [AsyncFunction]
+2025-11-22 06:29:57 spartan-app    | ]
+2025-11-22 06:29:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 06:29:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 06:29:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 06:29:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 06:29:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 06:29:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 06:29:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 06:29:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 06:29:57 spartan-app    | DP:checkPositions - done checking open positions, took 25ms
+2025-11-22 06:39:57 spartan-app    | checking trending
+2025-11-22 06:39:57 spartan-app    | trending registered handlers [
+2025-11-22 06:39:57 spartan-app    |   [AsyncFunction]
+2025-11-22 06:39:57 spartan-app    | ]
+2025-11-22 06:39:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 06:39:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 06:39:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 06:39:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 06:39:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 06:39:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 06:39:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 06:39:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 06:39:57 spartan-app    | DP:checkPositions - done checking open positions, took 25ms
+2025-11-22 06:40:01 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 06:40:01 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 06:40:01 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 06:49:57 spartan-app    | checking trending
+2025-11-22 06:49:57 spartan-app    | trending registered handlers [
+2025-11-22 06:49:57 spartan-app    |   [AsyncFunction]
+2025-11-22 06:49:57 spartan-app    | ]
+2025-11-22 06:49:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 06:49:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 06:49:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 06:49:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 06:49:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 06:49:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 06:49:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 06:49:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 06:49:57 spartan-app    | DP:checkPositions - done checking open positions, took 31ms
+2025-11-22 06:55:01 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 06:55:01 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 06:55:01 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 06:59:57 spartan-app    | checking trending
+2025-11-22 06:59:57 spartan-app    | trending registered handlers [
+2025-11-22 06:59:57 spartan-app    |   [AsyncFunction]
+2025-11-22 06:59:57 spartan-app    | ]
+2025-11-22 06:59:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 06:59:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 06:59:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 06:59:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 06:59:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 06:59:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 06:59:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 06:59:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 06:59:57 spartan-app    | DP:checkPositions - done checking open positions, took 39ms
+2025-11-22 07:01:38 spartan-app    |  Info       [SocketIO] Client 1lxavPbOokqAAZxvAAAB disconnected.
+2025-11-22 07:01:41 spartan-app    |  Info       [SocketIO] New connection: 3zUCeH2MsS3cgHFsAAAE
+2025-11-22 07:09:57 spartan-app    | checking trending
+2025-11-22 07:09:57 spartan-app    | trending registered handlers [
+2025-11-22 07:09:57 spartan-app    |   [AsyncFunction]
+2025-11-22 07:09:57 spartan-app    | ]
+2025-11-22 07:09:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 07:09:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 07:09:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 07:09:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 07:09:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 07:09:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 07:09:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 07:09:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 07:09:57 spartan-app    | DP:checkPositions - done checking open positions, took 28ms
+2025-11-22 07:09:58 spartan-app    |  Info       #Spartan  Attempting to generate new DISCORD post...
+2025-11-22 07:09:58 spartan-app    |  Error      #Spartan  Cannot generate post: Discord profile not available
+2025-11-22 07:10:02 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 07:10:02 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 07:10:02 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 07:19:57 spartan-app    | checking trending
+2025-11-22 07:19:57 spartan-app    | trending registered handlers [
+2025-11-22 07:19:57 spartan-app    |   [AsyncFunction]
+2025-11-22 07:19:57 spartan-app    | ]
+2025-11-22 07:19:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 07:19:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 07:19:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 07:19:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 07:19:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 07:19:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 07:19:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 07:19:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 07:19:57 spartan-app    | DP:checkPositions - done checking open positions, took 41ms
+2025-11-22 07:25:02 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 07:25:02 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 07:25:02 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 07:29:57 spartan-app    | checking trending
+2025-11-22 07:29:57 spartan-app    | trending registered handlers [
+2025-11-22 07:29:57 spartan-app    |   [AsyncFunction]
+2025-11-22 07:29:57 spartan-app    | ]
+2025-11-22 07:29:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 07:29:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 07:29:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 07:29:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 07:29:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 07:29:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 07:29:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 07:29:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 07:29:57 spartan-app    | DP:checkPositions - done checking open positions, took 59ms
+2025-11-22 07:39:57 spartan-app    | checking trending
+2025-11-22 07:39:57 spartan-app    | trending registered handlers [
+2025-11-22 07:39:57 spartan-app    |   [AsyncFunction]
+2025-11-22 07:39:57 spartan-app    | ]
+2025-11-22 07:39:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 07:39:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 07:39:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 07:39:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 07:39:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 07:39:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 07:39:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 07:39:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 07:39:57 spartan-app    | DP:checkPositions - done checking open positions, took 28ms
+2025-11-22 07:40:03 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 07:40:03 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 07:40:03 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 07:49:57 spartan-app    | checking trending
+2025-11-22 07:49:57 spartan-app    | trending registered handlers [
+2025-11-22 07:49:57 spartan-app    |   [AsyncFunction]
+2025-11-22 07:49:57 spartan-app    | ]
+2025-11-22 07:49:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 07:49:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 07:49:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 07:49:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 07:49:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 07:49:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 07:49:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 07:49:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 07:49:57 spartan-app    | DP:checkPositions - done checking open positions, took 32ms
+2025-11-22 07:55:03 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 07:55:03 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 07:55:03 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 07:59:57 spartan-app    | checking trending
+2025-11-22 07:59:57 spartan-app    | trending registered handlers [
+2025-11-22 07:59:57 spartan-app    |   [AsyncFunction]
+2025-11-22 07:59:57 spartan-app    | ]
+2025-11-22 07:59:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 07:59:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 07:59:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 07:59:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 07:59:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 07:59:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 07:59:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 07:59:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 07:59:57 spartan-app    | DP:checkPositions - done checking open positions, took 31ms
+2025-11-22 08:09:57 spartan-app    | checking trending
+2025-11-22 08:09:57 spartan-app    | trending registered handlers [
+2025-11-22 08:09:57 spartan-app    |   [AsyncFunction]
+2025-11-22 08:09:57 spartan-app    | ]
+2025-11-22 08:09:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 08:09:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 08:09:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 08:09:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 08:09:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 08:09:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 08:09:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 08:09:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 08:09:57 spartan-app    | DP:checkPositions - done checking open positions, took 36ms
+2025-11-22 08:10:03 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 08:10:03 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 08:10:03 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 08:19:57 spartan-app    | checking trending
+2025-11-22 08:19:57 spartan-app    | trending registered handlers [
+2025-11-22 08:19:57 spartan-app    |   [AsyncFunction]
+2025-11-22 08:19:57 spartan-app    | ]
+2025-11-22 08:19:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 08:19:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 08:19:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 08:19:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 08:19:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 08:19:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 08:19:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 08:19:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 08:19:57 spartan-app    | DP:checkPositions - done checking open positions, took 27ms
+2025-11-22 08:25:03 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 08:25:03 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 08:25:03 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 08:29:57 spartan-app    | checking trending
+2025-11-22 08:29:57 spartan-app    | trending registered handlers [
+2025-11-22 08:29:57 spartan-app    |   [AsyncFunction]
+2025-11-22 08:29:57 spartan-app    | ]
+2025-11-22 08:29:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 08:29:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 08:29:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 08:29:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 08:29:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 08:29:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 08:29:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 08:29:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 08:29:57 spartan-app    | DP:checkPositions - done checking open positions, took 31ms
+2025-11-22 08:39:57 spartan-app    | checking trending
+2025-11-22 08:39:57 spartan-app    | trending registered handlers [
+2025-11-22 08:39:57 spartan-app    |   [AsyncFunction]
+2025-11-22 08:39:57 spartan-app    | ]
+2025-11-22 08:39:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 08:39:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 08:39:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 08:39:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 08:39:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 08:39:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 08:39:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 08:39:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 08:39:57 spartan-app    | DP:checkPositions - done checking open positions, took 46ms
+2025-11-22 08:40:04 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 08:40:04 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 08:40:04 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 08:49:57 spartan-app    | checking trending
+2025-11-22 08:49:57 spartan-app    | trending registered handlers [
+2025-11-22 08:49:57 spartan-app    |   [AsyncFunction]
+2025-11-22 08:49:57 spartan-app    | ]
+2025-11-22 08:49:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 08:49:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 08:49:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 08:49:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 08:49:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 08:49:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 08:49:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 08:49:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 08:49:57 spartan-app    | DP:checkPositions - done checking open positions, took 36ms
+2025-11-22 08:55:05 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 08:55:05 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 08:55:05 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 08:59:57 spartan-app    | checking trending
+2025-11-22 08:59:57 spartan-app    | trending registered handlers [
+2025-11-22 08:59:57 spartan-app    |   [AsyncFunction]
+2025-11-22 08:59:57 spartan-app    | ]
+2025-11-22 08:59:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 08:59:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 08:59:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 08:59:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 08:59:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 08:59:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 08:59:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 08:59:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 08:59:57 spartan-app    | DP:checkPositions - done checking open positions, took 45ms
+2025-11-22 09:09:57 spartan-app    | checking trending
+2025-11-22 09:09:57 spartan-app    | trending registered handlers [
+2025-11-22 09:09:57 spartan-app    |   [AsyncFunction]
+2025-11-22 09:09:57 spartan-app    | ]
+2025-11-22 09:09:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 09:09:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 09:09:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 09:09:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 09:09:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 09:09:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 09:09:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 09:09:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 09:09:57 spartan-app    | DP:checkPositions - done checking open positions, took 32ms
+2025-11-22 09:09:58 spartan-app    |  Info       #Spartan  Attempting to generate new DISCORD post...
+2025-11-22 09:09:58 spartan-app    |  Error      #Spartan  Cannot generate post: Discord profile not available
+2025-11-22 09:10:06 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 09:10:06 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 09:10:06 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 09:19:57 spartan-app    | checking trending
+2025-11-22 09:19:57 spartan-app    | trending registered handlers [
+2025-11-22 09:19:57 spartan-app    |   [AsyncFunction]
+2025-11-22 09:19:57 spartan-app    | ]
+2025-11-22 09:19:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 09:19:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 09:19:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 09:19:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 09:19:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 09:19:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 09:19:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 09:19:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 09:19:57 spartan-app    | DP:checkPositions - done checking open positions, took 32ms
+2025-11-22 09:25:06 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 09:25:06 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 09:25:06 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 09:29:57 spartan-app    | checking trending
+2025-11-22 09:29:57 spartan-app    | trending registered handlers [
+2025-11-22 09:29:57 spartan-app    |   [AsyncFunction]
+2025-11-22 09:29:57 spartan-app    | ]
+2025-11-22 09:29:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 09:29:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 09:29:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 09:29:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 09:29:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 09:29:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 09:29:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 09:29:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 09:29:57 spartan-app    | DP:checkPositions - done checking open positions, took 26ms
+2025-11-22 09:39:57 spartan-app    | checking trending
+2025-11-22 09:39:57 spartan-app    | trending registered handlers [
+2025-11-22 09:39:57 spartan-app    |   [AsyncFunction]
+2025-11-22 09:39:57 spartan-app    | ]
+2025-11-22 09:39:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 09:39:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 09:39:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 09:39:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 09:39:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 09:39:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 09:39:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 09:39:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 09:39:57 spartan-app    | DP:checkPositions - done checking open positions, took 44ms
+2025-11-22 09:40:07 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 09:40:07 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 09:40:07 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 09:49:57 spartan-app    | checking trending
+2025-11-22 09:49:57 spartan-app    | trending registered handlers [
+2025-11-22 09:49:57 spartan-app    |   [AsyncFunction]
+2025-11-22 09:49:57 spartan-app    | ]
+2025-11-22 09:49:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 09:49:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 09:49:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 09:49:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 09:49:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 09:49:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 09:49:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 09:49:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 09:49:57 spartan-app    | DP:checkPositions - done checking open positions, took 37ms
+2025-11-22 09:55:07 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 09:55:07 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 09:55:07 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 09:59:57 spartan-app    | checking trending
+2025-11-22 09:59:57 spartan-app    | trending registered handlers [
+2025-11-22 09:59:57 spartan-app    |   [AsyncFunction]
+2025-11-22 09:59:57 spartan-app    | ]
+2025-11-22 09:59:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 09:59:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 09:59:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 09:59:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 09:59:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 09:59:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 09:59:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 09:59:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 09:59:57 spartan-app    | DP:checkPositions - done checking open positions, took 28ms
+2025-11-22 10:09:57 spartan-app    | checking trending
+2025-11-22 10:09:57 spartan-app    | trending registered handlers [
+2025-11-22 10:09:57 spartan-app    |   [AsyncFunction]
+2025-11-22 10:09:57 spartan-app    | ]
+2025-11-22 10:09:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 10:09:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 10:09:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 10:09:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 10:09:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 10:09:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 10:09:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 10:09:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 10:09:57 spartan-app    | DP:checkPositions - done checking open positions, took 23ms
+2025-11-22 10:10:07 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 10:10:07 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 10:10:07 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 10:19:57 spartan-app    | checking trending
+2025-11-22 10:19:57 spartan-app    | trending registered handlers [
+2025-11-22 10:19:57 spartan-app    |   [AsyncFunction]
+2025-11-22 10:19:57 spartan-app    | ]
+2025-11-22 10:19:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 10:19:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 10:19:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 10:19:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 10:19:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 10:19:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 10:19:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 10:19:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 10:19:57 spartan-app    | DP:checkPositions - done checking open positions, took 31ms
+2025-11-22 10:25:08 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 10:25:08 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 10:25:08 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 10:29:57 spartan-app    | checking trending
+2025-11-22 10:29:57 spartan-app    | trending registered handlers [
+2025-11-22 10:29:57 spartan-app    |   [AsyncFunction]
+2025-11-22 10:29:57 spartan-app    | ]
+2025-11-22 10:29:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 10:29:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 10:29:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 10:29:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 10:29:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 10:29:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 10:29:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 10:29:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 10:29:57 spartan-app    | DP:checkPositions - done checking open positions, took 30ms
+2025-11-22 10:39:57 spartan-app    | checking trending
+2025-11-22 10:39:57 spartan-app    | trending registered handlers [
+2025-11-22 10:39:57 spartan-app    |   [AsyncFunction]
+2025-11-22 10:39:57 spartan-app    | ]
+2025-11-22 10:39:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 10:39:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 10:39:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 10:39:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 10:39:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 10:39:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 10:39:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 10:39:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 10:39:57 spartan-app    | DP:checkPositions - done checking open positions, took 36ms
+2025-11-22 10:40:08 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 10:40:08 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 10:40:08 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 10:49:57 spartan-app    | checking trending
+2025-11-22 10:49:57 spartan-app    | trending registered handlers [
+2025-11-22 10:49:57 spartan-app    |   [AsyncFunction]
+2025-11-22 10:49:57 spartan-app    | ]
+2025-11-22 10:49:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 10:49:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 10:49:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 10:49:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 10:49:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 10:49:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 10:49:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 10:49:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 10:49:57 spartan-app    | DP:checkPositions - done checking open positions, took 32ms
+2025-11-22 10:55:08 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 10:55:08 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 10:55:08 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 10:59:57 spartan-app    | checking trending
+2025-11-22 10:59:57 spartan-app    | trending registered handlers [
+2025-11-22 10:59:57 spartan-app    |   [AsyncFunction]
+2025-11-22 10:59:57 spartan-app    | ]
+2025-11-22 10:59:57 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 10:59:57 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 10:59:57 spartan-app    | getMetaWallets - users 0
+2025-11-22 10:59:57 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 10:59:57 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 10:59:57 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 10:59:57 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 10:59:57 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 10:59:57 spartan-app    | DP:checkPositions - done checking open positions, took 21ms
+2025-11-22 11:02:23 spartan-app    |  Info       [SocketIO] Client 3zUCeH2MsS3cgHFsAAAE disconnected.
+2025-11-22 11:02:24 spartan-app    |  Info       [SocketIO] New connection: hdYZa3P6BfmCHKLJAAAG
+2025-11-22 11:09:58 spartan-app    |  Info       #Spartan  Attempting to generate new DISCORD post...
+2025-11-22 11:09:58 spartan-app    |  Error      #Spartan  Cannot generate post: Discord profile not available
+2025-11-22 11:10:09 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 11:10:09 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 11:10:09 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 11:13:33 spartan-app    | checking trending
+2025-11-22 11:13:33 spartan-app    | trending registered handlers [
+2025-11-22 11:13:33 spartan-app    |   [AsyncFunction]
+2025-11-22 11:13:33 spartan-app    | ]
+2025-11-22 11:13:33 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 11:13:33 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 11:13:33 spartan-app    | getMetaWallets - users 0
+2025-11-22 11:13:34 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 11:13:34 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 11:13:34 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 11:13:34 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 11:13:34 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 11:13:34 spartan-app    | DP:checkPositions - done checking open positions, took 35ms
+2025-11-22 11:23:33 spartan-app    | checking trending
+2025-11-22 11:23:33 spartan-app    | trending registered handlers [
+2025-11-22 11:23:33 spartan-app    |   [AsyncFunction]
+2025-11-22 11:23:33 spartan-app    | ]
+2025-11-22 11:23:33 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 11:23:33 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 11:23:34 spartan-app    | getMetaWallets - users 0
+2025-11-22 11:23:34 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 11:23:34 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 11:23:34 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 11:23:34 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 11:23:34 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 11:23:34 spartan-app    | DP:checkPositions - done checking open positions, took 49ms
+2025-11-22 11:25:07 spartan-app    |  Info       [SocketIO] Client hdYZa3P6BfmCHKLJAAAG disconnected.
+2025-11-22 11:25:07 spartan-app    |  Info       [SocketIO] New connection: Fsi71z0aa0F2yuXrAAAI
+2025-11-22 11:25:10 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 11:25:10 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 11:25:10 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 11:31:04 spartan-app    |  Info       [SocketIO] Client Fsi71z0aa0F2yuXrAAAI disconnected.
+2025-11-22 11:31:04 spartan-app    |  Info       [SocketIO] New connection: w_DT-LjaQCpxgzk5AAAK
+2025-11-22 11:42:00 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 11:42:00 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 11:42:00 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 11:42:23 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 11:42:24 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 11:42:26 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 11:42:27 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 11:42:28 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 11:42:29 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:01:22 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 12:01:22 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 12:01:22 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 12:03:08 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:09 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:10 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:11 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:13 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:14 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:15 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:16 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:17 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:18 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:19 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:20 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:21 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:22 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:23 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:24 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:25 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:26 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:27 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:28 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:29 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:30 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:31 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:32 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:33 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:34 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:35 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:36 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:37 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:38 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:39 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:40 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:41 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:42 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:43 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:44 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:45 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:46 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:47 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:48 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:49 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:50 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:51 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:52 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:53 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:54 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:55 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:56 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:57 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:58 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:03:59 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:00 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:01 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:02 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:03 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:04 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:05 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:06 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:07 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:08 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:09 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:10 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:11 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:12 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:13 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:14 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:15 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:16 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:17 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:18 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:19 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:20 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:21 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:22 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:23 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:04:24 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 12:53:45 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 12:53:45 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 12:53:45 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 13:09:07 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 13:09:07 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 13:09:07 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 13:21:36 spartan-app    |  Info       #Spartan  Attempting to generate new DISCORD post...
+2025-11-22 13:21:36 spartan-app    |  Error      #Spartan  Cannot generate post: Discord profile not available
+2025-11-22 13:21:52 spartan-app    | checking trending
+2025-11-22 13:21:52 spartan-app    | trending registered handlers [
+2025-11-22 13:21:52 spartan-app    |   [AsyncFunction]
+2025-11-22 13:21:52 spartan-app    | ]
+2025-11-22 13:21:52 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 13:21:52 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 13:21:52 spartan-app    | getMetaWallets - users 0
+2025-11-22 13:21:52 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 13:21:52 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 13:21:52 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 13:21:52 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 13:21:52 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 13:21:52 spartan-app    | DP:checkPositions - done checking open positions, took 26ms
+2025-11-22 13:26:18 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 13:26:18 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 13:26:18 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 13:41:19 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 13:41:19 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 13:41:19 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 13:57:18 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 13:57:18 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 13:57:18 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 14:13:17 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 14:13:17 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 14:13:17 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 14:40:39 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 14:40:39 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 14:40:39 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 14:58:56 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 14:58:56 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 14:58:56 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 15:13:59 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 15:13:59 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 15:13:59 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 15:24:21 spartan-app    |  Info       #Spartan  Attempting to generate new DISCORD post...
+2025-11-22 15:24:21 spartan-app    |  Error      #Spartan  Cannot generate post: Discord profile not available
+2025-11-22 15:30:35 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 15:30:35 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 15:30:35 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 15:46:21 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 15:46:21 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 15:46:21 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 15:46:35 spartan-app    | checking trending
+2025-11-22 15:46:35 spartan-app    | trending registered handlers [
+2025-11-22 15:46:35 spartan-app    |   [AsyncFunction]
+2025-11-22 15:46:35 spartan-app    | ]
+2025-11-22 15:46:35 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 15:46:35 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 15:46:35 spartan-app    | getMetaWallets - users 0
+2025-11-22 15:46:35 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 15:46:35 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 15:46:35 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 15:46:35 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 15:46:35 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 15:46:35 spartan-app    | DP:checkPositions - done checking open positions, took 54ms
+2025-11-22 16:36:51 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 16:36:51 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 16:36:51 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 16:58:33 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 16:58:33 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 16:58:33 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 17:27:47 spartan-app    |  Info       #Spartan  Attempting to generate new DISCORD post...
+2025-11-22 17:27:47 spartan-app    |  Error      #Spartan  Cannot generate post: Discord profile not available
+2025-11-22 17:27:47 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 17:27:47 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 17:27:47 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 17:42:47 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 17:42:47 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 17:42:47 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 18:01:16 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 18:01:16 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 18:01:16 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 18:25:06 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 18:25:06 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 18:25:06 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 18:55:20 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 18:55:20 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 18:55:20 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 19:13:02 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 19:13:02 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 19:13:02 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 19:36:40 spartan-app    |  Info       #Spartan  Attempting to generate new DISCORD post...
+2025-11-22 19:36:40 spartan-app    |  Error      #Spartan  Cannot generate post: Discord profile not available
+2025-11-22 19:36:40 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 19:36:40 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 19:36:40 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 19:36:59 spartan-app    |  Info       [SocketIO] Client w_DT-LjaQCpxgzk5AAAK disconnected.
+2025-11-22 19:36:59 spartan-app    |  Info       [SocketIO] New connection: qeGGerhlX0KzUk_bAAAM
+2025-11-22 19:49:05 spartan-app    | checking trending
+2025-11-22 19:49:05 spartan-app    | trending registered handlers [
+2025-11-22 19:49:05 spartan-app    |   [AsyncFunction]
+2025-11-22 19:49:05 spartan-app    | ]
+2025-11-22 19:49:05 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 19:49:05 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 19:49:05 spartan-app    | getMetaWallets - users 0
+2025-11-22 19:49:05 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 19:49:05 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 19:49:05 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 19:49:05 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 19:49:05 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 19:49:05 spartan-app    | DP:checkPositions - done checking open positions, took 35ms
+2025-11-22 19:51:40 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 19:51:40 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 19:51:40 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 19:59:05 spartan-app    | checking trending
+2025-11-22 19:59:05 spartan-app    | trending registered handlers [
+2025-11-22 19:59:05 spartan-app    |   [AsyncFunction]
+2025-11-22 19:59:05 spartan-app    | ]
+2025-11-22 19:59:05 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 19:59:05 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 19:59:05 spartan-app    | getMetaWallets - users 0
+2025-11-22 19:59:05 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 19:59:05 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 19:59:05 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 19:59:05 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 19:59:05 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 19:59:05 spartan-app    | DP:checkPositions - done checking open positions, took 21ms
+2025-11-22 20:06:40 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 20:06:40 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 20:06:40 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 20:09:05 spartan-app    | checking trending
+2025-11-22 20:09:05 spartan-app    | trending registered handlers [
+2025-11-22 20:09:05 spartan-app    |   [AsyncFunction]
+2025-11-22 20:09:05 spartan-app    | ]
+2025-11-22 20:09:05 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 20:09:05 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 20:09:05 spartan-app    | getMetaWallets - users 0
+2025-11-22 20:09:05 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 20:09:05 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 20:09:05 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 20:09:05 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 20:09:05 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 20:09:05 spartan-app    | DP:checkPositions - done checking open positions, took 40ms
+2025-11-22 20:19:05 spartan-app    | checking trending
+2025-11-22 20:19:05 spartan-app    | trending registered handlers [
+2025-11-22 20:19:05 spartan-app    |   [AsyncFunction]
+2025-11-22 20:19:05 spartan-app    | ]
+2025-11-22 20:19:05 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 20:19:05 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 20:19:05 spartan-app    | getMetaWallets - users 0
+2025-11-22 20:19:05 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 20:19:05 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 20:19:05 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 20:19:05 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 20:19:05 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 20:19:05 spartan-app    | DP:checkPositions - done checking open positions, took 17ms
+2025-11-22 20:21:41 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 20:21:41 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 20:21:41 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 20:29:05 spartan-app    | checking trending
+2025-11-22 20:29:05 spartan-app    | trending registered handlers [
+2025-11-22 20:29:05 spartan-app    |   [AsyncFunction]
+2025-11-22 20:29:05 spartan-app    | ]
+2025-11-22 20:29:05 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 20:29:05 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 20:29:05 spartan-app    | getMetaWallets - users 0
+2025-11-22 20:29:05 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 20:29:05 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 20:29:05 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 20:29:05 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 20:29:05 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 20:29:05 spartan-app    | DP:checkPositions - done checking open positions, took 61ms
+2025-11-22 20:36:42 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 20:36:42 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 20:36:42 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 20:39:05 spartan-app    | checking trending
+2025-11-22 20:39:05 spartan-app    | trending registered handlers [
+2025-11-22 20:39:05 spartan-app    |   [AsyncFunction]
+2025-11-22 20:39:05 spartan-app    | ]
+2025-11-22 20:39:05 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 20:39:05 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 20:39:05 spartan-app    | getMetaWallets - users 0
+2025-11-22 20:39:05 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 20:39:05 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 20:39:05 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 20:39:05 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 20:39:05 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 20:39:05 spartan-app    | DP:checkPositions - done checking open positions, took 28ms
+2025-11-22 20:49:05 spartan-app    | checking trending
+2025-11-22 20:49:05 spartan-app    | trending registered handlers [
+2025-11-22 20:49:05 spartan-app    |   [AsyncFunction]
+2025-11-22 20:49:05 spartan-app    | ]
+2025-11-22 20:49:05 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 20:49:05 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 20:49:05 spartan-app    | getMetaWallets - users 0
+2025-11-22 20:49:05 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 20:49:05 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 20:49:05 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 20:49:05 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 20:49:05 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 20:49:05 spartan-app    | DP:checkPositions - done checking open positions, took 33ms
+2025-11-22 20:51:42 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 20:51:42 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 20:51:42 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 20:59:05 spartan-app    | checking trending
+2025-11-22 20:59:05 spartan-app    | trending registered handlers [
+2025-11-22 20:59:05 spartan-app    |   [AsyncFunction]
+2025-11-22 20:59:05 spartan-app    | ]
+2025-11-22 20:59:05 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 20:59:05 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 20:59:05 spartan-app    | getMetaWallets - users 0
+2025-11-22 20:59:05 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 20:59:05 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 20:59:05 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 20:59:05 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 20:59:05 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 20:59:05 spartan-app    | DP:checkPositions - done checking open positions, took 28ms
+2025-11-22 21:06:42 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 21:06:42 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 21:06:42 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 21:07:43 spartan-app    |  Info       [SocketIO] Client qeGGerhlX0KzUk_bAAAM disconnected.
+2025-11-22 21:07:44 spartan-app    |  Info       [SocketIO] New connection: s9YMjwmcutE65WEdAAAO
+2025-11-22 22:09:38 spartan-app    |  Info       #Spartan  Attempting to generate new DISCORD post...
+2025-11-22 22:09:38 spartan-app    |  Error      #Spartan  Cannot generate post: Discord profile not available
+2025-11-22 22:09:38 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 22:09:38 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 22:09:38 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 22:09:51 spartan-app    | checking trending
+2025-11-22 22:09:51 spartan-app    | trending registered handlers [
+2025-11-22 22:09:51 spartan-app    |   [AsyncFunction]
+2025-11-22 22:09:51 spartan-app    | ]
+2025-11-22 22:09:51 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-22 22:09:51 spartan-app    | DP:checkPositions - checking positions
+2025-11-22 22:09:51 spartan-app    | getMetaWallets - users 0
+2025-11-22 22:09:51 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-22 22:09:51 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-22 22:09:51 spartan-app    | DP:checkPositions - wallets []
+2025-11-22 22:09:51 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-22 22:09:51 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-22 22:09:51 spartan-app    | DP:checkPositions - done checking open positions, took 25ms
+2025-11-22 22:12:31 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 22:12:32 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 22:12:33 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 22:12:34 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 22:12:35 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 22:12:36 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-22 22:29:39 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 22:29:39 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 22:29:39 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 22:59:15 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 22:59:15 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 22:59:15 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-22 23:43:34 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-22 23:43:34 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-22 23:43:34 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-23 00:09:48 spartan-app    |  Info       #Spartan  Attempting to generate new DISCORD post...
+2025-11-23 00:09:48 spartan-app    |  Error      #Spartan  Cannot generate post: Discord profile not available
+2025-11-23 00:09:48 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-23 00:09:48 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-23 00:09:48 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-23 00:29:05 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-23 00:29:05 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-23 00:29:05 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-23 00:31:54 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-23 00:31:55 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-23 00:31:56 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-23 00:31:59 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-23 00:32:00 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-23 00:32:01 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-23 00:32:02 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-23 00:32:03 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-23 00:32:04 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-23 00:32:05 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-23 00:32:06 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-23 00:32:07 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-23 00:32:08 spartan-app    | ws error: WebSocket connection to 'wss://api.mainnet-beta.solana.com/' failed: Failed to connect
+2025-11-23 00:56:30 spartan-app    |  Warn       [SpartanNewsService] No tokens found in either cache format (tokens_v2_solana or tokens_solana)
+2025-11-23 00:56:30 spartan-app    |  Warn       [SpartanNewsService] Required services not available for trending token lookup
+2025-11-23 00:56:30 spartan-app    |  Warn       [SpartanNewsService] No trending tokens available for report generation.
+2025-11-23 00:56:34 spartan-app    |  Info       [SocketIO] Client s9YMjwmcutE65WEdAAAO disconnected.
+2025-11-23 01:00:07 spartan-app    | checking trending
+2025-11-23 01:00:07 spartan-app    | trending registered handlers [
+2025-11-23 01:00:07 spartan-app    |   [AsyncFunction]
+2025-11-23 01:00:07 spartan-app    | ]
+2025-11-23 01:00:07 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2025-11-23 01:00:07 spartan-app    | DP:checkPositions - checking positions
+2025-11-23 01:00:07 spartan-app    | getMetaWallets - users 0
+2025-11-23 01:00:07 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2025-11-23 01:00:07 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2025-11-23 01:00:07 spartan-app    | DP:checkPositions - wallets []
+2025-11-23 01:00:07 spartan-app    | DP:checkPositions - solBalances {}
+2025-11-23 01:00:07 spartan-app    | DP:checkPositions - looking at 0 CAs
+2025-11-23 01:00:07 spartan-app    | DP:checkPositions - done checking open positions, took 30ms
+2026-01-21 18:32:06 spartan-app    | 
+2026-01-21 18:32:06 spartan-app    | ────────────────────────────────────────────────────────────────────
+2026-01-21 18:32:06 spartan-app    | │ Update available: 1.6.4 → 1.7.2                                  │
+2026-01-21 18:32:06 spartan-app    | │ Run bun i -g @elizaos/cli@latest to get the latest features      │
+2026-01-21 18:32:06 spartan-app    | ────────────────────────────────────────────────────────────────────
+2026-01-21 18:32:06 spartan-app    | 
+2026-01-21 18:32:06 spartan-app    | [dotenv@17.2.3] injecting env (0) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+2026-01-21 18:32:06 spartan-app    | │
+2026-01-21 18:32:06 spartan-app    | ◇  Failed to build project
+2026-01-21 18:32:06 spartan-app    |  Error      Build error: Command execution failed: ENOEXEC: unknown error, posix_spawn 'bun'
+2026-01-21 18:32:06 spartan-app    |  Warn       Build failed, but continuing with start. Some features may not work correctly.
+2026-01-21 18:32:06 spartan-app    |  Info       No character files specified, attempting to load project agents...
+2026-01-21 18:32:06 spartan-app    | bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+2026-01-21 18:32:06 spartan-app    | Applying payment protection to: /api/analytics/trending {
+2026-01-21 18:32:06 spartan-app    |   priceInCents: 10,
+2026-01-21 18:32:06 spartan-app    |   paymentConfigs: [ "base_usdc", "solana_usdc" ],
+2026-01-21 18:32:06 spartan-app    | }
+2026-01-21 18:32:06 spartan-app    | Applying payment protection to: /api/analytics/analyze-token {
+2026-01-21 18:32:06 spartan-app    |   priceInCents: 10,
+2026-01-21 18:32:06 spartan-app    |   paymentConfigs: [ "base_usdc", "solana_usdc" ],
+2026-01-21 18:32:06 spartan-app    | }
+2026-01-21 18:32:06 spartan-app    | Applying payment protection to: /api/analytics/analyze-token {
+2026-01-21 18:32:06 spartan-app    |   priceInCents: 10,
+2026-01-21 18:32:06 spartan-app    |   paymentConfigs: [ "base_usdc", "solana_usdc" ],
+2026-01-21 18:32:06 spartan-app    | }
+2026-01-21 18:32:06 spartan-app    | Applying payment protection to: /api/birdeye/trending {
+2026-01-21 18:32:06 spartan-app    |   priceInCents: 10,
+2026-01-21 18:32:06 spartan-app    |   paymentConfigs: [ "base_usdc", "solana_usdc" ],
+2026-01-21 18:32:06 spartan-app    | }
+2026-01-21 18:32:06 spartan-app    | Applying payment protection to: /api/coingecko/trending {
+2026-01-21 18:32:06 spartan-app    |   priceInCents: 10,
+2026-01-21 18:32:06 spartan-app    |   paymentConfigs: [ "base_usdc", "solana_usdc" ],
+2026-01-21 18:32:06 spartan-app    | }
+2026-01-21 18:32:06 spartan-app    | Applying payment protection to: /api/coingecko/global {
+2026-01-21 18:32:06 spartan-app    |   priceInCents: 10,
+2026-01-21 18:32:06 spartan-app    |   paymentConfigs: [ "base_usdc", "polygon_usdc", "solana_usdc" ],
+2026-01-21 18:32:06 spartan-app    | }
+2026-01-21 18:32:06 spartan-app    | protectedRoutes 67 total routes
+2026-01-21 18:32:06 spartan-app    | [dotenv@17.2.3] injecting env (0) from ../.env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+2026-01-21 18:32:06 spartan-app    |  Info       Loaded project from /app/src/index.ts
+2026-01-21 18:32:06 spartan-app    |  Info       Found 1 agent(s) in project configuration
+2026-01-21 18:32:06 spartan-app    |  Info       Loaded character: Spartan
+2026-01-21 18:32:06 spartan-app    | [dotenv@17.2.3] injecting env (0) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+2026-01-21 18:32:06 spartan-app    |  Info       [INIT] Database Dir for SQL plugin: /app/.eliza/.elizadb
+2026-01-21 18:32:06 spartan-app    |  Info       [INIT] Running database migrations for messaging tables...
+2026-01-21 18:32:06 spartan-app    |  Info       [RuntimeMigrator] Initializing migration system...
+2026-01-21 18:32:07 spartan-app    |  Info       [RuntimeMigrator] Migration system initialized
+2026-01-21 18:32:07 spartan-app    |  Info       DatabaseMigrationService initialized with database and runtime migrator
+2026-01-21 18:32:07 spartan-app    |  Info       Registered schema for plugin: @elizaos/plugin-sql
+2026-01-21 18:32:07 spartan-app    |  Info       Discovered 1 plugin schemas out of 1 plugins
+2026-01-21 18:32:07 spartan-app    |  Info       [DatabaseMigrationService] Starting migrations
+2026-01-21 18:32:07 spartan-app    |  Info       [DatabaseMigrationService] Environment: DEVELOPMENT
+2026-01-21 18:32:07 spartan-app    |  Info       [DatabaseMigrationService] Plugins to migrate: 1
+2026-01-21 18:32:07 spartan-app    |  Info       [RuntimeMigrator] Starting migration for plugin: @elizaos/plugin-sql
+2026-01-21 18:32:07 spartan-app    |  Info       [RuntimeMigrator] Initializing migration system...
+2026-01-21 18:32:07 spartan-app    |  Info       [RuntimeMigrator] Migration system initialized
+2026-01-21 18:32:07 spartan-app    |  Info       [RuntimeMigrator] No changes detected for @elizaos/plugin-sql, skipping migration (hash: 4cf9e2c36eefb44def62bc8f4a2bed351512046129a89ad15dbf55fde82358ca)
+2026-01-21 18:32:07 spartan-app    |  Info       [DatabaseMigrationService] ✅ Completed: @elizaos/plugin-sql
+2026-01-21 18:32:07 spartan-app    |  Info       [DatabaseMigrationService] All 1 migrations completed successfully
+2026-01-21 18:32:07 spartan-app    |  Info       [INIT] Ensuring default server exists...
+2026-01-21 18:32:07 spartan-app    |  Info       [AgentServer] Checking for server 00000000-0000-0000-0000-000000000000...
+2026-01-21 18:32:07 spartan-app    |  Info       [AgentServer] Server already exists with ID: 00000000-0000-0000-0000-000000000000
+2026-01-21 18:32:07 spartan-app    |  Info       [INIT] Server uses temporary adapter for migrations only
+2026-01-21 18:32:07 spartan-app    |  Info       [INIT] Initializing ElizaOS...
+2026-01-21 18:32:07 spartan-app    |  Info       [MessageBusService] Global ElizaOS instance set
+2026-01-21 18:32:07 spartan-app    |  Info       [MessageBusService] Global AgentServer instance set
+2026-01-21 18:32:07 spartan-app    |  Info       [Sentry] Initialized Sentry for @elizaos/server
+2026-01-21 18:32:07 spartan-app    |  Info       Public health check endpoints enabled: /healthz and /health (rate limited: 100 req/min)
+2026-01-21 18:32:07 spartan-app    |  Info       Web UI enabled
+2026-01-21 18:32:07 spartan-app    |  Warn       Server authentication is disabled. Set ELIZA_SERVER_AUTH_TOKEN environment variable to enable.
+2026-01-21 18:32:07 spartan-app    |  Info       [STATIC] Found client files at: /app/node_modules/@elizaos/server/dist/client
+2026-01-21 18:32:07 spartan-app    |  Info       [STATIC] Serving static files from: /app/node_modules/@elizaos/server/dist/client
+2026-01-21 18:32:07 spartan-app    |  Info       [Jobs API] Started job cleanup interval
+2026-01-21 18:32:07 spartan-app    |  Info       [SocketIO] Router initialized with 0 agents
+2026-01-21 18:32:07 spartan-app    |  Info       [SocketIO] Setting up Socket.IO event listeners
+2026-01-21 18:32:07 spartan-app    |  Info       [SocketIO] Registered message types: 1: ROOM_JOINING, 2: SEND_MESSAGE, 3: MESSAGE, 4: ACK, 5: THINKING, 6: CONTROL, ROOM_JOINING: 1, SEND_MESSAGE: 2, MESSAGE: 3, ACK: 4, THINKING: 5, CONTROL: 6
+2026-01-21 18:32:08 spartan-app    | AgentServer is listening on port 2096
+2026-01-21 18:32:08 spartan-app    |  Warn       SECRET_SALT is not set or using default value
+2026-01-21 18:32:08 spartan-app    |  Info       Final plugins being loaded: {
+2026-01-21 18:32:08 spartan-app    |   plugins: [
+2026-01-21 18:32:08 spartan-app    |     "openai", "discord", "telegram", "bootstrap", "chain_solana", "coinmarketcap", "account registration",
+2026-01-21 18:32:08 spartan-app    |     "autonomous-trader", "spartan-intel", "multitenant wallet", "trader", "KOL", "coin_marketer",
+2026-01-21 18:32:08 spartan-app    |     "@elizaos/plugin-sql"
+2026-01-21 18:32:08 spartan-app    |   ],
+2026-01-21 18:32:08 spartan-app    | }
+2026-01-21 18:32:08 spartan-app    |  Warn       Discord API Token not provided - Discord plugin is loaded but will not be functional
+2026-01-21 18:32:08 spartan-app    |  Warn       To enable Discord functionality, please provide DISCORD_API_TOKEN in your .eliza/.env file
+2026-01-21 18:32:08 spartan-app    | no trading strategy waiting for TRADER_STRATEGY service...
+2026-01-21 18:32:08 spartan-app    | llm trading strategy waiting for TRADER_STRATEGY service...
+2026-01-21 18:32:08 spartan-app    | KOL init
+2026-01-21 18:32:08 spartan-app    | Coin marketer init
+2026-01-21 18:32:08 spartan-app    |  Info       plugin-sql (node) init starting...
+2026-01-21 18:32:08 spartan-app    |  Info       No pre-registered database adapter detected; registering adapter
+2026-01-21 18:32:08 spartan-app    |  Info       Database adapter created and registered
+2026-01-21 18:32:08 spartan-app    |  Info       #Spartan  Running plugin migrations...
+2026-01-21 18:32:08 spartan-app    |  Info       #Spartan  Found 1 plugins with schemas to migrate.
+2026-01-21 18:32:08 spartan-app    |  Info       [RuntimeMigrator] Initializing migration system...
+2026-01-21 18:32:08 spartan-app    |  Info       [RuntimeMigrator] Migration system initialized
+2026-01-21 18:32:08 spartan-app    |  Info       DatabaseMigrationService initialized with database and runtime migrator
+2026-01-21 18:32:08 spartan-app    |  Info       Registered schema for plugin: @elizaos/plugin-sql
+2026-01-21 18:32:08 spartan-app    |  Info       [DatabaseMigrationService] Starting migrations
+2026-01-21 18:32:08 spartan-app    |  Info       [DatabaseMigrationService] Environment: DEVELOPMENT
+2026-01-21 18:32:08 spartan-app    |  Info       [DatabaseMigrationService] Plugins to migrate: 1
+2026-01-21 18:32:08 spartan-app    |  Info       [RuntimeMigrator] Starting migration for plugin: @elizaos/plugin-sql
+2026-01-21 18:32:08 spartan-app    |  Info       [RuntimeMigrator] Initializing migration system...
+2026-01-21 18:32:08 spartan-app    |  Info       [RuntimeMigrator] Migration system initialized
+2026-01-21 18:32:08 spartan-app    |  Info       [RuntimeMigrator] No changes detected for @elizaos/plugin-sql, skipping migration (hash: 4cf9e2c36eefb44def62bc8f4a2bed351512046129a89ad15dbf55fde82358ca)
+2026-01-21 18:32:08 spartan-app    |  Info       [DatabaseMigrationService] ✅ Completed: @elizaos/plugin-sql
+2026-01-21 18:32:08 spartan-app    |  Info       [DatabaseMigrationService] All 1 migrations completed successfully
+2026-01-21 18:32:08 spartan-app    |  Info       #Spartan  Plugin migrations completed successfully.
+2026-01-21 18:32:08 spartan-app    |  Info       #Spartan  Plugin migrations completed.
+2026-01-21 18:32:08 spartan-app    |  Warn       Telegram Bot Token not provided - Telegram functionality will be unavailable
+2026-01-21 18:32:08 spartan-app    |  Warn       Telegram service started without bot functionality - no bot token provided
+2026-01-21 18:32:08 spartan-app    |  Info       [EmbeddingService] Starting embedding generation service
+2026-01-21 18:32:08 spartan-app    |  Info       [EmbeddingService] Initializing embedding generation service
+2026-01-21 18:32:08 spartan-app    |  Info       [EmbeddingService] Started processing loop
+2026-01-21 18:32:08 spartan-app    |  Info       Starting chain trading service...
+2026-01-21 18:32:08 spartan-app    |  Info       Trading chain service started successfully
+2026-01-21 18:32:08 spartan-app    |  Info       #Spartan  Starting chain trading service...
+2026-01-21 18:32:08 spartan-app    |  Info       #Spartan  Trading chain service started successfully
+2026-01-21 18:32:08 spartan-app    | Multiwallet service waiting for AUTONOMOUS_TRADER_INTERFACE_ACCOUNTS service...
+2026-01-21 18:32:08 spartan-app    |  Info       #Spartan  Starting chain trading service...
+2026-01-21 18:32:08 spartan-app    |  Info       Trading chain service started successfully
+2026-01-21 18:32:08 spartan-app    |  Warn       #Spartan  Discord API Token not provided - Discord functionality will be unavailable
+2026-01-21 18:32:08 spartan-app    |  Info       Starting chain trading service...
+2026-01-21 18:32:08 spartan-app    |  Info       Trading chain service started successfully
+2026-01-21 18:32:08 spartan-app    | INTEL_DATAPROVIDER trying to start
+2026-01-21 18:32:08 spartan-app    |  Info       #Spartan  Starting info trading service...
+2026-01-21 18:32:08 spartan-app    |  Info       #Spartan  Starting strategy trading service...
+2026-01-21 18:32:08 spartan-app    |  Info       Starting LP trading service...
+2026-01-21 18:32:08 spartan-app    |  Info       Trading LP service started successfully
+2026-01-21 18:32:08 spartan-app    |  Info       AUTONOMOUS_TRADER_INTERFACE_POSITIONS trading service...
+2026-01-21 18:32:08 spartan-app    |  Info       AUTONOMOUS_TRADER_INTERFACE_POSITIONS service started successfully
+2026-01-21 18:32:08 spartan-app    |  Warn       [Telegram] Cannot register send handler - bot not initialized.
+2026-01-21 18:32:08 spartan-app    |  Error      #Spartan  Spartan(479233fd-b0e7-0f50-9d88-d4c9ea5b0de0) - Failed to register service JUPITER_SERVICE: Not implemented
+2026-01-21 18:32:08 spartan-app    |  Info       #Spartan  Registered send handler for source: discord
+2026-01-21 18:32:08 spartan-app    |  Info       #Spartan  [Discord] Registered send handler.
+2026-01-21 18:32:08 spartan-app    |  Error      #Spartan  Service registration failed for JUPITER_SERVICE: Not implemented
+2026-01-21 18:32:08 spartan-app    |  Info       #Spartan  discord post enabled
+2026-01-21 18:32:08 spartan-app    |  Info       #Spartan  Trading strategy dependencies acquired
+2026-01-21 18:32:08 spartan-app    | DP:checkPositions - checking positions
+2026-01-21 18:32:08 spartan-app    | intel:tasks - plugins [
+2026-01-21 18:32:08 spartan-app    |   "openai", "discord", "telegram", "bootstrap", "chain_solana", "coinmarketcap", "account registration",
+2026-01-21 18:32:08 spartan-app    |   "autonomous-trader", "spartan-intel", "multitenant wallet", "trader", "KOL", "coin_marketer",
+2026-01-21 18:32:08 spartan-app    |   "@elizaos/plugin-sql"
+2026-01-21 18:32:08 spartan-app    | ]
+2026-01-21 18:32:09 spartan-app    |  Info       [AgentServer] Registered MessageBusConnector for agent Spartan
+2026-01-21 18:32:09 spartan-app    |  Info       [Spartan] MessageBusService: Subscribing to internal message bus for 'new_message', 'message_deleted', and 'channel_cleared' events.
+2026-01-21 18:32:09 spartan-app    | getMetaWallets - users 0
+2026-01-21 18:32:09 spartan-app    |  Info       [SpartanNewsService] World and room initialized successfully
+2026-01-21 18:32:09 spartan-app    | postImmediately null
+2026-01-21 18:32:09 spartan-app    | intel:DPsrv - boot wallets 0
+2026-01-21 18:32:09 spartan-app    | intel:DPsrv - pubKeys []
+2026-01-21 18:32:09 spartan-app    |  Info       Trading info service started successfully
+2026-01-21 18:32:09 spartan-app    |  Info       [AgentServer] Auto-associated agent Spartan with server ID: 00000000-0000-0000-0000-000000000000
+2026-01-21 18:32:09 spartan-app    |  Info       Started 1 agents
+2026-01-21 18:32:09 spartan-app    | DP:checkPositions - reviewing 0 open positions
+2026-01-21 18:32:09 spartan-app    | DP:checkPositions - positions 0/0 watching 0 CAs
+2026-01-21 18:32:09 spartan-app    | DP:checkPositions - wallets []
+2026-01-21 18:32:09 spartan-app    | DP:checkPositions - solBalances {}
+2026-01-21 18:32:09 spartan-app    | DP:checkPositions - looking at 0 CAs
+2026-01-21 18:32:09 spartan-app    | DP:checkPositions - done checking open positions, took 41ms
+2026-01-21 18:32:09 spartan-app    | This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). The promise rejected with the reason:
+2026-01-21 18:32:09 spartan-app    | Error: Not implemented
+2026-01-21 18:32:09 spartan-app    |     at start (/app/node_modules/@elizaos/core/dist/node/index.node.js:25208:15)
+2026-01-21 18:32:09 spartan-app    |     at start (/app/node_modules/@elizaos/core/dist/node/index.node.js:25207:22)
+2026-01-21 18:32:09 spartan-app    |     at registerService (/app/node_modules/@elizaos/core/dist/node/index.node.js:45819:48)
+2026-01-21 18:32:09 spartan-app    |     at processTicksAndRejections (native:7:39)
+2026-01-21 18:32:09 spartan-app    |  Info       [Spartan] MessageBusService: Agent is subscribed to 1 servers (including server 00000000-0000-0000-0000-000000000000)
+2026-01-21 18:32:09 spartan-app    |  Info       [Spartan] MessageBusService: Fetched 0 channels from server 00000000-0000-0000-0000-000000000000
+2026-01-21 18:32:09 spartan-app    |  Info       [Spartan] MessageBusService: Loaded 0 valid channel IDs from 1 servers (including default server)
+2026-01-21 18:32:09 spartan-app    |  Error      Attempt 1 failed: Error: HTTP error! status: 401, message: {"success":false,"message":"Your API key is either suspended or lacks sufficient permissions to access this resource. Please check your account status or upgrade to a higher plan. For assistance, contact bds.support@birdeye.so."}
+2026-01-21 18:32:09 spartan-app    |  Error      Attempt 1 failed {
+2026-01-21 18:32:09 spartan-app    |   error: 797 |             ...options.headers
+2026-01-21 18:32:09 spartan-app    | 798 |           }
+2026-01-21 18:32:09 spartan-app    | 799 |         });
+2026-01-21 18:32:09 spartan-app    | 800 |         if (!response.ok) {
+2026-01-21 18:32:09 spartan-app    | 801 |           const errorText = await response.text();
+2026-01-21 18:32:09 spartan-app    | 802 |           throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+2026-01-21 18:32:09 spartan-app    |                           ^
+2026-01-21 18:32:09 spartan-app    | error: HTTP error! status: 401, message: {"success":false,"message":"Your API key is either suspended or lacks sufficient permissions to access this resource. Please check your account status or upgrade to a higher plan. For assistance, contact bds.support@birdeye.so."}
+2026-01-21 18:32:09 spartan-app    |       at birdeyeFetchWithRetry (/app/node_modules/@elizaos/plugin-solana/dist/index.js:802:21)
+2026-01-21 18:32:09 spartan-app    |       at async updateWalletData (/app/node_modules/@elizaos/plugin-solana/dist/index.js:1459:41)
+2026-01-21 18:32:09 spartan-app    | ,
+2026-01-21 18:32:09 spartan-app    | }
+2026-01-21 18:32:09 spartan-app    | no trading strategy waiting for TRADER_STRATEGY service...
+2026-01-21 18:32:09 spartan-app    | no trading strategy Acquired TRADER_STRATEGY service...
+2026-01-21 18:32:09 spartan-app    | registered No trading strategy as trading strategy #1
+2026-01-21 18:32:09 spartan-app    | llm trading strategy waiting for TRADER_STRATEGY service...
+2026-01-21 18:32:09 spartan-app    | llm trading strategy Acquired TRADER_STRATEGY service...
+2026-01-21 18:32:09 spartan-app    | registered LLM trading strategy as trading strategy #2
+2026-01-21 18:32:09 spartan-app    | Multiwallet service waiting for AUTONOMOUS_TRADER_INTERFACE_ACCOUNTS service...
+2026-01-21 18:32:09 spartan-app    | Multiwallet service Acquired AUTONOMOUS_TRADER_INTERFACE_ACCOUNTS service...
+2026-01-21 18:32:11 spartan-app    |  Error      Attempt 2 failed: Error: HTTP error! status: 401, message: {"success":false,"message":"Your API key is either suspended or lacks sufficient permissions to access this resource. Please check your account status or upgrade to a higher plan. For assistance, contact bds.support@birdeye.so."}
+2026-01-21 18:32:11 spartan-app    |  Error      Attempt 2 failed {
+2026-01-21 18:32:11 spartan-app    |   error: 797 |             ...options.headers
+2026-01-21 18:32:11 spartan-app    | 798 |           }
+2026-01-21 18:32:11 spartan-app    | 799 |         });
+2026-01-21 18:32:11 spartan-app    | 800 |         if (!response.ok) {
+2026-01-21 18:32:11 spartan-app    | 801 |           const errorText = await response.text();
+2026-01-21 18:32:11 spartan-app    | 802 |           throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+2026-01-21 18:32:11 spartan-app    |                           ^
+2026-01-21 18:32:11 spartan-app    | error: HTTP error! status: 401, message: {"success":false,"message":"Your API key is either suspended or lacks sufficient permissions to access this resource. Please check your account status or upgrade to a higher plan. For assistance, contact bds.support@birdeye.so."}
+2026-01-21 18:32:11 spartan-app    |       at birdeyeFetchWithRetry (/app/node_modules/@elizaos/plugin-solana/dist/index.js:802:21)
+2026-01-21 18:32:11 spartan-app    |       at async updateWalletData (/app/node_modules/@elizaos/plugin-solana/dist/index.js:1459:41)
+2026-01-21 18:32:11 spartan-app    | ,
+2026-01-21 18:32:11 spartan-app    | }
+2026-01-21 18:32:14 spartan-app    | checking trending
+2026-01-21 18:32:14 spartan-app    | trending registered handlers [
+2026-01-21 18:32:14 spartan-app    |   [AsyncFunction]
+2026-01-21 18:32:14 spartan-app    | ]
+2026-01-21 18:32:14 spartan-app    |  Warn       #Spartan  LLM trading strategy: No trending results available (hasResults: true, length: 0)
+2026-01-21 18:32:15 spartan-app    |  Error      Attempt 3 failed: Error: HTTP error! status: 401, message: {"success":false,"message":"Your API key is either suspended or lacks sufficient permissions to access this resource. Please check your account status or upgrade to a higher plan. For assistance, contact bds.support@birdeye.so."}
+2026-01-21 18:32:15 spartan-app    |  Error      Attempt 3 failed {
+2026-01-21 18:32:15 spartan-app    |   error: 797 |             ...options.headers
+2026-01-21 18:32:15 spartan-app    | 798 |           }
+2026-01-21 18:32:15 spartan-app    | 799 |         });
+2026-01-21 18:32:15 spartan-app    | 800 |         if (!response.ok) {
+2026-01-21 18:32:15 spartan-app    | 801 |           const errorText = await response.text();
+2026-01-21 18:32:15 spartan-app    | 802 |           throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+2026-01-21 18:32:15 spartan-app    |                           ^
+2026-01-21 18:32:15 spartan-app    | error: HTTP error! status: 401, message: {"success":false,"message":"Your API key is either suspended or lacks sufficient permissions to access this resource. Please check your account status or upgrade to a higher plan. For assistance, contact bds.support@birdeye.so."}
+2026-01-21 18:32:15 spartan-app    |       at birdeyeFetchWithRetry (/app/node_modules/@elizaos/plugin-solana/dist/index.js:802:21)
+2026-01-21 18:32:15 spartan-app    | ,
+2026-01-21 18:32:15 spartan-app    | }
+2026-01-21 18:32:15 spartan-app    | solana::updateWalletData - exception err 797 |             ...options.headers
+2026-01-21 18:32:15 spartan-app    | 798 |           }
+2026-01-21 18:32:15 spartan-app    | 799 |         });
+2026-01-21 18:32:15 spartan-app    | 800 |         if (!response.ok) {
+2026-01-21 18:32:15 spartan-app    | 801 |           const errorText = await response.text();
+2026-01-21 18:32:15 spartan-app    | 802 |           throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+2026-01-21 18:32:15 spartan-app    |                           ^
+2026-01-21 18:32:15 spartan-app    | error: HTTP error! status: 401, message: {"success":false,"message":"Your API key is either suspended or lacks sufficient permissions to access this resource. Please check your account status or upgrade to a higher plan. For assistance, contact bds.support@birdeye.so."}
+2026-01-21 18:32:15 spartan-app    |       at birdeyeFetchWithRetry (/app/node_modules/@elizaos/plugin-solana/dist/index.js:802:21)
+2026-01-21 18:32:15 spartan-app    | 
+2026-01-21 18:32:15 spartan-app    | getTokenAccountsByKeypair cache MISS, its 5,232,131,961ms old
+2026-01-21 18:32:15 spartan-app    | getTokenAccountsByKeypair - getParsedTokenAccountsByOwner 9WudUxm9PSsdyzMRx5HQRcrQ4qyxaU1sMJ1bx7i5A15T

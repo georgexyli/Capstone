@@ -1286,6 +1286,76 @@ export class TradeChainService extends Service {
       logger.info('Starting chain trading service...');
 
       this.isRunning = true;
+
+      // Register Ethereum chain service for EVM chains
+      // Use setTimeout to allow other services to initialize first
+      setTimeout(async () => {
+        try {
+          const ethService = this.runtime.getService('chain_ethereum');
+          if (ethService) {
+            // Register Ethereum mainnet
+            await this.registerChain({
+              name: 'Ethereum',
+              chain: 'ethereum',
+              chainType: 'ethereum',
+              chainNet: 'mainnet',
+              service: 'chain_ethereum',
+            });
+
+            // Register Base
+            await this.registerChain({
+              name: 'Base',
+              chain: 'base',
+              chainType: 'base',
+              chainNet: 'mainnet',
+              service: 'chain_ethereum',
+            });
+
+            // Register Polygon
+            await this.registerChain({
+              name: 'Polygon',
+              chain: 'polygon',
+              chainType: 'polygon',
+              chainNet: 'mainnet',
+              service: 'chain_ethereum',
+            });
+
+            // Register Arbitrum
+            await this.registerChain({
+              name: 'Arbitrum',
+              chain: 'arbitrum',
+              chainType: 'arbitrum',
+              chainNet: 'mainnet',
+              service: 'chain_ethereum',
+            });
+
+            // Register Optimism
+            await this.registerChain({
+              name: 'Optimism',
+              chain: 'optimism',
+              chainType: 'optimism',
+              chainNet: 'mainnet',
+              service: 'chain_ethereum',
+            });
+
+            // Register Sepolia testnet
+            await this.registerChain({
+              name: 'Sepolia',
+              chain: 'sepolia',
+              chainType: 'sepolia',
+              chainNet: 'testnet',
+              service: 'chain_ethereum',
+            });
+
+            logger.info('EVM chains registered successfully');
+          } else {
+            logger.debug('chain_ethereum service not found, skipping EVM chain registration');
+          }
+        } catch (error) {
+          logger.error('Error registering EVM chains:', error instanceof Error ? error.message : String(error));
+        }
+      }, 1000);
+
       logger.info('Trading chain service started successfully');
     } catch (error) {
       logger.error('Error starting trading chain service:', error instanceof Error ? error.message : String(error));

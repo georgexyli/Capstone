@@ -22,42 +22,57 @@ export const walletImportAction: Action = {
   ],
   description: 'Allows a user to import a wallet without a strategy',
   validate: async (runtime: IAgentRuntime, message: Memory) => {
-    //console.log('WALLET_IMPORT validate')
+    console.log('WALLET_IMPORT validate called');
 
     runtime.logger.debug(
       `WALLET_IMPORT validate start messageId=${message.id ?? 'unknown'} roomId=${message.roomId}`
     );
+    console.log(`WALLET_IMPORT validate start messageId=${message.id ?? 'unknown'}`);
 
     const traderChainService = runtime.getService('INTEL_CHAIN') as any;
     if (!traderChainService) {
+      console.log('WALLET_IMPORT validate FAILED: INTEL_CHAIN service missing');
       runtime.logger.debug('WALLET_IMPORT validate skipped: INTEL_CHAIN service missing');
       return false;
     }
+    console.log('WALLET_IMPORT validate: INTEL_CHAIN service found');
+
     const traderStrategyService = runtime.getService('TRADER_STRATEGY') as any;
     if (!traderStrategyService) {
+      console.log('WALLET_IMPORT validate FAILED: TRADER_STRATEGY service missing');
       runtime.logger.debug('WALLET_IMPORT validate skipped: TRADER_STRATEGY service missing');
       return false;
     }
+    console.log('WALLET_IMPORT validate: TRADER_STRATEGY service found');
+
     const intAccountService = runtime.getService('AUTONOMOUS_TRADER_INTERFACE_ACCOUNTS') as any;
     if (!intAccountService) {
+      console.log('WALLET_IMPORT validate FAILED: AUTONOMOUS_TRADER_INTERFACE_ACCOUNTS service missing');
       runtime.logger.debug('WALLET_IMPORT validate skipped: AUTONOMOUS_TRADER_INTERFACE_ACCOUNTS service missing');
       return false;
     }
+    console.log('WALLET_IMPORT validate: AUTONOMOUS_TRADER_INTERFACE_ACCOUNTS service found');
 
-    if (!await HasEntityIdFromMessage(runtime, message)) {
+    const hasEntity = await HasEntityIdFromMessage(runtime, message);
+    if (!hasEntity) {
+      console.log('WALLET_IMPORT validate FAILED: author entity not found');
       runtime.logger.debug(
         `WALLET_IMPORT validate skipped: author entity not found messageId=${message.id ?? 'unknown'}`
       );
       return false;
     }
+    console.log('WALLET_IMPORT validate: entity found');
 
     const solanaService = runtime.getService('chain_solana') as any;
     if (!solanaService) {
+      console.log('WALLET_IMPORT validate FAILED: chain_solana service missing');
       runtime.logger.debug('WALLET_IMPORT validate skipped: chain_solana service missing');
       return false;
     }
+    console.log('WALLET_IMPORT validate: chain_solana service found');
 
     const messageText = message.content.text ?? '';
+    console.log(`WALLET_IMPORT validate: message text length=${messageText.length}, sample="${messageText.slice(0, 100)}"`);
     runtime.logger.debug(
       `WALLET_IMPORT validate analyzing message text length=${messageText.length} sample=${messageText.slice(0, 80)}`
     );
@@ -65,43 +80,67 @@ export const walletImportAction: Action = {
     let detectedKeysByChain: Array<{ chain: string; keys: any[] }> = [];
     try {
       detectedKeysByChain = await traderChainService.detectPrivateKeysFromString(messageText);
+      console.log(`WALLET_IMPORT validate: chain detection returned ${detectedKeysByChain.length} chains:`, JSON.stringify(detectedKeysByChain.map(c => ({ chain: c.chain, keyCount: c.keys?.length }))));
       runtime.logger.debug(
         `WALLET_IMPORT validate chain detection results chains=${detectedKeysByChain.length}`
       );
     } catch (error) {
       const err = error as Error;
+      console.log(`WALLET_IMPORT validate: chain detection error: ${err.message}`);
       runtime.logger.error(
         `WALLET_IMPORT validate failed to run chain detection: ${err.message}`
       );
     }
 
+    // Check for Solana keys
     const solanaDetected = detectedKeysByChain.find(
       result => result.chain?.toLowerCase() === 'solana'
     );
     const solanaKeys = solanaDetected?.keys ?? [];
+    console.log(`WALLET_IMPORT validate: solana keys detected: ${solanaKeys.length}`);
 
-    if (!solanaKeys.length) {
+    // Check for Ethereum keys
+    const ethereumDetected = detectedKeysByChain.find(
+      result => result.chain?.toLowerCase() === 'ethereum' || result.chain?.toLowerCase() === 'evm'
+    );
+    const ethereumKeys = ethereumDetected?.keys ?? [];
+    console.log(`WALLET_IMPORT validate: ethereum keys detected: ${ethereumKeys.length}`);
+
+    // Also check ethereum service directly
+    const ethereumService = runtime.getService('chain_ethereum') as any;
+    console.log(`WALLET_IMPORT validate: chain_ethereum service available: ${!!ethereumService}`);
+
+    // If no keys detected via chain service, try Solana fallback
+    if (!solanaKeys.length && !ethereumKeys.length) {
+      console.log('WALLET_IMPORT validate: no keys from chain service, trying fallback detection');
       runtime.logger.debug('WALLET_IMPORT validate falling back to direct Solana detection');
       const keys = solanaService.detectPrivateKeysFromString(messageText);
+      console.log(`WALLET_IMPORT validate: solana fallback detected ${keys.length} keys`);
       runtime.logger.debug(`WALLET_IMPORT validate solana fallback detected keys count=${keys.length}`);
       if (!keys.length) {
+        console.log('WALLET_IMPORT validate FAILED: no private keys detected anywhere');
         runtime.logger.debug('WALLET_IMPORT validate skipped: no private keys detected');
         return false;
       }
     } else {
+      console.log(`WALLET_IMPORT validate: keys detected via chain service: solana=${solanaKeys.length}, ethereum=${ethereumKeys.length}`);
       runtime.logger.debug(
-        `WALLET_IMPORT validate solana keys detected via chain service count=${solanaKeys.length}`
+        `WALLET_IMPORT validate keys detected via chain service: solana=${solanaKeys.length}, ethereum=${ethereumKeys.length}`
       );
     }
 
+    console.log('WALLET_IMPORT validate: checking account...');
     const account = await getAccountFromMessage(runtime, message);
     if (!account) {
+      console.log('WALLET_IMPORT validate FAILED: account not resolved');
       runtime.logger.debug(
         `WALLET_IMPORT validate skipped: account not resolved messageId=${message.id ?? 'unknown'}`
       );
       return false; // require account
     }
+    console.log(`WALLET_IMPORT validate: account resolved, entityId=${account?.entityId}`);
 
+    console.log(`WALLET_IMPORT validate PASSED - accountId=${account?.entityId ?? 'unknown'}`);
     runtime.logger.debug(
       `WALLET_IMPORT validate passed messageId=${message.id ?? 'unknown'} accountId=${account?.entityId ?? 'unknown'}`
     );
@@ -177,14 +216,61 @@ export const walletImportAction: Action = {
       runtime.logger.debug('WALLET_IMPORT handler using solana key detected via chain service');
     }
 
-    if (!solanaKey?.bytes) {
-      runtime.logger.warn('WALLET_IMPORT handler unable to resolve Solana private key bytes');
+    // Check for Ethereum keys in addition to Solana
+    const ethereumDetected = detectedKeysByChain.find(
+      result => result.chain?.toLowerCase() === 'ethereum' || result.chain?.toLowerCase() === 'evm'
+    );
+    const ethereumKey = ethereumDetected?.keys?.[0];
+
+    // Need at least one key type to proceed
+    if (!solanaKey?.bytes && !ethereumKey) {
+      runtime.logger.warn('WALLET_IMPORT handler unable to resolve any private key');
       return;
     }
 
-    const keypair = Keypair.fromSecretKey(solanaKey.bytes);
-    //console.log('privateKeyB58', keypair)
-    // keys[{ format, match, bytes }]
+    // Build keypairs object with available chains
+    const keypairs: Record<string, any> = {};
+
+    // Handle Solana key if present
+    if (solanaKey?.bytes) {
+      const keypair = Keypair.fromSecretKey(solanaKey.bytes);
+      keypairs.solana = {
+        privateKey: bs58.encode(keypair.secretKey),
+        publicKey: keypair.publicKey.toBase58(),
+        type: 'imported',
+        createdAt: Date.now(),
+      };
+    }
+
+    // Handle Ethereum key if present
+    if (ethereumKey) {
+      try {
+        // Get the Ethereum service to derive the address
+        const ethService = runtime.getService('chain_ethereum') as any;
+        if (ethService) {
+          const ethAddress = ethService.getPubkeyFromSecret(ethereumKey.key);
+          keypairs.ethereum = {
+            privateKey: ethereumKey.key,
+            publicKey: ethAddress,
+            type: 'imported',
+            createdAt: Date.now(),
+          };
+        } else {
+          // Fallback: derive address using viem directly
+          const { privateKeyToAccount } = require('viem/accounts');
+          const normalizedKey = ethereumKey.key.startsWith('0x') ? ethereumKey.key : `0x${ethereumKey.key}`;
+          const account = privateKeyToAccount(normalizedKey);
+          keypairs.ethereum = {
+            privateKey: normalizedKey,
+            publicKey: account.address,
+            type: 'imported',
+            createdAt: Date.now(),
+          };
+        }
+      } catch (error) {
+        runtime.logger.warn('WALLET_IMPORT handler failed to process Ethereum key:', error);
+      }
+    }
 
     console.log('account', account)
     //callback(takeItPrivate(runtime, message, 'Thinking about making a meta-wallet'))
@@ -193,22 +279,23 @@ export const walletImportAction: Action = {
     const strat = containsStrats?.[0] || 'No trading strategy'
     const newWallet = {
       strategy: strat,
-      keypairs: {
-        solana: {
-          privateKey: bs58.encode(keypair.secretKey),
-          publicKey: keypair.publicKey.toBase58(),
-          type: 'imported',
-          createdAt: Date.now(),
-        },
-      }
+      keypairs,
     }
     console.log('newWallet', newWallet)
 
+    // Build response message showing all imported chains
     let str = '\n'
     str += '  Strategy: ' + strat + '\n'
-    str += '  Chain: solana\n'
-    //str += '    Private key: ' + newWallet.keypairs.solana.privateKey + ' (Write this down/save it somewhere safe, we will not show this again. This key allows you to spend the funds)\n'
-    str += '    Public key: ' + newWallet.keypairs.solana.publicKey + ' (This is the wallet address that you can publicly send to people)\n'
+
+    if (keypairs.solana) {
+      str += '  Chain: solana\n'
+      str += '    Public key: ' + keypairs.solana.publicKey + ' (This is the wallet address that you can publicly send to people)\n'
+    }
+
+    if (keypairs.ethereum) {
+      str += '  Chain: ethereum (EVM)\n'
+      str += '    Public key: ' + keypairs.ethereum.publicKey + ' (This address works on Ethereum, Base, Polygon, and other EVM chains)\n'
+    }
 
     callback?.(takeItPrivate(runtime, message, 'Made a meta-wallet ' + str + ' please fund it to start trading'))
 

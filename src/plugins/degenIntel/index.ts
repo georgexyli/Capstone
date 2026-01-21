@@ -16,6 +16,7 @@ import { TradeChainService } from './services/srv_chain';
 import { TradeDataProviderService } from './services/srv_dataprovider';
 import { TradeStrategyService } from './services/srv_strategy';
 import { TradeLpService } from './services/srv_liquiditypooling';
+import { EthereumChainService } from './services/srv_ethereum';
 
 // create a new plugin
 export const degenIntelPlugin: Plugin = {
@@ -23,7 +24,7 @@ export const degenIntelPlugin: Plugin = {
   description: 'Spartan Intel plugin',
   routes,
   providers: [tokenResearchProvider],
-  services: [TradeChainService, TradeDataProviderService, TradeStrategyService, TradeLpService],
+  services: [TradeChainService, TradeDataProviderService, TradeStrategyService, TradeLpService, EthereumChainService],
   evaluators: [tokenSnifferEvaluator],
   tests: [
     {

@@ -57,6 +57,7 @@
     "@elizaos/plugin-solana": "workspace:*",
     "@elizaos/plugin-sql": "workspace:*",
     "@elizaos/plugin-telegram": "latest",
+    "viem": "^2.21.0",
     "@jup-ag/api": "^6.0.45",
     "@langchain/core": "^0.3.79",
     "@langchain/textsplitters": "^0.1.0",
@@ -93,7 +94,7 @@
     "typescript": "5.8.2",
     "vitest": "2.1.9",
     "ws": "8.18.0",
-    "zod": "3.24.2"
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",

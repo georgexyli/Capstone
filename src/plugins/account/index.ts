@@ -5,6 +5,7 @@ import { userRegistration } from "./actions/act_reg_start";
 //import { checkRegistration } from "./actions/act_reg_query";
 import { checkRegistrationCode } from "./actions/act_reg_confirmemail";
 import { deleteRegistration } from "./actions/act_reg_delete";
+import { devRegistration } from "./actions/act_reg_dev";
 
 //import actEmailUuid from "./actions/act_email_uuid";
 
@@ -27,6 +28,7 @@ export const accountRegPlugin: Plugin = {
   providers: [accountProvider, userProvider],
   actions: [
     userRegistration, checkRegistrationCode, deleteRegistration,
+    devRegistration,  // DEV ONLY: bypass email verification
     //devFix,
     //actEmailUuid,
     turnOnNotificationsAction, turnOffNotificationsAction,

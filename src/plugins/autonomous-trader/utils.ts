@@ -62,22 +62,30 @@ export async function getEntityIdFromMessage(runtime: IAgentRuntime, message: Me
   //return createUniqueUuid(runtime, message.metadata.fromId);
   //console.log('getEntityIdFromMessage message', message)
 
-  // ensureEntity because I don't think the clients are going to build it
-  if (message?.metadata?.sourceId) {
-    const entityId: UUID = message.metadata.sourceId
-    const entity = await runtime.getEntityById(entityId);
-    if (!entity) {
-      const success = await runtime.createEntity({
-        id: entityId,
-        names: [],
-        //names: [message.names],
-        //metadata: entityMetadata,
-        metadata: {}, // Empty metadata for now
-        agentId: runtime.agentId,
-      });
-    }
+  // Prioritize message.entityId over metadata.sourceId (DEV_REGISTRATION uses message.entityId)
+  const entityId = (message?.entityId || message?.metadata?.sourceId) as UUID | undefined;
+  console.log('getEntityIdFromMessage - resolved entityId:', entityId, '(message.entityId:', message?.entityId, ', sourceId:', message?.metadata?.sourceId, ')')
+
+  if (!entityId) {
+    console.log('getEntityIdFromMessage - no entityId found, returning undefined')
+    return undefined;
   }
-  return message?.metadata?.sourceId
+
+  // ensureEntity because I don't think the clients are going to build it
+  const entity = await runtime.getEntityById(entityId);
+  console.log('getEntityIdFromMessage - entity exists:', !!entity)
+  if (!entity) {
+    console.log('getEntityIdFromMessage - creating entity for', entityId)
+    const success = await runtime.createEntity({
+      id: entityId,
+      names: [],
+      //names: [message.names],
+      //metadata: entityMetadata,
+      metadata: {}, // Empty metadata for now
+      agentId: runtime.agentId,
+    });
+  }
+  return entityId;
 }
 
 export async function HasEntityIdFromMessage(runtime: IAgentRuntime, message: Memory): Promise<boolean> {
@@ -96,15 +104,18 @@ export async function getDataFromMessage(runtime: IAgentRuntime, message: Memory
   //console.log('getDataFromMessage', message)
   //return createUniqueUuid(runtime, message.metadata.fromId);
   const entityId = await getEntityIdFromMessage(runtime, message)
-  //console.debug('autotrade::getDataFromMessage - entityId', entityId)
+  console.log('getDataFromMessage - entityId:', entityId)
+  console.log('getDataFromMessage - message.entityId:', message.entityId)
+  console.log('getDataFromMessage - message.metadata?.sourceId:', message.metadata?.sourceId)
   if (!entityId) {
     console.error('autotrade::getDataFromMessage - no entityId found')
     return false // avoid database look up
   }
   const intUserService = runtime.getService('AUTONOMOUS_TRADER_INTERFACE_USERS') as any;
   const components = await intUserService.interface_users_ByIds([entityId])
+  console.log('getDataFromMessage - user components lookup for', entityId, ':', components)
   const component = components[entityId]
-  //console.debug('autotrade::getDataFromMessage - user components', components)
+  console.log('getDataFromMessage - found component:', component)
   // .componentId
 
   // fix update user record to include discord information if we don't already have it
@@ -136,12 +147,18 @@ export async function getDataFromMessage(runtime: IAgentRuntime, message: Memory
 // they have a verified email
 // returns componentData
 export async function getAccountFromMessage(runtime: IAgentRuntime, message: Memory): Promise<any> {
+  console.log('getAccountFromMessage - starting lookup')
   const componentData = await getDataFromMessage(runtime, message)
+  console.log('getAccountFromMessage - componentData:', componentData)
+  console.log('getAccountFromMessage - verified:', componentData?.verified)
   if (componentData?.verified) {
     const emailAddr = componentData.address
+    console.log('getAccountFromMessage - emailAddr:', emailAddr)
     const emailEntityId = createUniqueUuid(runtime, emailAddr);
+    console.log('getAccountFromMessage - emailEntityId:', emailEntityId)
     const intAcountService = runtime.getService('AUTONOMOUS_TRADER_INTERFACE_ACCOUNTS') as any;
     const accounts = await intAcountService.interface_accounts_ByIds([emailEntityId])
+    console.log('getAccountFromMessage - accounts lookup result:', accounts)
     if (accounts[emailEntityId]) {
       // accounts[emailEntityId] is componentData
       // .componentId
@@ -156,10 +173,12 @@ export async function getAccountFromMessage(runtime: IAgentRuntime, message: Mem
     } else {
       // verified just no component yet
       // should we just ensure it here?
+      console.log('getAccountFromMessage - account not found, returning minimal object')
       return { accountEntityId: emailEntityId }
     }
   }
   // not verified
+  console.log('getAccountFromMessage - not verified or no componentData, returning false')
   return false
 }
 
