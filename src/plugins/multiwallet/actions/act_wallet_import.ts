@@ -19,8 +19,17 @@ import bs58 from 'bs58'
 export const walletImportAction: Action = {
   name: 'WALLET_IMPORT',
   similes: [
+    'IMPORT_WALLET',
+    'IMPORT_ETH_WALLET',
+    'IMPORT_ETHEREUM_WALLET',
+    'IMPORT_EVM_WALLET',
+    'IMPORT_SOLANA_WALLET',
+    'ADD_WALLET',
+    'ADD_PRIVATE_KEY',
+    'USE_PRIVATE_KEY',
+    'SAVE_WALLET',
   ],
-  description: 'Allows a user to import a wallet without a strategy',
+  description: 'Allows a user to import a Solana or Ethereum/EVM wallet using their private key. Supports base58 (Solana) and hex/0x format (Ethereum) private keys.',
   validate: async (runtime: IAgentRuntime, message: Memory) => {
     console.log('WALLET_IMPORT validate called');
 
@@ -322,6 +331,7 @@ export const walletImportAction: Action = {
     */
   },
   examples: [
+    // Solana wallet examples (base58 format)
     [
       {
         name: '{{name1}}',
@@ -332,7 +342,7 @@ export const walletImportAction: Action = {
       {
         name: '{{name2}}',
         content: {
-          text: "I'll import that now",
+          text: "I'll import that Solana wallet now",
           actions: ['WALLET_IMPORT'],
         },
       },
@@ -348,6 +358,67 @@ export const walletImportAction: Action = {
         name: '{{name2}}',
         content: {
           text: "I'll import that now",
+          actions: ['WALLET_IMPORT'],
+        },
+      },
+    ],
+    // Ethereum/EVM wallet examples (hex format with 0x prefix)
+    [
+      {
+        name: '{{name1}}',
+        content: {
+          text: 'Import my ethereum wallet 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
+        },
+      },
+      {
+        name: '{{name2}}',
+        content: {
+          text: "I'll import that Ethereum wallet now",
+          actions: ['WALLET_IMPORT'],
+        },
+      },
+    ],
+    [
+      {
+        name: '{{name1}}',
+        content: {
+          text: 'Import wallet 0x614ede74112fb2484bd5316f2176d0ed400c583884f0430331d6dfae2cadb3ea',
+        },
+      },
+      {
+        name: '{{name2}}',
+        content: {
+          text: "importing your EVM wallet",
+          actions: ['WALLET_IMPORT'],
+        },
+      },
+    ],
+    [
+      {
+        name: '{{name1}}',
+        content: {
+          text: 'I want to import an eth wallet with private key 614ede74112fb2484bd5316f2176d0ed400c583884f0430331d6dfae2cadb3ea',
+        },
+      },
+      {
+        name: '{{name2}}',
+        content: {
+          text: "I'll import that Ethereum private key",
+          actions: ['WALLET_IMPORT'],
+        },
+      },
+    ],
+    [
+      {
+        name: '{{name1}}',
+        content: {
+          text: 'add this wallet to my account: 0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
+        },
+      },
+      {
+        name: '{{name2}}',
+        content: {
+          text: "importing that wallet",
           actions: ['WALLET_IMPORT'],
         },
       },
