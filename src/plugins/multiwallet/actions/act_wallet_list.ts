@@ -12,6 +12,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { HasEntityIdFromMessage, takeItPrivate, messageReply, getAccountFromMessage } from '../../autonomous-trader/utils'
 import CONSTANTS from '../../autonomous-trader/constants'
+import { formatWalletBalance } from '../utils/format-cards'
 
 // handle starting new form and collecting first field
 export const userMetawalletList: Action = {
@@ -63,44 +64,44 @@ export const userMetawalletList: Action = {
     // metawallet
     //   strategy
     //   keypairs
-    let wStr = 'List wallets: \n\n'
     if (!Object.values(account.metawallets).length) {
-      // no keypairs?
-      wStr += '  None'
-    }
-
-    async function flushString(wStr: string) {
-      if (wStr.trim().length) {
-        console.log('trying to send', wStr)
-        const output = takeItPrivate(runtime, message, wStr)
-        await callback?.(output)
+      const output = takeItPrivate(runtime, message, 'You don\'t have any wallets yet. Would you like to create or import one?')
+      callback?.(output)
+      return {
+        success: true,
+        text: 'No wallets found'
       }
-      wStr = ''
     }
 
+    // Build formatted wallet cards
+    let walletCount = 0;
     for (const mw of account.metawallets) {
-      //console.log('mw', mw)
-      wStr += 'Wallet:\n'
-      wStr += '  Strategy: ' + mw.strategy + '\n'
-      // mw.keypairs [{ chain, keypair {publicKey, privateKey} }]
-      wStr += '  Keypairs: \n'
-      for (const c in mw.keypairs) {
-        const kp = mw.keypairs[c]
-        //console.log('c', c, 'kp', kp)
-        wStr += '    Chain: ' + c + ' Address:' + "\n"
-        await flushString(wStr)
-        // a pause might be goodhere
-        await new Promise(resolve => setTimeout(resolve, 100))
-        wStr += kp.publicKey + "\n"
-        await flushString(wStr)
+      for (const chainName in mw.keypairs) {
+        const kp = mw.keypairs[chainName];
+        walletCount++;
+
+        // Get network display name
+        const networkName = chainName.charAt(0).toUpperCase() + chainName.slice(1);
+
+        // Format wallet card (without balances for now - could add balance fetching later)
+        const walletCard = formatWalletBalance({
+          address: kp.publicKey,
+          network: networkName,
+          tokens: [], // Empty for now - will show "No tokens found"
+          totalUsdValue: undefined,
+        });
+
+        // Send each wallet as a separate message
+        const output = takeItPrivate(runtime, message, walletCard);
+        await callback?.(output);
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
-      if (!Object.values(mw.keypairs).length) {
-        // no keypairs?
-        wStr += '    None'
-      }
-      wStr += '\n\n'
     }
-    await flushString(wStr)
+
+    // Send summary
+    const summaryText = `\n${walletCount} wallet${walletCount !== 1 ? 's' : ''} found.`;
+    const summaryOutput = takeItPrivate(runtime, message, summaryText);
+    await callback?.(summaryOutput);
 
     //const output = takeItPrivate(runtime, message, wStr)
     //callback(output)

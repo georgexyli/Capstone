@@ -12,6 +12,7 @@ import {
     logger,
     createUniqueUuid,
     parseJSONObjectFromText,
+    type UUID,
 } from '@elizaos/core';
 import {
     Connection,
@@ -28,6 +29,40 @@ import { SOLANA_SERVICE_NAME } from '../../autonomous-trader/constants';
 // import type { SolanaService } from '../service'; // Commented out as module not found
 // import type { Item } from '../types'; // Commented out as module not found
 import { askLlmObject, takeItPrivate, getAccountFromMessage, getWalletsFromText, HasEntityIdFromMessage, getDataFromMessage } from '../../autonomous-trader/utils'
+import {
+    formatSwapPreview,
+    formatSwapSuccess,
+    formatSwapFailed,
+    formatInsufficientBalance,
+    formatSwapProcessing,
+    getFaucetUrl,
+} from '../utils/format-cards'
+
+/**
+ * Helper to push a message to the responses array for chat display
+ */
+function pushChatMessage(
+    runtime: IAgentRuntime,
+    message: Memory,
+    text: string,
+    responses?: Memory[]
+): void {
+    if (!responses) return;
+
+    const responseMemory: Memory = {
+        id: createUniqueUuid(runtime, `swap-response-${Date.now()}`) as UUID,
+        entityId: runtime.agentId,
+        agentId: runtime.agentId,
+        roomId: message.roomId,
+        content: {
+            text,
+            source: message.content?.source || 'unknown',
+        },
+        createdAt: Date.now(),
+    };
+    responses.push(responseMemory);
+    console.log('MULTIWALLET_SWAP pushed message to responses array');
+}
 
 /**
  * Interface representing the content of a swap with a specific wallet.
@@ -669,6 +704,14 @@ export default {
                 const amountInWei = BigInt(Math.floor(Number(content.amount) * 1e18)).toString();
 
                 // Get quote
+                // Show processing indicator
+                const processingText = formatSwapProcessing(
+                    content.inputTokenSymbol || 'Token',
+                    content.outputTokenSymbol || 'Token',
+                    swapChain.charAt(0).toUpperCase() + swapChain.slice(1)
+                );
+                callback?.(takeItPrivate(runtime, message, processingText));
+
                 const quote = await ethService.getSwapQuote({
                     tokenIn: inputTokenCA,
                     tokenOut: outputTokenCA,
@@ -678,6 +721,21 @@ export default {
                 });
 
                 console.log('MULTIWALLET_SWAP quote:', quote);
+
+                // Show swap preview
+                const outputEstimate = (Number(quote.amountOut) / 1e18).toFixed(6);
+                const rate = (Number(quote.amountOut) / Number(amountInWei)).toFixed(2);
+                const previewText = formatSwapPreview({
+                    inputAmount: content.amount,
+                    inputSymbol: content.inputTokenSymbol || 'Unknown',
+                    outputAmount: outputEstimate,
+                    outputSymbol: content.outputTokenSymbol || 'Unknown',
+                    rate: `1 ${content.inputTokenSymbol} = ${rate} ${content.outputTokenSymbol}`,
+                    slippage: 1,
+                    network: swapChain.charAt(0).toUpperCase() + swapChain.slice(1),
+                    walletAddress: sourceKp.publicKey,
+                });
+                callback?.(takeItPrivate(runtime, message, previewText));
 
                 // Execute swap
                 const swapResult = await ethService.executeSwap({
@@ -692,18 +750,18 @@ export default {
 
                 if (swapResult.success) {
                     const outputAmount = (Number(quote.amountOut) / 1e18).toFixed(6);
-                    const responseText = `Swap completed successfully!
+                    const responseText = formatSwapSuccess({
+                        inputAmount: content.amount,
+                        inputSymbol: content.inputTokenSymbol || 'Unknown',
+                        outputAmount,
+                        outputSymbol: content.outputTokenSymbol || 'Unknown',
+                        txHash: swapResult.txHash,
+                        explorerUrl: swapResult.explorerUrl,
+                        network: swapChain.charAt(0).toUpperCase() + swapChain.slice(1),
+                    });
 
-**Tokens Swapped:**
-- ${content.amount} ${content.inputTokenSymbol} -> ${outputAmount} ${content.outputTokenSymbol}
-
-**Transaction Details:**
-- Chain: ${swapChain}
-- TX: ${swapResult.txHash}
-- Explorer: ${swapResult.explorerUrl}
-
-**Wallet:** ${sourceKp.publicKey}`;
-
+                    // Push to responses array for direct chat display
+                    pushChatMessage(runtime, message, responseText, responses);
                     callback?.(takeItPrivate(runtime, message, responseText));
                     return {
                         success: true,
@@ -723,10 +781,31 @@ export default {
             } catch (error) {
                 const errorMsg = error instanceof Error ? error.message : String(error);
                 logger.error('EVM swap error:', errorMsg);
-                callback?.(takeItPrivate(runtime, message, `Swap failed: ${errorMsg}`));
+
+                // Check for insufficient funds error
+                let responseText: string;
+                if (errorMsg.includes('insufficient funds') || errorMsg.includes('exceeds the balance')) {
+                    responseText = formatInsufficientBalance(
+                        content.inputTokenSymbol || 'ETH',
+                        content.amount,
+                        '0', // We don't have the exact balance here
+                        swapChain,
+                        getFaucetUrl(swapChain)
+                    );
+                } else {
+                    responseText = formatSwapFailed({
+                        reason: 'Transaction failed',
+                        details: errorMsg.length > 200 ? errorMsg.slice(0, 200) + '...' : errorMsg,
+                        suggestion: 'Check your wallet balance and try again',
+                    });
+                }
+
+                // Push to responses array for direct chat display
+                pushChatMessage(runtime, message, responseText, responses);
+                callback?.(takeItPrivate(runtime, message, responseText));
                 return {
                     success: false,
-                    text: `Swap failed: ${errorMsg}`,
+                    text: responseText,
                     error: errorMsg
                 };
             }
@@ -843,19 +922,19 @@ export default {
             // Create Solscan link
             const solscanLink = `https://solscan.io/tx/${txid}`;
 
-            // Format response with all details
-            const responseText = `Swap completed successfully!
+            // Format response with card UI
+            const responseText = formatSwapSuccess({
+                inputAmount: content.amount,
+                inputSymbol: content.inputTokenSymbol || 'Unknown',
+                outputAmount,
+                outputSymbol: content.outputTokenSymbol || 'Unknown',
+                txHash: txid,
+                explorerUrl: solscanLink,
+                network: 'Solana',
+            });
 
-**Tokens Swapped:**
-- ${content.amount} ${content.inputTokenSymbol} -> ${outputAmount} ${content.outputTokenSymbol}
-
-**Transaction Details:**
-- Chain: Solana
-- TX: ${txid}
-- Solscan: ${solscanLink}
-
-**Wallet:** ${sourceResult.sourceWalletAddress}`;
-
+            // Push to responses array for direct chat display
+            pushChatMessage(runtime, message, responseText, responses);
             callback?.(takeItPrivate(runtime, message, responseText))
             return {
                 success: true,
@@ -872,10 +951,30 @@ export default {
         } catch (error) {
             logger.error('Error during token swap:', error instanceof Error ? error.message : String(error));
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            callback?.(takeItPrivate(runtime, message, `Swap failed: ${errorMessage}`))
+
+            // Format error with card UI
+            let responseText: string;
+            if (errorMessage.includes('insufficient') || errorMessage.includes('balance')) {
+                responseText = formatInsufficientBalance(
+                    content.inputTokenSymbol || 'SOL',
+                    content.amount,
+                    '0',
+                    'solana'
+                );
+            } else {
+                responseText = formatSwapFailed({
+                    reason: 'Transaction failed',
+                    details: errorMessage.length > 200 ? errorMessage.slice(0, 200) + '...' : errorMessage,
+                    suggestion: 'Check your wallet balance and try again',
+                });
+            }
+
+            // Push to responses array for direct chat display
+            pushChatMessage(runtime, message, responseText, responses);
+            callback?.(takeItPrivate(runtime, message, responseText))
             return {
                 success: false,
-                text: `Swap failed: ${errorMessage}`,
+                text: responseText,
                 error: errorMessage
             };
         }
