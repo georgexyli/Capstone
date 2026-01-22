@@ -1,267 +1,219 @@
-# Spartan EVM Integration Tasks
+# Spartan Trading Agent - Development Roadmap
 
 > **Last Updated:** 2026-01-22
-> **Status:** Task 1 Complete, Task 2 Not Started
+> **Status:** Tasks 1-2 Complete, Task 3 Next
 
 ---
 
-## Overview
+## Vision
 
-This document tracks the implementation of Ethereum/EVM support for the Spartan trading agent. We're adding:
-1. Ethereum RPC connection with wallet/signer setup
-2. Uniswap DEX integration for token swaps
-3. (Optional) Sepolia testnet simulation
-4. (Optional) Telegram Frontend UI
+**Spartan is a conversational AI trading broker.** Users chat with the agent naturally, and it executes trades on their behalf across multiple blockchains.
+
+### The End Goal
+```
+User: "What's the price of ETH?"
+Spartan: "ETH is currently $3,245. Want me to buy some?"
+
+User: "Yeah, swap $100 of my USDC for ETH on Base"
+Spartan: "Done. Swapped 100 USDC for 0.0308 ETH on Base. TX: 0x..."
+
+User: "What's in my wallet?"
+Spartan: "You have 0.5 ETH ($1,622), 500 USDC, and 1000 PEPE ($12) on Base."
+```
+
+### Core Capabilities
+| Capability | Status | Notes |
+|------------|--------|-------|
+| Conversational AI | ✅ Done | Spartan character with personality |
+| Wallet Import (Solana) | ✅ Done | Base58 private keys |
+| Wallet Import (Ethereum) | ✅ Done | Hex/0x private keys (Task 1) |
+| Trade Execution (Solana) | ✅ Done | Jupiter DEX integration |
+| Trade Execution (Ethereum) | ✅ Done | Uniswap V3 integration (Task 2) |
+| Price Lookups | ⏳ Next | Task 3 |
+| Portfolio/Balance View | 📋 Planned | Task 4 |
+| Trade Confirmations | 📋 Planned | Task 5 |
 
 ---
 
-## Current Architecture Summary
+## Current Architecture
 
-### Existing Infrastructure
-- **Solana**: Fully implemented with Jupiter DEX integration
-- **EVM Chain Service**: Now implemented via `EthereumChainService`
-- **Multi-chain wallet structure**: Already supports multiple chains via `keypairs` Record
-- **IChainService interface**: Defines contract for all chain services
+### Supported Chains
+| Chain | Wallet | Trading | DEX |
+|-------|--------|---------|-----|
+| Solana | ✅ | ✅ | Jupiter |
+| Ethereum | ✅ | ✅ | Uniswap V3 |
+| Base | ✅ | ✅ | Uniswap V3 |
+| Polygon | ✅ | ✅ | Uniswap V3 |
+| Arbitrum | ✅ | ✅ | Uniswap V3 |
+| Optimism | ✅ | ✅ | Uniswap V3 |
+| Sepolia | ✅ | ✅ | Uniswap V3 |
 
-### Key Files (Updated)
+### Key Files
 | File | Purpose |
 |------|---------|
-| `src/plugins/degenIntel/services/srv_ethereum.ts` | **NEW** - Ethereum chain service (viem-based) |
-| `src/plugins/degenIntel/config/evm-chains.ts` | **NEW** - EVM chain configurations |
-| `src/plugins/degenIntel/services/srv_chain.ts` | Multi-chain service orchestrator (now registers EVM) |
-| `src/plugins/degenIntel/types.ts` | `IChainService` interface definition |
-| `src/plugins/multiwallet/actions/act_wallet_import.ts` | Wallet import (needs Ethereum branch) |
-| `src/plugins/account/actions/act_reg_dev.ts` | **NEW** - Dev registration bypass |
-| `src/plugins/autonomous-trader/utils.ts` | Entity ID resolution (fixed) |
+| `src/index.ts` | Spartan character definition |
+| `src/plugins/degenIntel/services/srv_ethereum.ts` | Ethereum chain service |
+| `src/plugins/degenIntel/services/srv_chain.ts` | Multi-chain orchestrator |
+| `src/plugins/multiwallet/actions/act_wallet_import.ts` | Wallet import action |
+| `src/plugins/multiwallet/actions/act_wallet_swap.ts` | Swap execution action |
+| `src/plugins/account/actions/act_reg_dev.ts` | Dev registration (testing) |
 
-### Service Pattern
-```typescript
-// Services accessed via runtime
-const solanaService = runtime.getService('chain_solana');
-const ethService = runtime.getService('chain_ethereum');  // NOW AVAILABLE
-const traderChainService = runtime.getService('INTEL_CHAIN');
+---
+
+## Task 1: Ethereum Wallet Support ✅ COMPLETE
+
+**Goal:** Allow users to import Ethereum wallets so the agent can trade on EVM chains.
+
+### What Was Built
+- `EthereumChainService` - Connects to 6 EVM chains via viem
+- Wallet import for hex private keys (0x format)
+- LLM recognizes "import my ETH wallet" commands
+- Character knows it supports multi-chain trading
+
+### Verified Working
+```
+✅ "dev register" → Creates account
+✅ Paste ETH private key → WALLET_IMPORT detects and saves
+✅ Account updated with ethereum keypair
 ```
 
 ---
 
-## Task 1: Connect to Ethereum RPC & Setup Signer
+## Task 2: Uniswap Trade Execution ✅ COMPLETE
 
-### Status: `[✓] Complete`
+**Goal:** Execute token swaps on EVM chains using Uniswap, just like Jupiter works for Solana.
 
-### What's Done
+### User Story
+```
+User: "Swap 0.1 ETH for USDC on Base"
+Spartan: "Swapped 0.1 ETH for 324.50 USDC on Base. TX: 0x..."
+```
 
-#### 1.1 EthereumChainService Created
-**File:** `src/plugins/degenIntel/services/srv_ethereum.ts`
+### What Was Built
 
-- Implements `IChainService` interface
-- Uses **viem** (not ethers) for all EVM operations
-- Supports 6 chains: ethereum, base, polygon, arbitrum, optimism, sepolia
-
-| Method | Status | Notes |
-|--------|--------|-------|
-| `createWallet()` | ✅ Done | Uses viem's `generatePrivateKey()` + `privateKeyToAccount()` |
-| `getPubkeysFromSecrets()` | ✅ Done | Derives addresses from hex private keys |
-| `detectPubkeysFromString()` | ✅ Done | Regex: `/\b0x[a-fA-F0-9]{40}\b/g` |
-| `detectPrivateKeysFromString()` | ✅ Done | Regex for 64 hex chars, validates by deriving address |
-| `verifySignature()` | ✅ Done | Uses viem's `verifyMessage()` |
-| `getBalances()` | ✅ Done | Native ETH + ERC20 balances via `publicClient` |
-| `transfer()` | ✅ Done | Native ETH + ERC20 transfers via `walletClient` |
-
-#### 1.2 EVM Chain Configuration
+#### 2.1 Uniswap Contracts & ABIs Added
 **File:** `src/plugins/degenIntel/config/evm-chains.ts`
 
-```typescript
-export const EVM_CHAINS = {
-  ethereum: { chainId: 1, nativeSymbol: 'ETH', ... },
-  base: { chainId: 8453, nativeSymbol: 'ETH', ... },
-  polygon: { chainId: 137, nativeSymbol: 'MATIC', ... },
-  arbitrum: { chainId: 42161, nativeSymbol: 'ETH', ... },
-  optimism: { chainId: 10, nativeSymbol: 'ETH', ... },
-  sepolia: { chainId: 11155111, nativeSymbol: 'ETH', ... },
-};
-```
+- Added `UNISWAP_CONTRACTS` with SwapRouter02 and QuoterV2 addresses for all chains
+- Added `SWAP_ROUTER_ABI` for `exactInputSingle` swaps
+- Added `QUOTER_V2_ABI` for getting quotes
+- Added `WETH_ABI` for wrapping/unwrapping ETH
+- Added `UNISWAP_FEE_TIERS` (500, 3000, 10000)
 
-#### 1.3 Service Registration
-**File:** `src/plugins/degenIntel/services/srv_chain.ts`
+#### 2.2 Swap Methods in EthereumChainService
+**File:** `src/plugins/degenIntel/services/srv_ethereum.ts`
 
-- EthereumChainService registered on startup
-- All 6 EVM chains auto-registered with TradeChainService
-- Logs: "EVM chains registered successfully"
+| Method | Description |
+|--------|-------------|
+| `getSwapQuote()` | Gets best quote across fee tiers, calculates slippage |
+| `executeSwap()` | Handles ERC20 approval, executes swap via SwapRouter02 |
+| `doSwapOnExchange()` | Legacy interface, combines quote + execute |
 
-#### 1.4 Entity ID Resolution Fixed
-**File:** `src/plugins/autonomous-trader/utils.ts`
-
-- Fixed `getEntityIdFromMessage()` to prioritize `message.entityId` over `metadata.sourceId`
-- This ensures DEV_REGISTRATION and WALLET_IMPORT use consistent entity IDs
-
-#### 1.5 DEV_REGISTRATION Action
-**File:** `src/plugins/account/actions/act_reg_dev.ts`
-
-- Bypasses email verification when `DEV_MODE=true`
-- Creates user component with `verified: true`
-- Creates account entity and component
-- Triggered by: "dev register" or "test register"
-
-### What's Working (Verified)
-
-```
-✅ Ethereum key detection: "chain detection returned 6 chains"
-✅ Account lookup: "verified: true", "account resolved"
-✅ WALLET_IMPORT validation: "WALLET_IMPORT validate PASSED"
-```
-
-#### 1.6 WALLET_IMPORT Handler - Ethereum Branch ✅
-**File:** `src/plugins/multiwallet/actions/act_wallet_import.ts`
-
-The handler now saves both Solana AND Ethereum keys (lines 245-273):
-- Detects Ethereum keys from `detectedKeysByChain`
-- Uses `chain_ethereum` service to derive address, or falls back to viem directly
-- Saves to `keypairs.ethereum` with privateKey, publicKey, type, createdAt
-
-#### 1.7 LLM Action Selection ✅
-**File:** `src/plugins/multiwallet/actions/act_wallet_import.ts`
-
-Fixed by adding:
-- **Similes**: `IMPORT_ETH_WALLET`, `IMPORT_ETHEREUM_WALLET`, `IMPORT_EVM_WALLET`, etc.
-- **Description**: Updated to mention both Solana and Ethereum/EVM wallet support
-- **Examples**: Added 4 new examples with Ethereum hex private keys
-
-#### 1.8 Character Bio & System Prompt Updated ✅
-**File:** `src/index.ts`
-
-Updated character to indicate multi-chain support:
-- Bio now mentions "multi-chain DeFi trading across Solana and EVM chains"
-- Bio mentions support for both base58 and hex private key formats
-- System prompt now explicitly lists wallet import for Solana AND EVM chains
-
-### Testing Results
-
-| Test | Result |
-|------|--------|
-| Connect to RPC | ✅ Working (Sepolia confirmed) |
-| Detect hex private key | ✅ Working (detected across 6 chains) |
-| Account lookup | ✅ Working (after entity ID fix) |
-| WALLET_IMPORT validation | ✅ PASSED |
-| WALLET_IMPORT handler saves ETH key | ✅ Implemented |
-| LLM selects WALLET_IMPORT for ETH keys | ✅ Fixed (similes + examples added) |
-| Character knows about ETH support | ✅ Fixed (bio + system prompt updated) |
-
-### Completed Checklist
-- [x] Add Ethereum branch to WALLET_IMPORT handler
-- [x] Add similes for Ethereum wallet import
-- [x] Add Ethereum private key examples
-- [x] Update character bio for multi-chain support
-- [x] Update system prompt for multi-chain support
-- [x] Test end-to-end wallet import with ETH key (verified working)
-
----
-
-## Task 2: Implement Uniswap Swap Execution
-
-### Status: `[ ] Not Started`
-
-### Objective
-Implement token swaps on Ethereum using Uniswap V3, following the Jupiter pattern.
-
-### Current State
-- Jupiter swap fully implemented in `act_wallet_swap.ts`
-- EthereumChainService provides the signer/provider infrastructure
-- Need to add Uniswap SDK integration
-
-### Implementation Steps
-
-#### 2.1 Install Uniswap SDK
-```bash
-npm install @uniswap/v3-sdk @uniswap/sdk-core
-```
-
-#### 2.2 Create Uniswap Service
-**New File:** `src/plugins/multiwallet/services/srv_uniswap.ts`
-
-```typescript
-export class UniswapService extends Service {
-  static serviceName = 'UNISWAP_SERVICE';
-
-  async getQuote(params: { inputToken, outputToken, amount, slippageBps, chainId }): Promise<QuoteResult>;
-  async executeSwap(params: { quote, privateKey, chainId }): Promise<TransactionReceipt>;
-}
-```
-
-#### 2.3 Create EVM Swap Action or Extend Existing
+#### 2.3 Chain Routing in Swap Action
 **File:** `src/plugins/multiwallet/actions/act_wallet_swap.ts`
 
-Add chain routing:
-```typescript
-if (chain === 'solana') {
-  return executeJupiterSwap(...);
-} else if (['ethereum','base','polygon','arbitrum','optimism'].includes(chain)) {
-  return executeUniswapSwap(...);
-}
+- Added `isEthereumAddress()` and `isSolanaAddress()` helpers
+- Detects chain from wallet address format
+- Routes to Jupiter (Solana) or Uniswap (EVM) based on chain
+- Added EVM swap similes and examples
+
+### Uniswap Contracts Used
+| Chain | SwapRouter02 | QuoterV2 |
+|-------|--------------|----------|
+| Ethereum | `0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45` | `0x61fFE014bA17989E743c5F6cB21bF9697530B21e` |
+| Base | `0x2626664c2603336E57B271c5C0b26F421741e481` | `0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a` |
+| Sepolia | `0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E` | `0xEd1f6473345F45b75F8179591dd5bA1888cf2FB3` |
+
+### Completed Checklist
+- [x] Add Uniswap contract addresses and ABIs to evm-chains.ts
+- [x] Implement `getSwapQuote()` method (tries all fee tiers, picks best)
+- [x] Implement `executeSwap()` method (handles approval + swap)
+- [x] Update `act_wallet_swap.ts` with chain routing
+- [x] Add EVM swap similes and examples
+- [x] Build and verify compilation
+- [x] Deploy to Docker
+- [ ] Test swap on Sepolia testnet (ready for testing)
+
+---
+
+## Task 3: Price Lookups 📋 PLANNED
+
+**Goal:** User asks for a token price, agent responds with current market data.
+
+### User Story
+```
+User: "What's the price of PEPE?"
+Spartan: "PEPE is $0.000012, up 5% in 24h. Market cap $5B."
 ```
 
-### Uniswap Contract Addresses
-| Chain | Router V3 | WETH |
-|-------|-----------|------|
-| Ethereum | `0xE592427A0AEce92De3Edee1F18E0157C05861564` | `0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2` |
-| Base | `0x2626664c2603336E57B271c5C0b26F421741e481` | `0x4200000000000000000000000000000000000006` |
-| Sepolia | `0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E` | `0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14` |
-
-### Files to Create/Modify
-- [ ] `package.json` - Add Uniswap SDK
-- [ ] `src/plugins/multiwallet/services/srv_uniswap.ts` - Create new
-- [ ] `src/plugins/multiwallet/actions/act_wallet_swap.ts` - Add chain routing
-- [ ] `src/plugins/multiwallet/index.ts` - Register service
+### Implementation Ideas
+- CoinGecko API for prices
+- Or use DEX quotes (Jupiter/Uniswap) for real-time prices
+- Create `GET_PRICE` action
 
 ---
 
-## Task 3: Transaction Simulation on Sepolia (Optional)
+## Task 4: Portfolio View 📋 PLANNED
 
-### Status: `[ ] Not Started`
+**Goal:** User asks what's in their wallet, agent shows balances.
 
-### Objective
-Test all EVM functionality on Sepolia testnet before mainnet deployment.
-
-### Sepolia Already Supported
-The EthereumChainService already includes Sepolia configuration. Just need to:
-1. Get test ETH from faucet: https://sepoliafaucet.com/
-2. Import test wallet with `dev register` + private key
-3. Execute test operations
-
----
-
-## Task 4: Telegram Frontend UI (Optional)
-
-### Status: `[ ] Not Started`
-
-(Details unchanged from original)
-
----
-
-## Progress Tracker
-
-| Task | Status | Priority | Notes |
-|------|--------|----------|-------|
-| 1. ETH RPC + Signer | `[✓] Complete` | High | Service, handler, LLM recognition all done |
-| 2. Uniswap Swaps | `[ ] Not Started` | High | Core trading functionality |
-| 3. Sepolia Testing | `[ ] Not Started` | Medium | Infrastructure ready |
-| 4. Telegram UI | `[ ] Not Started` | Low | Nice-to-have |
-
----
-
-## Dependencies
-
-**Already using:**
-- `viem` - Used by EthereumChainService (modern, type-safe)
-
-**To add for Task 2:**
-```json
-{
-  "dependencies": {
-    "@uniswap/v3-sdk": "^3.11.0",
-    "@uniswap/sdk-core": "^4.2.0"
-  }
-}
+### User Story
 ```
+User: "What's in my wallet?"
+Spartan: "On Base: 0.5 ETH ($1,622), 500 USDC, 1000 PEPE ($12)"
+```
+
+### Implementation Ideas
+- Use existing `getBalances()` from chain services
+- Create `GET_PORTFOLIO` or `CHECK_BALANCE` action
+- Format response nicely with USD values
+
+---
+
+## Task 5: Trade Confirmations 📋 PLANNED
+
+**Goal:** For large trades, ask user to confirm before executing.
+
+### User Story
+```
+User: "Swap all my ETH for DOGE"
+Spartan: "That's 2.5 ETH ($8,112). Are you sure? Reply 'yes' to confirm."
+User: "yes"
+Spartan: "Done. Swapped 2.5 ETH for 45,000 DOGE."
+```
+
+---
+
+## Task 6: Sepolia Testing 📋 OPTIONAL
+
+**Goal:** Test all functionality on testnet before mainnet.
+
+Already supported - just need to:
+1. Get test ETH from faucet
+2. Import test wallet
+3. Run test trades
+
+---
+
+## Task 7: Telegram UI 📋 OPTIONAL
+
+**Goal:** Chat with Spartan via Telegram instead of web interface.
+
+Lower priority - focus on core trading first.
+
+---
+
+## Progress Summary
+
+| Task | Description | Status | Priority |
+|------|-------------|--------|----------|
+| 1 | Ethereum Wallet Support | ✅ Complete | - |
+| 2 | Uniswap Trade Execution | ✅ Complete | - |
+| 3 | Price Lookups | ⏳ Next | Medium |
+| 4 | Portfolio View | 📋 Planned | Medium |
+| 5 | Trade Confirmations | 📋 Planned | Medium |
+| 6 | Sepolia Testing | 📋 Optional | Low |
+| 7 | Telegram UI | 📋 Optional | Low |
 
 ---
 
@@ -272,36 +224,14 @@ The EthereumChainService already includes Sepolia configuration. Just need to:
 SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/...
 EVM_PROVIDER_URL=https://mainnet.base.org
 RPC_URL=https://mainnet.base.org
-
-# For dev testing
 DEV_MODE=true
 ```
-
----
-
-## Notes & Decisions
-
-- **2026-01-21:** Initial investigation complete
-- **2026-01-22:**
-  - EthereumChainService implemented with viem (not ethers)
-  - Follows existing `IChainService` interface pattern
-  - 6 EVM chains supported out of the box
-  - Fixed entity ID resolution bug in `getEntityIdFromMessage`
-  - WALLET_IMPORT validation works, handler needs ETH branch
-  - DEV_REGISTRATION created for testing without SMTP
-  - **Task 1 Completed:**
-    - WALLET_IMPORT handler already had Ethereum branch (lines 245-273)
-    - Added similes: IMPORT_ETH_WALLET, IMPORT_ETHEREUM_WALLET, IMPORT_EVM_WALLET, etc.
-    - Added 4 Ethereum private key examples to action
-    - Updated character bio to mention multi-chain support
-    - Updated system prompt to mention EVM wallet import capability
-    - LLM should now correctly select WALLET_IMPORT for Ethereum keys
 
 ---
 
 ## Resources
 
 - [viem Docs](https://viem.sh/)
-- [Uniswap V3 SDK Docs](https://docs.uniswap.org/sdk/v3/overview)
+- [Uniswap V3 SDK](https://docs.uniswap.org/sdk/v3/overview)
+- [Jupiter Docs](https://station.jup.ag/docs)
 - [Sepolia Faucet](https://sepoliafaucet.com/)
-- [Sepolia Etherscan](https://sepolia.etherscan.io/)

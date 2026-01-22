@@ -203,6 +203,157 @@ export const RPC_ENV_KEYS: Record<string, string> = {
 };
 
 /**
+ * Uniswap V3 Contract Addresses per Chain
+ * SwapRouter02 is the recommended router for swaps
+ */
+export const UNISWAP_CONTRACTS: Record<string, {
+  swapRouter: `0x${string}`;
+  quoterV2: `0x${string}`;
+  weth: `0x${string}`;
+}> = {
+  ethereum: {
+    swapRouter: '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45', // SwapRouter02
+    quoterV2: '0x61fFE014bA17989E743c5F6cB21bF9697530B21e',
+    weth: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+  },
+  base: {
+    swapRouter: '0x2626664c2603336E57B271c5C0b26F421741e481', // SwapRouter02
+    quoterV2: '0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a',
+    weth: '0x4200000000000000000000000000000000000006',
+  },
+  polygon: {
+    swapRouter: '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45', // SwapRouter02
+    quoterV2: '0x61fFE014bA17989E743c5F6cB21bF9697530B21e',
+    weth: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', // WMATIC
+  },
+  arbitrum: {
+    swapRouter: '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45', // SwapRouter02
+    quoterV2: '0x61fFE014bA17989E743c5F6cB21bF9697530B21e',
+    weth: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+  },
+  optimism: {
+    swapRouter: '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45', // SwapRouter02
+    quoterV2: '0x61fFE014bA17989E743c5F6cB21bF9697530B21e',
+    weth: '0x4200000000000000000000000000000000000006',
+  },
+  sepolia: {
+    swapRouter: '0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E', // SwapRouter02
+    quoterV2: '0xEd1f6473345F45b75F8179591dd5bA1888cf2FB3',
+    weth: '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14',
+  },
+};
+
+/**
+ * Uniswap V3 SwapRouter02 ABI (minimal for exactInputSingle)
+ */
+export const SWAP_ROUTER_ABI = [
+  {
+    inputs: [
+      {
+        components: [
+          { name: 'tokenIn', type: 'address' },
+          { name: 'tokenOut', type: 'address' },
+          { name: 'fee', type: 'uint24' },
+          { name: 'recipient', type: 'address' },
+          { name: 'amountIn', type: 'uint256' },
+          { name: 'amountOutMinimum', type: 'uint256' },
+          { name: 'sqrtPriceLimitX96', type: 'uint160' },
+        ],
+        name: 'params',
+        type: 'tuple',
+      },
+    ],
+    name: 'exactInputSingle',
+    outputs: [{ name: 'amountOut', type: 'uint256' }],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+] as const;
+
+/**
+ * Uniswap V3 QuoterV2 ABI (minimal for quoteExactInputSingle)
+ */
+export const QUOTER_V2_ABI = [
+  {
+    inputs: [
+      {
+        components: [
+          { name: 'tokenIn', type: 'address' },
+          { name: 'tokenOut', type: 'address' },
+          { name: 'amountIn', type: 'uint256' },
+          { name: 'fee', type: 'uint24' },
+          { name: 'sqrtPriceLimitX96', type: 'uint160' },
+        ],
+        name: 'params',
+        type: 'tuple',
+      },
+    ],
+    name: 'quoteExactInputSingle',
+    outputs: [
+      { name: 'amountOut', type: 'uint256' },
+      { name: 'sqrtPriceX96After', type: 'uint160' },
+      { name: 'initializedTicksCrossed', type: 'uint32' },
+      { name: 'gasEstimate', type: 'uint256' },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+] as const;
+
+/**
+ * WETH ABI (minimal for deposit/withdraw)
+ */
+export const WETH_ABI = [
+  {
+    inputs: [],
+    name: 'deposit',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'wad', type: 'uint256' }],
+    name: 'withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { name: 'guy', type: 'address' },
+      { name: 'wad', type: 'uint256' },
+    ],
+    name: 'approve',
+    outputs: [{ name: '', type: 'bool' }],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { name: 'src', type: 'address' },
+      { name: 'dst', type: 'address' },
+    ],
+    name: 'allowance',
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const;
+
+/**
+ * Common Uniswap V3 fee tiers (in basis points * 100)
+ * 500 = 0.05%, 3000 = 0.3%, 10000 = 1%
+ */
+export const UNISWAP_FEE_TIERS = [500, 3000, 10000] as const;
+
+/**
+ * Get Uniswap contracts for a chain
+ */
+export function getUniswapContracts(chainName: string) {
+  return UNISWAP_CONTRACTS[chainName.toLowerCase()];
+}
+
+/**
  * Get RPC URL for a chain from environment or fallback to public RPC
  * @param chainName - Chain name
  * @param runtime - Agent runtime with getSetting method

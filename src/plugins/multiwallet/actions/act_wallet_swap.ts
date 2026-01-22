@@ -238,6 +238,23 @@ Extract the following information about the requested token swap:
 
 Respond with a JSON markdown block containing only the extracted values. All fields are required`;
 
+// EVM chain names for routing
+const EVM_CHAINS = ['ethereum', 'base', 'polygon', 'arbitrum', 'optimism', 'sepolia'];
+
+/**
+ * Detect if an address is an Ethereum address (0x prefix, 40 hex chars)
+ */
+function isEthereumAddress(address: string): boolean {
+    return /^0x[a-fA-F0-9]{40}$/i.test(address);
+}
+
+/**
+ * Detect if an address is a Solana address (base58, typically 32-44 chars)
+ */
+function isSolanaAddress(address: string): boolean {
+    return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
+}
+
 export default {
     name: 'MULTIWALLET_SWAP',
     similes: [
@@ -246,8 +263,15 @@ export default {
         'MULTIWALLET_TRADE_TOKENS',
         'MULTIWALLET_EXCHANGE_TOKENS',
         'MULTIWALLET_SWAP_SOL_TOKENS',
+        'SWAP_ETH',
+        'SWAP_ETHEREUM',
+        'SWAP_EVM',
+        'SWAP_BASE',
+        'SWAP_POLYGON',
+        'UNISWAP_SWAP',
     ],
     validate: async (runtime: IAgentRuntime, message: Memory) => {
+        console.log('MULTIWALLET_SWAP validate called');
         // they have to be registered
         if (!await HasEntityIdFromMessage(runtime, message)) {
             console.log('MULTIWALLET_SWAP validate - author not found')
@@ -255,12 +279,13 @@ export default {
         }
         const account = await getAccountFromMessage(runtime, message)
         if (!account) {
-            //console.log('WALLET_CREATION validate - registration not found')
+            console.log('MULTIWALLET_SWAP validate - account not found')
             return false;
         }
+        console.log('MULTIWALLET_SWAP validate - PASSED, account has', account.metawallets?.length || 0, 'wallets');
         return true;
     },
-    description: 'Swap tokens from one of your wallets using Jupiter DEX.',
+    description: 'Swap tokens from one of your wallets using Jupiter DEX (Solana) or Uniswap (Ethereum/EVM chains).',
     handler: async (
         runtime: IAgentRuntime,
         message: Memory,
@@ -280,26 +305,84 @@ export default {
         }
         console.log('account', account)
 
-        // local agent wallet?
-        const validSources = account.metawallets.map(mw => mw.keypairs.solana.publicKey)
+        // local agent wallet? - collect both Solana and Ethereum addresses
+        const validSources: string[] = [];
+        const solanaWallets: string[] = [];
+        const evmWallets: string[] = [];
+        for (const mw of account.metawallets) {
+            if (mw.keypairs?.solana?.publicKey) {
+                validSources.push(mw.keypairs.solana.publicKey);
+                solanaWallets.push(mw.keypairs.solana.publicKey);
+            }
+            if (mw.keypairs?.ethereum?.publicKey) {
+                validSources.push(mw.keypairs.ethereum.publicKey);
+                evmWallets.push(mw.keypairs.ethereum.publicKey);
+            }
+        }
         console.log('validSources', validSources)
+        console.log('solanaWallets', solanaWallets)
+        console.log('evmWallets', evmWallets)
 
-        // the source might not just be in the last message
-        // might be in the context...
-
+        // Try to detect source wallet from message text first
         const sources = await getWalletsFromText(runtime, message)
-        console.log('sources', sources)
-        if (sources.length !== 1) {
-            callback?.(takeItPrivate(runtime, message, "Can't determine source wallet"))
+        console.log('sources from text', sources)
+
+        let sourceWalletAddress: string | null = null;
+
+        if (sources.length === 1) {
+            // User specified a wallet address in the message
+            sourceWalletAddress = sources[0];
+        } else {
+            // No wallet specified - try to auto-detect based on message content
+            const messageText = message.content?.text?.toLowerCase() || '';
+
+            // Check if user mentions an EVM chain
+            const evmChainMentioned = ['ethereum', 'eth', 'base', 'polygon', 'arbitrum', 'optimism', 'sepolia'].some(
+                chain => messageText.includes(chain)
+            );
+            // Check if user mentions Solana
+            const solanaMentioned = ['solana', 'sol'].some(
+                chain => messageText.includes(chain)
+            );
+
+            console.log('MULTIWALLET_SWAP auto-detect: evmChainMentioned=', evmChainMentioned, 'solanaMentioned=', solanaMentioned);
+
+            if (evmChainMentioned && evmWallets.length === 1) {
+                // User mentioned EVM chain and has exactly one EVM wallet
+                sourceWalletAddress = evmWallets[0];
+                console.log('MULTIWALLET_SWAP auto-selected EVM wallet:', sourceWalletAddress);
+            } else if (solanaMentioned && solanaWallets.length === 1) {
+                // User mentioned Solana and has exactly one Solana wallet
+                sourceWalletAddress = solanaWallets[0];
+                console.log('MULTIWALLET_SWAP auto-selected Solana wallet:', sourceWalletAddress);
+            } else if (validSources.length === 1) {
+                // User has only one wallet total - use it
+                sourceWalletAddress = validSources[0];
+                console.log('MULTIWALLET_SWAP auto-selected only wallet:', sourceWalletAddress);
+            } else if (evmWallets.length === 1 && solanaWallets.length === 0) {
+                // User only has EVM wallet(s)
+                sourceWalletAddress = evmWallets[0];
+                console.log('MULTIWALLET_SWAP auto-selected EVM wallet (no Solana):', sourceWalletAddress);
+            } else if (solanaWallets.length === 1 && evmWallets.length === 0) {
+                // User only has Solana wallet(s)
+                sourceWalletAddress = solanaWallets[0];
+                console.log('MULTIWALLET_SWAP auto-selected Solana wallet (no EVM):', sourceWalletAddress);
+            }
+        }
+
+        if (!sourceWalletAddress) {
+            callback?.(takeItPrivate(runtime, message, "Can't determine source wallet. Please specify which wallet to use."))
             return {
                 success: false,
                 text: "Can't determine source wallet",
                 error: 'SOURCE_WALLET_AMBIGUOUS'
             }
         }
+
         const sourceResult = {
-            sourceWalletAddress: sources[0]
+            sourceWalletAddress
         }
+        console.log('MULTIWALLET_SWAP sourceResult', sourceResult)
         /*
         const sourcePrompt = composePromptFromState({
             state: state,
@@ -339,14 +422,42 @@ export default {
         //const metawallets = await interfaceWalletService.getWalletByUserEntityIds([entityId]);
         const userMetawallets = account.metawallets;
 
-        // confirm wallet is in this list
+        // Detect chain type from address format
+        const sourceAddress = sourceResult.sourceWalletAddress;
+        const isEvmSwap = isEthereumAddress(sourceAddress);
+        const isSolanaSwap = isSolanaAddress(sourceAddress);
+
+        console.log('MULTIWALLET_SWAP chain detection:', { sourceAddress, isEvmSwap, isSolanaSwap });
+
+        // confirm wallet is in this list - check both Solana and Ethereum keypairs
         let found: any[] = [];
+        let detectedChain: string = 'solana';
+
         for (const mw of userMetawallets) {
-            const kp = mw.keypairs.solana;
-            if (kp) {
-                //console.log('kp', kp);
-                if (kp.publicKey.toString() === sourceResult.sourceWalletAddress) {
-                    found.push(kp);
+            // Check Solana keypairs
+            const solKp = mw.keypairs?.solana;
+            if (solKp && solKp.publicKey?.toString() === sourceAddress) {
+                found.push({ ...solKp, chain: 'solana' });
+                detectedChain = 'solana';
+            }
+
+            // Check Ethereum keypairs
+            const ethKp = mw.keypairs?.ethereum;
+            if (ethKp && ethKp.publicKey?.toLowerCase() === sourceAddress.toLowerCase()) {
+                found.push({ ...ethKp, chain: 'ethereum' });
+                detectedChain = 'ethereum';
+            }
+        }
+
+        // If no exact match found but it's an EVM address, check if user has any ETH wallet
+        if (!found.length && isEvmSwap) {
+            for (const mw of userMetawallets) {
+                const ethKp = mw.keypairs?.ethereum;
+                if (ethKp) {
+                    console.log('MULTIWALLET_SWAP using default Ethereum wallet:', ethKp.publicKey);
+                    found.push({ ...ethKp, chain: 'ethereum' });
+                    detectedChain = 'ethereum';
+                    break;
                 }
             }
         }
@@ -359,12 +470,15 @@ export default {
                 error: 'WALLET_NOT_FOUND'
             };
         }
-        console.log('MULTIWALLET_SWAP found', found);
+        console.log('MULTIWALLET_SWAP found', found, 'chain:', detectedChain);
 
-        // gather possibilities
+        // gather possibilities - only for Solana wallets
         let contextStr = '';
         const solanaService = runtime.getService(SOLANA_SERVICE_NAME) as any;
-        for (const kp of found) {
+
+        // Only gather Solana wallet info for Solana chains
+        const solanaKeypairs = found.filter(kp => kp.chain === 'solana');
+        for (const kp of solanaKeypairs) {
             const pubKey = kp.publicKey;
             contextStr += 'Wallet Address: ' + pubKey + '\n';
             // get wallet contents
@@ -390,6 +504,14 @@ export default {
             }
             contextStr += '\n';
         }
+
+        // For EVM wallets, add basic context
+        const evmKeypairs = found.filter(kp => kp.chain === 'ethereum');
+        for (const kp of evmKeypairs) {
+            contextStr += 'EVM Wallet Address: ' + kp.publicKey + '\n';
+            contextStr += '  (EVM balances not shown in context)\n\n';
+        }
+
         console.log('contextStr', contextStr);
 
         const swapPrompt = composePromptFromState({
@@ -429,9 +551,12 @@ export default {
 
         console.log('MULTIWALLET_SWAP content', content);
 
-        // find source keypair
+        // find source keypair - now supports both chains
         console.log('found', found)
-        const sourceKp = found.find(kp => kp.publicKey === sourceResult.sourceWalletAddress);
+        const sourceKp = found.find(kp =>
+            kp.publicKey === sourceResult.sourceWalletAddress ||
+            kp.publicKey?.toLowerCase() === sourceResult.sourceWalletAddress.toLowerCase()
+        );
         if (!sourceKp) {
             console.warn('MULTIWALLET_SWAP Could not find the specified wallet')
             callback?.({ text: 'Could not find the specified wallet' });
@@ -442,9 +567,175 @@ export default {
             };
         }
 
+        // Determine the chain from the message content first, then fall back to keypair
+        const messageText = message.content?.text?.toLowerCase() || '';
+        let swapChain = sourceKp.chain || (isEthereumAddress(sourceKp.publicKey) ? 'ethereum' : 'solana');
+
+        // Override chain if specific EVM chain is mentioned in message
+        if (swapChain !== 'solana') {
+            if (messageText.includes('sepolia')) {
+                swapChain = 'sepolia';
+            } else if (messageText.includes('base')) {
+                swapChain = 'base';
+            } else if (messageText.includes('polygon')) {
+                swapChain = 'polygon';
+            } else if (messageText.includes('arbitrum')) {
+                swapChain = 'arbitrum';
+            } else if (messageText.includes('optimism')) {
+                swapChain = 'optimism';
+            }
+            // If no specific chain mentioned, default to 'ethereum' (mainnet)
+        }
+        console.log('MULTIWALLET_SWAP swapChain:', swapChain);
+
         // clean up symbols
-        content.inputTokenSymbol = content.inputTokenSymbol.replace('$', '')
-        content.outputTokenSymbol = content.outputTokenSymbol.replace('$', '')
+        content.inputTokenSymbol = content.inputTokenSymbol?.replace('$', '') || '';
+        content.outputTokenSymbol = content.outputTokenSymbol?.replace('$', '') || '';
+
+        // ========================================
+        // EVM CHAIN SWAP (Uniswap)
+        // ========================================
+        if (swapChain !== 'solana') {
+            console.log('MULTIWALLET_SWAP executing EVM swap via Uniswap');
+
+            // Get the Ethereum chain service
+            const ethService = runtime.getService('chain_ethereum') as any;
+            if (!ethService) {
+                callback?.(takeItPrivate(runtime, message, 'Ethereum service not available'));
+                return {
+                    success: false,
+                    text: 'Ethereum service not available',
+                    error: 'SERVICE_NOT_FOUND'
+                };
+            }
+
+            // Common EVM token addresses
+            const COMMON_TOKENS: Record<string, Record<string, string>> = {
+                ethereum: {
+                    ETH: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+                    WETH: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+                    USDC: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+                    USDT: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+                },
+                base: {
+                    ETH: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+                    WETH: '0x4200000000000000000000000000000000000006',
+                    USDC: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+                },
+                sepolia: {
+                    ETH: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+                    WETH: '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14',
+                    USDC: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
+                },
+            };
+
+            // Resolve token addresses from symbols
+            // Note: LLM may return "null" as a string, so we need to check for that
+            const chainTokens = COMMON_TOKENS[swapChain] || COMMON_TOKENS['ethereum'];
+
+            // Helper to check if a value is valid (not null, "null", undefined, or empty)
+            const isValidCA = (ca: any): boolean => {
+                return ca && ca !== 'null' && ca !== 'undefined' && typeof ca === 'string' && ca.startsWith('0x');
+            };
+
+            let inputTokenCA = isValidCA(content.inputTokenCA)
+                ? content.inputTokenCA
+                : chainTokens[content.inputTokenSymbol?.toUpperCase()] || '';
+            let outputTokenCA = isValidCA(content.outputTokenCA)
+                ? content.outputTokenCA
+                : chainTokens[content.outputTokenSymbol?.toUpperCase()] || '';
+
+            // Handle ETH symbol as fallback
+            if (content.inputTokenSymbol?.toUpperCase() === 'ETH' && !inputTokenCA) {
+                inputTokenCA = chainTokens['ETH'] || '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
+            }
+            if (content.outputTokenSymbol?.toUpperCase() === 'ETH' && !outputTokenCA) {
+                outputTokenCA = chainTokens['ETH'] || '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
+            }
+
+            if (!inputTokenCA || !outputTokenCA) {
+                callback?.(takeItPrivate(runtime, message, `Could not resolve token addresses for ${content.inputTokenSymbol} -> ${content.outputTokenSymbol}`));
+                return {
+                    success: false,
+                    text: `Could not resolve token addresses`,
+                    error: 'TOKEN_NOT_FOUND'
+                };
+            }
+
+            console.log('MULTIWALLET_SWAP EVM tokens:', { inputTokenCA, outputTokenCA, amount: content.amount });
+
+            try {
+                // Convert amount to wei (assuming 18 decimals for simplicity, should get from token)
+                const amountInWei = BigInt(Math.floor(Number(content.amount) * 1e18)).toString();
+
+                // Get quote
+                const quote = await ethService.getSwapQuote({
+                    tokenIn: inputTokenCA,
+                    tokenOut: outputTokenCA,
+                    amountIn: amountInWei,
+                    chainName: swapChain,
+                    slippageBps: 100, // 1% slippage
+                });
+
+                console.log('MULTIWALLET_SWAP quote:', quote);
+
+                // Execute swap
+                const swapResult = await ethService.executeSwap({
+                    tokenIn: inputTokenCA,
+                    tokenOut: outputTokenCA,
+                    amountIn: amountInWei,
+                    amountOutMinimum: quote.amountOutMinimum,
+                    fee: quote.fee,
+                    privateKey: sourceKp.privateKey,
+                    chainName: swapChain,
+                });
+
+                if (swapResult.success) {
+                    const outputAmount = (Number(quote.amountOut) / 1e18).toFixed(6);
+                    const responseText = `Swap completed successfully!
+
+**Tokens Swapped:**
+- ${content.amount} ${content.inputTokenSymbol} -> ${outputAmount} ${content.outputTokenSymbol}
+
+**Transaction Details:**
+- Chain: ${swapChain}
+- TX: ${swapResult.txHash}
+- Explorer: ${swapResult.explorerUrl}
+
+**Wallet:** ${sourceKp.publicKey}`;
+
+                    callback?.(takeItPrivate(runtime, message, responseText));
+                    return {
+                        success: true,
+                        text: responseText,
+                        data: {
+                            txHash: swapResult.txHash,
+                            chain: swapChain,
+                            amount: content.amount,
+                            inputToken: content.inputTokenSymbol,
+                            outputToken: content.outputTokenSymbol,
+                            outputAmount,
+                        }
+                    };
+                } else {
+                    throw new Error(swapResult.error || 'Swap failed');
+                }
+            } catch (error) {
+                const errorMsg = error instanceof Error ? error.message : String(error);
+                logger.error('EVM swap error:', errorMsg);
+                callback?.(takeItPrivate(runtime, message, `Swap failed: ${errorMsg}`));
+                return {
+                    success: false,
+                    text: `Swap failed: ${errorMsg}`,
+                    error: errorMsg
+                };
+            }
+        }
+
+        // ========================================
+        // SOLANA CHAIN SWAP (Jupiter)
+        // ========================================
+        console.log('MULTIWALLET_SWAP executing Solana swap via Jupiter');
 
         // Fix Handle SOL addresses
         if (content.inputTokenSymbol?.toUpperCase() === 'SOL') {
@@ -553,40 +844,25 @@ export default {
             const solscanLink = `https://solscan.io/tx/${txid}`;
 
             // Format response with all details
-            const responseText = `✅ Swap completed successfully!
+            const responseText = `Swap completed successfully!
 
-💰 **Tokens Swapped:**
-• ${content.amount} ${content.inputTokenSymbol} → ${outputAmount} ${content.outputTokenSymbol}
+**Tokens Swapped:**
+- ${content.amount} ${content.inputTokenSymbol} -> ${outputAmount} ${content.outputTokenSymbol}
 
-🔗 **Transaction Details:**
-• Transaction ID: \`${txid}\`
-• Solscan: ${solscanLink}
+**Transaction Details:**
+- Chain: Solana
+- TX: ${txid}
+- Solscan: ${solscanLink}
 
-💼 **Wallet:** ${sourceResult.sourceWalletAddress}`;
-            /*
-            responses.length = 0;
-            const memory: Memory = {
-                entityId: uuidv4() as UUID,
-                roomId: message.roomId,
-                text: responseText,
-                content: {
-                    text: responseText,
-                    success: true,
-                    txid,
-                    amount: content.amount,
-                    sender: sourceResult.sourceWalletAddress,
-                    inputToken: content.inputTokenSymbol,
-                    outputToken: content.outputTokenSymbol,
-                }
-            };
-            responses.push(memory);
-            */
+**Wallet:** ${sourceResult.sourceWalletAddress}`;
+
             callback?.(takeItPrivate(runtime, message, responseText))
             return {
                 success: true,
                 text: responseText,
                 data: {
                     txid,
+                    chain: 'solana',
                     amount: content.amount,
                     inputToken: content.inputTokenSymbol,
                     outputToken: content.outputTokenSymbol,
@@ -605,6 +881,7 @@ export default {
         }
     },
     examples: [
+        // Solana swap example
         [
             {
                 name: '{{name1}}',
@@ -615,7 +892,55 @@ export default {
             {
                 name: '{{name2}}',
                 content: {
-                    text: "I'll help you swap 0.1 SOL for USDC",
+                    text: "I'll help you swap 0.1 SOL for USDC on Solana",
+                    actions: ['MULTIWALLET_SWAP'],
+                },
+            },
+        ],
+        // Ethereum swap example
+        [
+            {
+                name: '{{name1}}',
+                content: {
+                    text: 'Swap 0.1 ETH for USDC on Ethereum',
+                },
+            },
+            {
+                name: '{{name2}}',
+                content: {
+                    text: "I'll swap 0.1 ETH for USDC using Uniswap",
+                    actions: ['MULTIWALLET_SWAP'],
+                },
+            },
+        ],
+        // Base chain swap example
+        [
+            {
+                name: '{{name1}}',
+                content: {
+                    text: 'Swap 0.05 ETH for USDC on Base',
+                },
+            },
+            {
+                name: '{{name2}}',
+                content: {
+                    text: "I'll execute that swap on Base via Uniswap",
+                    actions: ['MULTIWALLET_SWAP'],
+                },
+            },
+        ],
+        // Generic EVM swap
+        [
+            {
+                name: '{{name1}}',
+                content: {
+                    text: 'Trade my ETH for USDC',
+                },
+            },
+            {
+                name: '{{name2}}',
+                content: {
+                    text: "I'll swap your ETH for USDC",
                     actions: ['MULTIWALLET_SWAP'],
                 },
             },

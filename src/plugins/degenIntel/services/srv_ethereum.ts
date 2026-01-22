@@ -34,6 +34,11 @@ import {
   ERC20_ABI,
   getChainConfig,
   getRpcUrl,
+  getUniswapContracts,
+  SWAP_ROUTER_ABI,
+  QUOTER_V2_ABI,
+  WETH_ABI,
+  UNISWAP_FEE_TIERS,
   type EVMChainConfig,
 } from '../config/evm-chains';
 
@@ -668,33 +673,298 @@ export class EthereumChainService extends Service implements IChainService {
   }
 
   // ========================================
-  // Trading / Exchange (placeholder)
+  // Trading / Exchange (Uniswap V3)
   // ========================================
 
   /**
    * Lists available exchanges for EVM chains
    */
   async listExchanges(): Promise<IntelExchange[]> {
-    // Placeholder - would integrate with Uniswap, 1inch, etc.
     return [
-      { id: 1, name: 'Uniswap', chain: 'ethereum' },
-      { id: 2, name: 'Uniswap', chain: 'base' },
-      { id: 3, name: 'QuickSwap', chain: 'polygon' },
+      { id: 1, name: 'Uniswap V3', chain: 'ethereum' },
+      { id: 2, name: 'Uniswap V3', chain: 'base' },
+      { id: 3, name: 'Uniswap V3', chain: 'polygon' },
+      { id: 4, name: 'Uniswap V3', chain: 'arbitrum' },
+      { id: 5, name: 'Uniswap V3', chain: 'optimism' },
+      { id: 6, name: 'Uniswap V3', chain: 'sepolia' },
     ];
   }
 
   /**
-   * Selects the best exchange (placeholder)
+   * Selects the best exchange (always Uniswap for EVM)
    */
   async selectExchange(): Promise<number> {
-    return 1; // Default to first exchange
+    return 1; // Default to Uniswap
   }
 
   /**
-   * Executes a swap on an exchange (placeholder)
+   * Get a swap quote from Uniswap V3
+   * @param params - Quote parameters
+   * @returns Quote result with expected output amount
    */
-  async doSwapOnExchange(exchangeId: number, params: any): Promise<any> {
-    throw new Error('Swap functionality not yet implemented for EVM chains');
+  async getSwapQuote(params: {
+    tokenIn: string;
+    tokenOut: string;
+    amountIn: string;
+    chainName?: string;
+    slippageBps?: number;
+  }): Promise<{
+    amountOut: string;
+    amountOutMinimum: string;
+    fee: number;
+    priceImpact: string;
+    chainName: string;
+  }> {
+    const chainName = params.chainName || this.defaultChain;
+    const contracts = getUniswapContracts(chainName);
+
+    if (!contracts) {
+      throw new Error(`Uniswap not supported on chain: ${chainName}`);
+    }
+
+    const publicClient = this.getPublicClient(chainName);
+    const slippageBps = params.slippageBps || 50; // Default 0.5% slippage
+
+    // Normalize addresses - handle native ETH as WETH
+    let tokenIn = params.tokenIn.toLowerCase();
+    let tokenOut = params.tokenOut.toLowerCase();
+
+    // Convert native ETH address to WETH
+    const nativeAddresses = ['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', '0x0000000000000000000000000000000000000000'];
+    if (nativeAddresses.includes(tokenIn)) {
+      tokenIn = contracts.weth.toLowerCase();
+    }
+    if (nativeAddresses.includes(tokenOut)) {
+      tokenOut = contracts.weth.toLowerCase();
+    }
+
+    // Try different fee tiers to find the best quote
+    let bestQuote: { amountOut: bigint; fee: number } | null = null;
+
+    for (const fee of UNISWAP_FEE_TIERS) {
+      try {
+        const result = await (publicClient as any).simulateContract({
+          address: contracts.quoterV2,
+          abi: QUOTER_V2_ABI,
+          functionName: 'quoteExactInputSingle',
+          args: [{
+            tokenIn: tokenIn as `0x${string}`,
+            tokenOut: tokenOut as `0x${string}`,
+            amountIn: BigInt(params.amountIn),
+            fee: fee,
+            sqrtPriceLimitX96: BigInt(0),
+          }],
+        });
+
+        const amountOut = result.result[0] as bigint;
+
+        if (!bestQuote || amountOut > bestQuote.amountOut) {
+          bestQuote = { amountOut, fee };
+        }
+      } catch (error) {
+        // This fee tier doesn't have liquidity, try next
+        logger.debug(`No liquidity for fee tier ${fee} on ${chainName}`);
+      }
+    }
+
+    if (!bestQuote) {
+      throw new Error(`No liquidity found for swap ${tokenIn} -> ${tokenOut} on ${chainName}`);
+    }
+
+    // Calculate minimum output with slippage
+    const amountOutMinimum = (bestQuote.amountOut * BigInt(10000 - slippageBps)) / BigInt(10000);
+
+    // Rough price impact calculation (simplified)
+    const priceImpact = '0.00'; // Would need to compare to oracle price for accurate impact
+
+    return {
+      amountOut: bestQuote.amountOut.toString(),
+      amountOutMinimum: amountOutMinimum.toString(),
+      fee: bestQuote.fee,
+      priceImpact,
+      chainName,
+    };
+  }
+
+  /**
+   * Execute a swap on Uniswap V3
+   * @param params - Swap parameters including private key
+   * @returns Transaction result
+   */
+  async executeSwap(params: {
+    tokenIn: string;
+    tokenOut: string;
+    amountIn: string;
+    amountOutMinimum: string;
+    fee: number;
+    privateKey: string;
+    chainName?: string;
+    deadline?: number;
+  }): Promise<{
+    success: boolean;
+    txHash?: string;
+    amountOut?: string;
+    error?: string;
+    explorerUrl?: string;
+  }> {
+    const chainName = params.chainName || this.defaultChain;
+    const contracts = getUniswapContracts(chainName);
+    const chainConfig = getChainConfig(chainName);
+
+    if (!contracts || !chainConfig) {
+      return {
+        success: false,
+        error: `Uniswap not supported on chain: ${chainName}`,
+      };
+    }
+
+    try {
+      const publicClient = this.getPublicClient(chainName);
+      const walletClient = this.getWalletClient(params.privateKey, chainName);
+      const account = walletClient.account!;
+
+      // Normalize addresses
+      let tokenIn = params.tokenIn.toLowerCase();
+      let tokenOut = params.tokenOut.toLowerCase();
+      const nativeAddresses = ['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', '0x0000000000000000000000000000000000000000'];
+      const isNativeIn = nativeAddresses.includes(tokenIn);
+      const isNativeOut = nativeAddresses.includes(tokenOut);
+
+      if (isNativeIn) {
+        tokenIn = contracts.weth.toLowerCase();
+      }
+      if (isNativeOut) {
+        tokenOut = contracts.weth.toLowerCase();
+      }
+
+      const amountIn = BigInt(params.amountIn);
+      const deadline = params.deadline || Math.floor(Date.now() / 1000) + 1800; // 30 min default
+
+      // If swapping from ERC20, need to approve first
+      if (!isNativeIn) {
+        // Check allowance for router using the allowance ABI
+        const allowanceAbi = [{
+          inputs: [{ name: 'owner', type: 'address' }, { name: 'spender', type: 'address' }],
+          name: 'allowance',
+          outputs: [{ name: '', type: 'uint256' }],
+          stateMutability: 'view',
+          type: 'function',
+        }] as const;
+
+        const currentAllowance = await (publicClient as any).readContract({
+          address: tokenIn as `0x${string}`,
+          abi: allowanceAbi,
+          functionName: 'allowance',
+          args: [account.address, contracts.swapRouter],
+        }) as bigint;
+
+        if (currentAllowance < amountIn) {
+          logger.info(`Approving ${tokenIn} for swap router...`);
+
+          const approveAbi = [{
+            inputs: [{ name: 'spender', type: 'address' }, { name: 'amount', type: 'uint256' }],
+            name: 'approve',
+            outputs: [{ name: '', type: 'bool' }],
+            stateMutability: 'nonpayable',
+            type: 'function',
+          }] as const;
+
+          const approveHash = await (walletClient as any).writeContract({
+            address: tokenIn as `0x${string}`,
+            abi: approveAbi,
+            functionName: 'approve',
+            args: [contracts.swapRouter, amountIn * BigInt(2)], // Approve 2x for future swaps
+            chain: chainConfig.viemChain,
+            account,
+          });
+
+          // Wait for approval
+          await publicClient.waitForTransactionReceipt({ hash: approveHash });
+          logger.info(`Approval confirmed: ${approveHash}`);
+        }
+      }
+
+      // Execute the swap
+      logger.info(`Executing swap on ${chainName}: ${tokenIn} -> ${tokenOut}`);
+
+      const swapParams = {
+        tokenIn: tokenIn as `0x${string}`,
+        tokenOut: tokenOut as `0x${string}`,
+        fee: params.fee,
+        recipient: account.address,
+        amountIn: amountIn,
+        amountOutMinimum: BigInt(params.amountOutMinimum),
+        sqrtPriceLimitX96: BigInt(0),
+      };
+
+      const txHash = await (walletClient as any).writeContract({
+        address: contracts.swapRouter,
+        abi: SWAP_ROUTER_ABI,
+        functionName: 'exactInputSingle',
+        args: [swapParams],
+        chain: chainConfig.viemChain,
+        account,
+        value: isNativeIn ? amountIn : BigInt(0), // Send ETH value if swapping from native
+      }) as `0x${string}`;
+
+      // Wait for confirmation
+      const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
+
+      if (receipt.status === 'success') {
+        logger.info(`Swap successful: ${txHash}`);
+        return {
+          success: true,
+          txHash,
+          explorerUrl: `${chainConfig.explorerUrl}/tx/${txHash}`,
+        };
+      } else {
+        return {
+          success: false,
+          txHash,
+          error: 'Transaction reverted',
+          explorerUrl: `${chainConfig.explorerUrl}/tx/${txHash}`,
+        };
+      }
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logger.error(`Swap failed on ${chainName}: ${errorMsg}`);
+      return {
+        success: false,
+        error: errorMsg,
+      };
+    }
+  }
+
+  /**
+   * Executes a swap on an exchange (legacy interface)
+   */
+  async doSwapOnExchange(exchangeId: number, params: {
+    tokenIn: string;
+    tokenOut: string;
+    amountIn: string;
+    privateKey: string;
+    chainName?: string;
+    slippageBps?: number;
+  }): Promise<any> {
+    // Get quote first
+    const quote = await this.getSwapQuote({
+      tokenIn: params.tokenIn,
+      tokenOut: params.tokenOut,
+      amountIn: params.amountIn,
+      chainName: params.chainName,
+      slippageBps: params.slippageBps,
+    });
+
+    // Execute swap
+    return this.executeSwap({
+      tokenIn: params.tokenIn,
+      tokenOut: params.tokenOut,
+      amountIn: params.amountIn,
+      amountOutMinimum: quote.amountOutMinimum,
+      fee: quote.fee,
+      privateKey: params.privateKey,
+      chainName: params.chainName,
+    });
   }
 
   // ========================================
