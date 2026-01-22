@@ -604,12 +604,16 @@ export default {
 
         // Determine the chain from the message content first, then fall back to keypair
         const messageText = message.content?.text?.toLowerCase() || '';
+        console.log('MULTIWALLET_SWAP messageText:', messageText);
+        console.log('MULTIWALLET_SWAP contains sepolia?', messageText.includes('sepolia'));
         let swapChain = sourceKp.chain || (isEthereumAddress(sourceKp.publicKey) ? 'ethereum' : 'solana');
+        console.log('MULTIWALLET_SWAP initial swapChain:', swapChain);
 
         // Override chain if specific EVM chain is mentioned in message
         if (swapChain !== 'solana') {
             if (messageText.includes('sepolia')) {
                 swapChain = 'sepolia';
+                console.log('MULTIWALLET_SWAP detected sepolia in message');
             } else if (messageText.includes('base')) {
                 swapChain = 'base';
             } else if (messageText.includes('polygon')) {
