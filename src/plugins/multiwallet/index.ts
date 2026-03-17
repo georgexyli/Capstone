@@ -7,6 +7,7 @@ import { walletCreate } from "./actions/act_wallet_create";
 import { userMetawalletList } from "./actions/act_wallet_list";
 import { walletImportAction } from "./actions/act_wallet_import";
 import userMetawalletSwap from "./actions/act_wallet_swap";
+import confirmSwapAction from "./actions/act_confirm_swap";
 import userMetawalletSweep from "./actions/act_wallet_sweep";
 import userMetawalletXfer from "./actions/act_wallet_xfer";
 //import userMetawalletBalance from "./actions/act_wallet_balance";
@@ -18,9 +19,6 @@ import userMetawalletXfer from "./actions/act_wallet_xfer";
 
 //import actionTokenScam from "./actions/act_token_scam";
 //import actionTokenRug from "./actions/act_token_rug";
-
-// in testing
-//import { actionConfirm } from "./actions/act_confirm";
 
 // Providers
 
@@ -40,7 +38,7 @@ export const multiwalletPlugin: Plugin = {
   actions: [
     walletCreate, walletImportAction,
     // userMetawalletDelete, // need a confirmation or something
-    userMetawalletXfer, userMetawalletSwap, userMetawalletSweep,
+    userMetawalletXfer, userMetawalletSwap, confirmSwapAction, userMetawalletSweep,
     // userMetawalletSwapAll, // need a confirmation or something
     userMetawalletList, // keep this enabled for the special formatting
     //userMetawalletBalance,

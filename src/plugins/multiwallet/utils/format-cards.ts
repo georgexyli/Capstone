@@ -377,3 +377,26 @@ export const FAUCET_URLS: Record<string, string> = {
 export function getFaucetUrl(network: string): string | undefined {
     return FAUCET_URLS[network.toLowerCase()];
 }
+
+// ============================================
+// SWAP CONFIRMATION PROMPT
+// ============================================
+
+export function formatSwapConfirmation(previewText: string): string {
+    return `${previewText}
+
+⚠️ Reply 'confirm' to execute or 'cancel' to abort.
+⏰ This quote expires in 60 seconds.`;
+}
+
+// ============================================
+// SWAP CANCELLED / EXPIRED MESSAGES
+// ============================================
+
+export function formatSwapCancelled(): string {
+    return `🚫 Swap cancelled. No transaction was executed.`;
+}
+
+export function formatSwapExpired(): string {
+    return `⏰ Quote expired. Please request a new swap to get a fresh quote.`;
+}

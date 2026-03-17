@@ -35,8 +35,10 @@ import {
     formatSwapFailed,
     formatInsufficientBalance,
     formatSwapProcessing,
+    formatSwapConfirmation,
     getFaucetUrl,
 } from '../utils/format-cards'
+import { getEntityIdFromMessage } from '../../autonomous-trader/utils'
 
 /**
  * Helper to push a message to the responses array for chat display
@@ -272,6 +274,8 @@ Extract the following information about the requested token swap:
 - Amount of input token to swap
 
 Respond with a JSON markdown block containing only the extracted values. All fields are required`;
+
+const PENDING_SWAP_TYPE = 'pending_swap_v0';
 
 // EVM chain names for routing
 const EVM_CHAINS = ['ethereum', 'base', 'polygon', 'arbitrum', 'optimism', 'sepolia'];
@@ -739,49 +743,63 @@ export default {
                     network: swapChain.charAt(0).toUpperCase() + swapChain.slice(1),
                     walletAddress: sourceKp.publicKey,
                 });
-                callback?.(takeItPrivate(runtime, message, previewText));
+                // Show preview with confirmation prompt
+                const confirmText = formatSwapConfirmation(previewText);
+                callback?.(takeItPrivate(runtime, message, confirmText));
 
-                // Execute swap
-                const swapResult = await ethService.executeSwap({
-                    tokenIn: inputTokenCA,
-                    tokenOut: outputTokenCA,
-                    amountIn: amountInWei,
-                    amountOutMinimum: quote.amountOutMinimum,
-                    fee: quote.fee,
-                    privateKey: sourceKp.privateKey,
-                    chainName: swapChain,
-                });
+                // Store pending swap as a component on the user's entity
+                const userEntityId = await getEntityIdFromMessage(runtime, message);
+                if (!userEntityId) {
+                    return { success: false, text: 'Could not resolve user entity', error: 'ENTITY_NOT_FOUND' };
+                }
 
-                if (swapResult.success) {
-                    const outputAmount = (Number(quote.amountOut) / 1e18).toFixed(6);
-                    const responseText = formatSwapSuccess({
+                // Clean up any existing pending swap first
+                const existingEntity = await runtime.getEntityById(userEntityId as UUID);
+                if (existingEntity?.components) {
+                    const existingPending = existingEntity.components.find(c => c.type === PENDING_SWAP_TYPE && !c.data?.deleted);
+                    if (existingPending) {
+                        await runtime.updateComponent({
+                            ...existingPending,
+                            type: PENDING_SWAP_TYPE,
+                            data: { deleted: true, deletedAt: Date.now() },
+                        });
+                    }
+                }
+
+                const roomDetails = await runtime.getRoom(message.roomId);
+                await runtime.createComponent({
+                    id: uuidv4() as UUID,
+                    agentId: runtime.agentId,
+                    worldId: roomDetails?.worldId || createUniqueUuid(runtime, 'default-world'),
+                    roomId: message.roomId,
+                    sourceEntityId: message.entityId,
+                    entityId: userEntityId as UUID,
+                    type: PENDING_SWAP_TYPE,
+                    data: {
+                        chain: swapChain,
+                        inputTokenCA,
+                        outputTokenCA,
+                        amountInWei,
+                        amountOutMinimum: quote.amountOutMinimum,
+                        fee: quote.fee,
+                        privateKey: sourceKp.privateKey,
+                        chainName: swapChain,
+                        quoteAmountOut: quote.amountOut,
                         inputAmount: content.amount,
                         inputSymbol: content.inputTokenSymbol || 'Unknown',
-                        outputAmount,
                         outputSymbol: content.outputTokenSymbol || 'Unknown',
-                        txHash: swapResult.txHash,
-                        explorerUrl: swapResult.explorerUrl,
-                        network: swapChain.charAt(0).toUpperCase() + swapChain.slice(1),
-                    });
+                        sourcePublicKey: sourceKp.publicKey,
+                        createdAt: Date.now(),
+                    },
+                    createdAt: Date.now(),
+                });
 
-                    // Push to responses array for direct chat display
-                    pushChatMessage(runtime, message, responseText, responses);
-                    callback?.(takeItPrivate(runtime, message, responseText));
-                    return {
-                        success: true,
-                        text: responseText,
-                        data: {
-                            txHash: swapResult.txHash,
-                            chain: swapChain,
-                            amount: content.amount,
-                            inputToken: content.inputTokenSymbol,
-                            outputToken: content.outputTokenSymbol,
-                            outputAmount,
-                        }
-                    };
-                } else {
-                    throw new Error(swapResult.error || 'Swap failed');
-                }
+                console.log('MULTIWALLET_SWAP stored pending EVM swap, awaiting user confirmation');
+                return {
+                    success: true,
+                    text: 'Swap preview shown, awaiting confirmation',
+                    data: { pendingConfirmation: true, chain: swapChain },
+                };
             } catch (error) {
                 const errorMsg = error instanceof Error ? error.message : String(error);
                 logger.error('EVM swap error:', errorMsg);
@@ -866,122 +884,67 @@ export default {
             };
         }
 
-        const secretKey = bs58.decode(sourceKp.privateKey);
-        const senderKeypair = Keypair.fromSecretKey(secretKey);
+        // Show Solana swap preview with confirmation prompt
+        const solPreviewText = formatSwapPreview({
+            inputAmount: content.amount,
+            inputSymbol: content.inputTokenSymbol || 'Unknown',
+            outputAmount: 'TBD (quoted at execution)',
+            outputSymbol: content.outputTokenSymbol || 'Unknown',
+            slippage: 2,
+            network: 'Solana',
+            walletAddress: sourceKp.publicKey,
+        });
+        const solConfirmText = formatSwapConfirmation(solPreviewText);
+        callback?.(takeItPrivate(runtime, message, solConfirmText));
 
-        console.log('MULTIWALLET_SWAP built KP');
+        // Store pending swap as a component on the user's entity
+        const solUserEntityId = await getEntityIdFromMessage(runtime, message);
+        if (!solUserEntityId) {
+            return { success: false, text: 'Could not resolve user entity', error: 'ENTITY_NOT_FOUND' };
+        }
 
-        try {
-            const connection = new Connection(
-                runtime.getSetting('SOLANA_RPC_URL') || 'https://api.mainnet-beta.solana.com'
-            );
-            console.log('1')
-
-            const swapResult = (await swapToken(
-                connection,
-                senderKeypair.publicKey,
-                content.inputTokenCA as string,
-                content.outputTokenCA as string,
-                Number(content.amount),
-                runtime
-            )) as { swapTransaction: string; quoteResponse?: any };
-
-            console.log('2')
-
-            const transactionBuf = Buffer.from(swapResult.swapTransaction, 'base64');
-            const transaction = VersionedTransaction.deserialize(transactionBuf);
-
-            transaction.sign([senderKeypair]);
-
-            const latestBlockhash = await connection.getLatestBlockhash();
-            const txid = await connection.sendTransaction(transaction, {
-                skipPreflight: false,
-                maxRetries: 3,
-                preflightCommitment: 'confirmed',
-            });
-
-            const confirmation = await connection.confirmTransaction(
-                {
-                    signature: txid,
-                    blockhash: latestBlockhash.blockhash,
-                    lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
-                },
-                'confirmed'
-            );
-
-            if (confirmation.value.err) {
-                throw new Error(`Transaction failed: ${confirmation.value.err}`);
-            }
-
-            // Extract output amount from quote if available
-            let outputAmount = 'Unknown';
-            if (swapResult.quoteResponse?.outAmount) {
-                const outputDecimals = content.outputTokenCA === 'So11111111111111111111111111111111111111112'
-                    ? 9
-                    : await getTokenDecimals(connection, content.outputTokenCA as string);
-                const outAmountBN = new BigNumber(swapResult.quoteResponse.outAmount);
-                outputAmount = outAmountBN.dividedBy(new BigNumber(10).pow(outputDecimals)).toString();
-            }
-
-            // Create Solscan link
-            const solscanLink = `https://solscan.io/tx/${txid}`;
-
-            // Format response with card UI
-            const responseText = formatSwapSuccess({
-                inputAmount: content.amount,
-                inputSymbol: content.inputTokenSymbol || 'Unknown',
-                outputAmount,
-                outputSymbol: content.outputTokenSymbol || 'Unknown',
-                txHash: txid,
-                explorerUrl: solscanLink,
-                network: 'Solana',
-            });
-
-            // Push to responses array for direct chat display
-            pushChatMessage(runtime, message, responseText, responses);
-            callback?.(takeItPrivate(runtime, message, responseText))
-            return {
-                success: true,
-                text: responseText,
-                data: {
-                    txid,
-                    chain: 'solana',
-                    amount: content.amount,
-                    inputToken: content.inputTokenSymbol,
-                    outputToken: content.outputTokenSymbol,
-                    outputAmount: outputAmount
-                }
-            };
-        } catch (error) {
-            logger.error('Error during token swap:', error instanceof Error ? error.message : String(error));
-            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-
-            // Format error with card UI
-            let responseText: string;
-            if (errorMessage.includes('insufficient') || errorMessage.includes('balance')) {
-                responseText = formatInsufficientBalance(
-                    content.inputTokenSymbol || 'SOL',
-                    content.amount,
-                    '0',
-                    'solana'
-                );
-            } else {
-                responseText = formatSwapFailed({
-                    reason: 'Transaction failed',
-                    details: errorMessage.length > 200 ? errorMessage.slice(0, 200) + '...' : errorMessage,
-                    suggestion: 'Check your wallet balance and try again',
+        // Clean up any existing pending swap first
+        const solExistingEntity = await runtime.getEntityById(solUserEntityId as UUID);
+        if (solExistingEntity?.components) {
+            const existingPending = solExistingEntity.components.find(c => c.type === PENDING_SWAP_TYPE && !c.data?.deleted);
+            if (existingPending) {
+                await runtime.updateComponent({
+                    ...existingPending,
+                    type: PENDING_SWAP_TYPE,
+                    data: { deleted: true, deletedAt: Date.now() },
                 });
             }
-
-            // Push to responses array for direct chat display
-            pushChatMessage(runtime, message, responseText, responses);
-            callback?.(takeItPrivate(runtime, message, responseText))
-            return {
-                success: false,
-                text: responseText,
-                error: errorMessage
-            };
         }
+
+        const solRoomDetails = await runtime.getRoom(message.roomId);
+        await runtime.createComponent({
+            id: uuidv4() as UUID,
+            agentId: runtime.agentId,
+            worldId: solRoomDetails?.worldId || createUniqueUuid(runtime, 'default-world'),
+            roomId: message.roomId,
+            sourceEntityId: message.entityId,
+            entityId: solUserEntityId as UUID,
+            type: PENDING_SWAP_TYPE,
+            data: {
+                chain: 'solana',
+                inputTokenCA: content.inputTokenCA as string,
+                outputTokenCA: content.outputTokenCA as string,
+                inputAmount: content.amount,
+                inputSymbol: content.inputTokenSymbol || 'Unknown',
+                outputSymbol: content.outputTokenSymbol || 'Unknown',
+                privateKey: sourceKp.privateKey,
+                sourcePublicKey: sourceKp.publicKey,
+                createdAt: Date.now(),
+            },
+            createdAt: Date.now(),
+        });
+
+        console.log('MULTIWALLET_SWAP stored pending Solana swap, awaiting user confirmation');
+        return {
+            success: true,
+            text: 'Swap preview shown, awaiting confirmation',
+            data: { pendingConfirmation: true, chain: 'solana' },
+        };
     },
     examples: [
         // Solana swap example

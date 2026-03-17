@@ -49,6 +49,10 @@ RUN chmod +x /usr/local/bin/elizaos || true
 # Initialize bun project
 RUN bun init -y
 
+# Re-copy package.json after bun init (which overwrites it) and remove stale lockfile
+COPY docker/package.json.docker ./package.json
+RUN rm -f bun.lockb bun.lock
+
 # Install dependencies
 RUN bun install
 
