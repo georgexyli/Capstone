@@ -712,14 +712,6 @@ export default {
                 const amountInWei = BigInt(Math.floor(Number(content.amount) * 1e18)).toString();
 
                 // Get quote
-                // Show processing indicator
-                const processingText = formatSwapProcessing(
-                    content.inputTokenSymbol || 'Token',
-                    content.outputTokenSymbol || 'Token',
-                    swapChain.charAt(0).toUpperCase() + swapChain.slice(1)
-                );
-                callback?.(takeItPrivate(runtime, message, processingText));
-
                 const quote = await ethService.getSwapQuote({
                     tokenIn: inputTokenCA,
                     tokenOut: outputTokenCA,
@@ -730,7 +722,7 @@ export default {
 
                 console.log('MULTIWALLET_SWAP quote:', quote);
 
-                // Show swap preview
+                // Show swap preview with confirmation prompt as the visible agent message
                 const outputEstimate = (Number(quote.amountOut) / 1e18).toFixed(6);
                 const rate = (Number(quote.amountOut) / Number(amountInWei)).toFixed(2);
                 const previewText = formatSwapPreview({
@@ -743,7 +735,6 @@ export default {
                     network: swapChain.charAt(0).toUpperCase() + swapChain.slice(1),
                     walletAddress: sourceKp.publicKey,
                 });
-                // Show preview with confirmation prompt
                 const confirmText = formatSwapConfirmation(previewText);
                 callback?.(takeItPrivate(runtime, message, confirmText));
 
@@ -797,7 +788,7 @@ export default {
                 console.log('MULTIWALLET_SWAP stored pending EVM swap, awaiting user confirmation');
                 return {
                     success: true,
-                    text: 'Swap preview shown, awaiting confirmation',
+                    text: confirmText,
                     data: { pendingConfirmation: true, chain: swapChain },
                 };
             } catch (error) {
@@ -942,7 +933,7 @@ export default {
         console.log('MULTIWALLET_SWAP stored pending Solana swap, awaiting user confirmation');
         return {
             success: true,
-            text: 'Swap preview shown, awaiting confirmation',
+            text: solConfirmText,
             data: { pendingConfirmation: true, chain: 'solana' },
         };
     },
