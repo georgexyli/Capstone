@@ -474,3 +474,56 @@ export function formatSimulationFailed(simResult: SimulationResult): string {
 
     return card.trim();
 }
+
+// ============================================
+// POST-TRADE RECEIPT CARD
+// ============================================
+
+export interface TradeReceiptParams {
+    inputAmount: string | number;
+    inputSymbol: string;
+    outputAmount: string | number;
+    outputSymbol: string;
+    txHash: string;
+    explorerUrl: string;
+    network: string;
+    realizedSlippage: string;
+    gasCostEth: string;
+    executionTimeSec: string;
+}
+
+export function formatTradeReceipt(params: TradeReceiptParams): string {
+    const {
+        inputAmount,
+        inputSymbol,
+        outputAmount,
+        outputSymbol,
+        txHash,
+        explorerUrl,
+        network,
+        realizedSlippage,
+        gasCostEth,
+        executionTimeSec,
+    } = params;
+
+    const inputStr = `${formatNumber(inputAmount)} ${inputSymbol}`;
+    const outputStr = `${formatNumber(outputAmount)} ${outputSymbol}`;
+    const truncatedTx = truncateAddress(txHash, 10, 8);
+
+    let card = `
+✅ SWAP COMPLETE
+
+   ${inputStr} → ${outputStr}
+
+   Network: ${network}
+   TX: ${truncatedTx}
+
+   ─────────────────────
+   Realized Slippage: ${realizedSlippage}%
+   Gas Used: ${gasCostEth} ETH
+   Execution Time: ${executionTimeSec}s
+
+   🔗 ${explorerUrl}`;
+
+    return card.trim();
+}

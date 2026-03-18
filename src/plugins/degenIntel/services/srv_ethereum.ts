@@ -553,8 +553,8 @@ export class EthereumChainService extends Service implements IChainService {
   /**
    * Gets decimals for token addresses
    */
-  async getDecimals(tokenAddresses: string[]): Promise<number[]> {
-    const client = this.getPublicClient();
+  async getDecimals(tokenAddresses: string[], chainName?: string): Promise<number[]> {
+    const client = this.getPublicClient(chainName || this.defaultChain);
     const results: number[] = [];
 
     for (const address of tokenAddresses) {
@@ -714,6 +714,8 @@ export class EthereumChainService extends Service implements IChainService {
     fee: number;
     priceImpact: string;
     chainName: string;
+    inputDecimals: number;
+    outputDecimals: number;
   }> {
     const chainName = params.chainName || this.defaultChain;
     const contracts = getUniswapContracts(chainName);
@@ -731,12 +733,38 @@ export class EthereumChainService extends Service implements IChainService {
 
     // Convert native ETH address to WETH
     const nativeAddresses = ['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', '0x0000000000000000000000000000000000000000'];
-    if (nativeAddresses.includes(tokenIn)) {
+    const isNativeIn = nativeAddresses.includes(tokenIn);
+    const isNativeOut = nativeAddresses.includes(tokenOut);
+
+    if (isNativeIn) {
       tokenIn = contracts.weth.toLowerCase();
     }
-    if (nativeAddresses.includes(tokenOut)) {
+    if (isNativeOut) {
       tokenOut = contracts.weth.toLowerCase();
     }
+
+    // Fetch token decimals (native ETH/WETH = 18, ERC-20 = read from contract)
+    let inputDecimals = 18;
+    let outputDecimals = 18;
+    try {
+      const [inDec, outDec] = await Promise.all([
+        isNativeIn ? Promise.resolve(18) : publicClient.readContract({
+          address: tokenIn as Address,
+          abi: ERC20_ABI,
+          functionName: 'decimals',
+        }).then(d => d as number).catch(() => 18),
+        isNativeOut ? Promise.resolve(18) : publicClient.readContract({
+          address: tokenOut as Address,
+          abi: ERC20_ABI,
+          functionName: 'decimals',
+        }).then(d => d as number).catch(() => 18),
+      ]);
+      inputDecimals = inDec;
+      outputDecimals = outDec;
+    } catch (e) {
+      logger.warn(`Failed to fetch token decimals, defaulting to 18: ${e}`);
+    }
+    logger.info(`[getSwapQuote] Token decimals: input=${inputDecimals}, output=${outputDecimals}`);
 
     // Try different fee tiers to find the best quote
     let bestQuote: { amountOut: bigint; fee: number } | null = null;
@@ -783,6 +811,8 @@ export class EthereumChainService extends Service implements IChainService {
       fee: bestQuote.fee,
       priceImpact,
       chainName,
+      inputDecimals,
+      outputDecimals,
     };
   }
 
@@ -912,10 +942,42 @@ export class EthereumChainService extends Service implements IChainService {
 
       if (receipt.status === 'success') {
         logger.info(`Swap successful: ${txHash}`);
+
+        // Decode actual output amount from Uniswap V3 Swap event logs
+        let actualAmountOut: string | undefined;
+        const SWAP_EVENT_TOPIC = '0xc42079f94a6350d7e6235f29174924f928cc2ac818eb64fed8004e115fbcca67';
+        try {
+          for (const log of receipt.logs) {
+            if (log.topics[0] === SWAP_EVENT_TOPIC) {
+              // Uniswap V3 Swap event: amount0 and amount1 are in data (non-indexed)
+              // data = abi.encode(int256 amount0, int256 amount1, uint160 sqrtPriceX96, uint128 liquidity, int24 tick)
+              const data = log.data as `0x${string}`;
+              // amount0 is bytes 0-32, amount1 is bytes 32-64 (as int256)
+              const amount0Hex = '0x' + data.slice(2, 66);
+              const amount1Hex = '0x' + data.slice(66, 130);
+              const amount0 = BigInt(amount0Hex);
+              const amount1 = BigInt(amount1Hex);
+              // The positive value is the output (tokens received)
+              // In Uniswap V3, negative = tokens leaving pool (to user), positive = tokens entering pool
+              // Actually: from the pool's perspective, positive = received, negative = sent
+              // The output for the user is the absolute value of the negative one
+              const output = amount0 < BigInt(0) ? -amount0 : amount1 < BigInt(0) ? -amount1 : (amount0 > amount1 ? amount1 : amount0);
+              actualAmountOut = (output < BigInt(0) ? -output : output).toString();
+              logger.info(`[executeSwap] Decoded Swap event: amount0=${amount0}, amount1=${amount1}, actualOutput=${actualAmountOut}`);
+              break;
+            }
+          }
+        } catch (decodeError) {
+          logger.warn(`[executeSwap] Failed to decode Swap event: ${decodeError}`);
+        }
+
         return {
           success: true,
           txHash,
           explorerUrl: `${chainConfig.explorerUrl}/tx/${txHash}`,
+          amountOut: actualAmountOut,
+          gasUsed: receipt.gasUsed.toString(),
+          effectiveGasPrice: receipt.effectiveGasPrice?.toString(),
         };
       } else {
         return {

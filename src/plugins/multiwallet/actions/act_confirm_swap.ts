@@ -19,6 +19,7 @@ import {
     formatSwapCancelled,
     formatSwapExpired,
     formatSimulationFailed,
+    formatTradeReceipt,
     getFaucetUrl,
 } from '../utils/format-cards';
 
@@ -289,6 +290,9 @@ async function executeEvmSwap(
         console.log('CONFIRM_SWAP - Simulation PASSED, proceeding to execution');
         // --- END SIMULATION GATE ---
 
+        const confirmTimestamp = Date.now();
+        const runId = uuidv4();
+
         const swapResult = await ethService.executeSwap({
             tokenIn: pendingData.inputTokenCA,
             tokenOut: pendingData.outputTokenCA,
@@ -299,12 +303,35 @@ async function executeEvmSwap(
             chainName: pendingData.chainName,
         });
 
+        const executionTimeMs = Date.now() - confirmTimestamp;
+
         // Always clean up
         await deletePendingSwap(runtime, pendingComponent);
 
         if (swapResult.success) {
-            const outputAmount = (Number(pendingData.quoteAmountOut) / 1e18).toFixed(6);
-            const responseText = formatSwapSuccess({
+            const outputDecimals = pendingData.outputDecimals || 18;
+
+            // Use actual output from tx receipt if available, otherwise fall back to quoted
+            const actualOutputRaw = swapResult.amountOut || pendingData.quoteAmountOut;
+            const outputAmount = (Number(actualOutputRaw) / (10 ** outputDecimals)).toFixed(6);
+
+            // Calculate realized slippage (quoted vs actual)
+            const quotedOutput = Number(pendingData.quoteAmountOut) / (10 ** outputDecimals);
+            const actualOutput = Number(actualOutputRaw) / (10 ** outputDecimals);
+            const realizedSlippage = quotedOutput > 0
+                ? (((quotedOutput - actualOutput) / quotedOutput) * 100).toFixed(2)
+                : '0.00';
+
+            // Calculate gas cost in ETH
+            let gasCostEth = 'N/A';
+            if (swapResult.gasUsed && swapResult.effectiveGasPrice) {
+                const gasCostWei = BigInt(swapResult.gasUsed) * BigInt(swapResult.effectiveGasPrice);
+                gasCostEth = (Number(gasCostWei) / 1e18).toFixed(6);
+            }
+
+            const executionTimeSec = (executionTimeMs / 1000).toFixed(1);
+
+            const responseText = formatTradeReceipt({
                 inputAmount: pendingData.inputAmount,
                 inputSymbol: pendingData.inputSymbol,
                 outputAmount,
@@ -312,7 +339,36 @@ async function executeEvmSwap(
                 txHash: swapResult.txHash,
                 explorerUrl: swapResult.explorerUrl,
                 network: pendingData.chainName.charAt(0).toUpperCase() + pendingData.chainName.slice(1),
+                realizedSlippage,
+                gasCostEth,
+                executionTimeSec,
             });
+
+            // Structured run log (no private keys)
+            logger.info(JSON.stringify({
+                type: 'TRADE_RUN_LOG',
+                runId,
+                timestamp: new Date().toISOString(),
+                verdict: 'success',
+                chain: pendingData.chainName,
+                inputToken: pendingData.inputSymbol,
+                outputToken: pendingData.outputSymbol,
+                inputAmount: pendingData.inputAmount,
+                outputAmount,
+                quotedOutput: quotedOutput.toFixed(6),
+                actualOutput: actualOutput.toFixed(6),
+                realizedSlippage: `${realizedSlippage}%`,
+                gasCostEth,
+                executionTimeMs,
+                txHash: swapResult.txHash,
+                gasUsed: swapResult.gasUsed,
+                stages: {
+                    confirm: { timestamp: new Date(confirmTimestamp).toISOString(), status: 'ok' },
+                    simulate: { status: 'ok' },
+                    broadcast: { status: 'ok', txHash: swapResult.txHash },
+                    receipt: { status: 'ok', gasUsed: swapResult.gasUsed, amountOut: actualOutputRaw },
+                },
+            }));
 
             pushChatMessage(runtime, message, responseText, responses);
             callback?.(takeItPrivate(runtime, message, responseText));
@@ -320,15 +376,32 @@ async function executeEvmSwap(
                 success: true,
                 text: responseText,
                 data: {
+                    runId,
                     txHash: swapResult.txHash,
                     chain: pendingData.chainName,
                     amount: pendingData.inputAmount,
                     inputToken: pendingData.inputSymbol,
                     outputToken: pendingData.outputSymbol,
                     outputAmount,
+                    realizedSlippage,
+                    gasCostEth,
+                    executionTimeSec,
                 },
             };
         } else {
+            // Log failed trade
+            logger.info(JSON.stringify({
+                type: 'TRADE_RUN_LOG',
+                runId,
+                timestamp: new Date().toISOString(),
+                verdict: 'failed',
+                chain: pendingData.chainName,
+                inputToken: pendingData.inputSymbol,
+                outputToken: pendingData.outputSymbol,
+                inputAmount: pendingData.inputAmount,
+                error: swapResult.error,
+                executionTimeMs,
+            }));
             throw new Error(swapResult.error || 'Swap failed');
         }
     } catch (error) {

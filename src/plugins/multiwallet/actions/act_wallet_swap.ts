@@ -721,10 +721,23 @@ export default {
             console.log('MULTIWALLET_SWAP EVM tokens:', { inputTokenCA, outputTokenCA, amount: content.amount });
 
             try {
-                // Convert amount to wei (assuming 18 decimals for simplicity, should get from token)
-                const amountInWei = BigInt(Math.floor(Number(content.amount) * 1e18)).toString();
+                // Determine input token decimals
+                const nativeAddresses = ['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', '0x0000000000000000000000000000000000000000'];
+                const isNativeInput = nativeAddresses.includes(inputTokenCA.toLowerCase());
+                let inputDecimals = 18;
+                if (!isNativeInput) {
+                    try {
+                        const [dec] = await ethService.getDecimals([inputTokenCA], swapChain);
+                        inputDecimals = dec;
+                    } catch (e) {
+                        console.log('MULTIWALLET_SWAP failed to get input decimals, defaulting to 18');
+                    }
+                }
 
-                // Get quote
+                // Convert amount to raw units using correct decimals
+                const amountInWei = BigInt(Math.floor(Number(content.amount) * (10 ** inputDecimals))).toString();
+
+                // Get quote (now returns decimals)
                 const quote = await ethService.getSwapQuote({
                     tokenIn: inputTokenCA,
                     tokenOut: outputTokenCA,
@@ -735,9 +748,10 @@ export default {
 
                 console.log('MULTIWALLET_SWAP quote:', quote);
 
-                // Show swap preview with confirmation prompt as the visible agent message
-                const outputEstimate = (Number(quote.amountOut) / 1e18).toFixed(6);
-                const rate = (Number(quote.amountOut) / Number(amountInWei)).toFixed(2);
+                // Show swap preview with correct decimal conversion
+                const outputDecimals = quote.outputDecimals || 18;
+                const outputEstimate = (Number(quote.amountOut) / (10 ** outputDecimals)).toFixed(6);
+                const rate = (Number(quote.amountOut) / (10 ** outputDecimals) / Number(content.amount)).toFixed(2);
                 const previewText = formatSwapPreview({
                     inputAmount: content.amount,
                     inputSymbol: content.inputTokenSymbol || 'Unknown',
@@ -793,6 +807,8 @@ export default {
                         inputSymbol: content.inputTokenSymbol || 'Unknown',
                         outputSymbol: content.outputTokenSymbol || 'Unknown',
                         sourcePublicKey: sourceKp.publicKey,
+                        inputDecimals,
+                        outputDecimals,
                         createdAt: Date.now(),
                     },
                     createdAt: Date.now(),
