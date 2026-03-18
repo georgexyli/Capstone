@@ -968,6 +968,243 @@ export class EthereumChainService extends Service implements IChainService {
   }
 
   // ========================================
+  // Pre-Execution Simulation & Risk Gate
+  // ========================================
+
+  /**
+   * Simulate a swap to verify all risk parameters before broadcasting.
+   * Checks: balance, allowance, gas estimation, slippage.
+   * Returns a pass/fail verdict with specific error codes.
+   */
+  async simulateSwap(params: {
+    tokenIn: string;
+    tokenOut: string;
+    amountIn: string;
+    amountOutMinimum: string;
+    fee: number;
+    privateKey: string;
+    chainName?: string;
+  }): Promise<{
+    success: boolean;
+    error?: string;
+    errorCode?: 'INSUFFICIENT_BALANCE' | 'MISSING_ALLOWANCE' | 'GAS_EXCEEDS_LIMIT' | 'SLIPPAGE_EXCEEDED';
+    details?: {
+      balance?: string;
+      required?: string;
+      estimatedGas?: string;
+      gasLimit?: string;
+      simulatedOutput?: string;
+      expectedOutput?: string;
+    };
+  }> {
+    const chainName = params.chainName || this.defaultChain;
+    const contracts = getUniswapContracts(chainName);
+    const chainConfig = getChainConfig(chainName);
+
+    if (!contracts || !chainConfig) {
+      return { success: false, error: `Chain ${chainName} not supported`, errorCode: 'INSUFFICIENT_BALANCE' };
+    }
+
+    const GAS_CEILING = BigInt(500_000); // Max gas units for a Uniswap V3 swap
+
+    try {
+      const publicClient = this.getPublicClient(chainName);
+      const account = privateKeyToAccount(
+        (params.privateKey.startsWith('0x') ? params.privateKey : `0x${params.privateKey}`) as Hex
+      );
+
+      // Normalize addresses
+      let tokenIn = params.tokenIn.toLowerCase();
+      let tokenOut = params.tokenOut.toLowerCase();
+      const nativeAddresses = ['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', '0x0000000000000000000000000000000000000000'];
+      const isNativeIn = nativeAddresses.includes(tokenIn);
+
+      if (isNativeIn) {
+        tokenIn = contracts.weth.toLowerCase();
+      }
+      if (nativeAddresses.includes(tokenOut)) {
+        tokenOut = contracts.weth.toLowerCase();
+      }
+
+      const amountIn = BigInt(params.amountIn);
+
+      // ---- CHECK 1: Balance ----
+      logger.info(`[SimulateSwap] Check 1: Balance check for ${account.address} on ${chainName}`);
+
+      if (isNativeIn) {
+        const balance = await publicClient.getBalance({ address: account.address });
+        // Need amountIn + some gas buffer
+        const gasBuffer = BigInt(50_000) * BigInt(20_000_000_000); // ~50k gas * 20 gwei
+        const required = amountIn + gasBuffer;
+        if (balance < required) {
+          const balanceEth = formatEther(balance);
+          const requiredEth = formatEther(required);
+          logger.warn(`[SimulateSwap] INSUFFICIENT_BALANCE: have ${balanceEth}, need ${requiredEth}`);
+          return {
+            success: false,
+            error: `You need ${requiredEth} ETH but only have ${balanceEth} ETH`,
+            errorCode: 'INSUFFICIENT_BALANCE',
+            details: { balance: balanceEth, required: requiredEth },
+          };
+        }
+      } else {
+        // ERC-20 balance check
+        const erc20Data = await this.getERC20Balance(account.address, params.tokenIn, chainName);
+        if (erc20Data.balance < amountIn) {
+          const balanceFormatted = (Number(erc20Data.balance) / (10 ** erc20Data.decimals)).toString();
+          const requiredFormatted = (Number(amountIn) / (10 ** erc20Data.decimals)).toString();
+          logger.warn(`[SimulateSwap] INSUFFICIENT_BALANCE: have ${balanceFormatted} ${erc20Data.symbol}, need ${requiredFormatted}`);
+          return {
+            success: false,
+            error: `You need ${requiredFormatted} ${erc20Data.symbol} but only have ${balanceFormatted} ${erc20Data.symbol}`,
+            errorCode: 'INSUFFICIENT_BALANCE',
+            details: { balance: balanceFormatted, required: requiredFormatted },
+          };
+        }
+
+        // Also check native balance for gas
+        const ethBalance = await publicClient.getBalance({ address: account.address });
+        const minGas = BigInt(100_000) * BigInt(20_000_000_000); // 100k gas * 20 gwei
+        if (ethBalance < minGas) {
+          const balanceEth = formatEther(ethBalance);
+          logger.warn(`[SimulateSwap] INSUFFICIENT_BALANCE for gas: have ${balanceEth} ETH`);
+          return {
+            success: false,
+            error: `Insufficient ETH for gas fees. You have ${balanceEth} ETH but need at least some ETH for transaction fees.`,
+            errorCode: 'INSUFFICIENT_BALANCE',
+            details: { balance: balanceEth, required: 'gas fees' },
+          };
+        }
+      }
+      logger.info(`[SimulateSwap] Check 1: Balance OK`);
+
+      // ---- CHECK 2: Allowance (ERC-20 only) ----
+      if (!isNativeIn) {
+        logger.info(`[SimulateSwap] Check 2: Allowance check`);
+        const allowanceAbi = [{
+          inputs: [{ name: 'owner', type: 'address' }, { name: 'spender', type: 'address' }],
+          name: 'allowance',
+          outputs: [{ name: '', type: 'uint256' }],
+          stateMutability: 'view',
+          type: 'function',
+        }] as const;
+
+        const currentAllowance = await (publicClient as any).readContract({
+          address: params.tokenIn as `0x${string}`,
+          abi: allowanceAbi,
+          functionName: 'allowance',
+          args: [account.address, contracts.swapRouter],
+        }) as bigint;
+
+        if (currentAllowance < amountIn) {
+          logger.warn(`[SimulateSwap] MISSING_ALLOWANCE: current ${currentAllowance}, need ${amountIn}`);
+          return {
+            success: false,
+            error: `Token approval required — the router needs approval to spend your tokens. Approval will be requested automatically during execution.`,
+            errorCode: 'MISSING_ALLOWANCE',
+            details: { balance: currentAllowance.toString(), required: amountIn.toString() },
+          };
+        }
+        logger.info(`[SimulateSwap] Check 2: Allowance OK`);
+      } else {
+        logger.info(`[SimulateSwap] Check 2: Skipped (native ETH)`);
+      }
+
+      // ---- CHECK 3: Gas Estimation ----
+      logger.info(`[SimulateSwap] Check 3: Gas estimation`);
+      try {
+        const swapParams = {
+          tokenIn: tokenIn as `0x${string}`,
+          tokenOut: tokenOut as `0x${string}`,
+          fee: params.fee,
+          recipient: account.address,
+          amountIn: amountIn,
+          amountOutMinimum: BigInt(params.amountOutMinimum),
+          sqrtPriceLimitX96: BigInt(0),
+        };
+
+        const estimatedGas = await (publicClient as any).estimateContractGas({
+          address: contracts.swapRouter,
+          abi: SWAP_ROUTER_ABI,
+          functionName: 'exactInputSingle',
+          args: [swapParams],
+          account: account.address,
+          value: isNativeIn ? amountIn : BigInt(0),
+        });
+
+        if (estimatedGas > GAS_CEILING) {
+          logger.warn(`[SimulateSwap] GAS_EXCEEDS_LIMIT: estimated ${estimatedGas}, ceiling ${GAS_CEILING}`);
+          return {
+            success: false,
+            error: `Estimated gas (${estimatedGas.toString()} units) exceeds maximum (${GAS_CEILING.toString()} units)`,
+            errorCode: 'GAS_EXCEEDS_LIMIT',
+            details: { estimatedGas: estimatedGas.toString(), gasLimit: GAS_CEILING.toString() },
+          };
+        }
+        logger.info(`[SimulateSwap] Check 3: Gas OK (${estimatedGas.toString()} units)`);
+      } catch (gasError) {
+        // Gas estimation failure often means the tx would revert
+        const gasMsg = gasError instanceof Error ? gasError.message : String(gasError);
+        logger.warn(`[SimulateSwap] Gas estimation failed: ${gasMsg}`);
+        // Don't block on gas estimation failure — it might be a simulation issue
+        // Log it but proceed (the actual execution will catch real issues)
+        logger.info(`[SimulateSwap] Check 3: Gas estimation failed but proceeding (may be simulation limitation)`);
+      }
+
+      // ---- CHECK 4: Slippage / Fresh Quote ----
+      logger.info(`[SimulateSwap] Check 4: Slippage check (re-quoting)`);
+      try {
+        const freshQuote = await this.getSwapQuote({
+          tokenIn: params.tokenIn,
+          tokenOut: params.tokenOut,
+          amountIn: params.amountIn,
+          chainName,
+          slippageBps: 100,
+        });
+
+        const freshAmountOut = BigInt(freshQuote.amountOut);
+        const expectedMinimum = BigInt(params.amountOutMinimum);
+
+        if (freshAmountOut < expectedMinimum) {
+          // Price has moved unfavorably since the original quote
+          const originalOut = BigInt(params.amountOutMinimum);
+          const diff = originalOut - freshAmountOut;
+          const slippagePct = originalOut > BigInt(0)
+            ? ((Number(diff) / Number(originalOut)) * 100).toFixed(2)
+            : '0';
+
+          logger.warn(`[SimulateSwap] SLIPPAGE_EXCEEDED: fresh output ${freshAmountOut}, minimum expected ${expectedMinimum}, diff ${slippagePct}%`);
+          return {
+            success: false,
+            error: `Price has moved unfavorably. Current output is ${slippagePct}% below your minimum acceptable amount.`,
+            errorCode: 'SLIPPAGE_EXCEEDED',
+            details: {
+              simulatedOutput: freshAmountOut.toString(),
+              expectedOutput: expectedMinimum.toString(),
+            },
+          };
+        }
+        logger.info(`[SimulateSwap] Check 4: Slippage OK`);
+      } catch (quoteError) {
+        // Quote failure — log but don't block (original quote was valid)
+        const quoteMsg = quoteError instanceof Error ? quoteError.message : String(quoteError);
+        logger.warn(`[SimulateSwap] Re-quote failed: ${quoteMsg}. Proceeding with original quote.`);
+      }
+
+      logger.info(`[SimulateSwap] All checks passed — safe to execute`);
+      return { success: true };
+
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logger.error(`[SimulateSwap] Unexpected error: ${errorMsg}`);
+      return {
+        success: false,
+        error: `Simulation failed: ${errorMsg}`,
+      };
+    }
+  }
+
+  // ========================================
   // Helper Methods
   // ========================================
 

@@ -321,6 +321,19 @@ export default {
             console.log('MULTIWALLET_SWAP validate - account not found')
             return false;
         }
+        // If user has a pending swap, let CONFIRM_SWAP handle it instead
+        const entityId = await getEntityIdFromMessage(runtime, message);
+        if (entityId) {
+            const entity = await runtime.getEntityById(entityId as UUID);
+            if (entity?.components) {
+                const pendingSwap = entity.components.find(c => c.type === PENDING_SWAP_TYPE && !c.data?.deleted);
+                if (pendingSwap) {
+                    console.log('MULTIWALLET_SWAP validate - BLOCKED, pending swap exists, deferring to CONFIRM_SWAP');
+                    return false;
+                }
+            }
+        }
+
         console.log('MULTIWALLET_SWAP validate - PASSED, account has', account.metawallets?.length || 0, 'wallets');
         return true;
     },

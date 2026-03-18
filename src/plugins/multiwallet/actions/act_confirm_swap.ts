@@ -18,6 +18,7 @@ import {
     formatInsufficientBalance,
     formatSwapCancelled,
     formatSwapExpired,
+    formatSimulationFailed,
     getFaucetUrl,
 } from '../utils/format-cards';
 
@@ -60,7 +61,7 @@ async function findPendingSwap(runtime: IAgentRuntime, entityId: string) {
     const entity = await runtime.getEntityById(entityId as UUID);
     if (!entity || !entity.components) return null;
 
-    const component = entity.components.find(c => c.type === PENDING_SWAP_TYPE);
+    const component = entity.components.find(c => c.type === PENDING_SWAP_TYPE && !c.data?.deleted);
     if (!component) return null;
 
     return component;
@@ -265,6 +266,29 @@ async function executeEvmSwap(
     }
 
     try {
+        // --- SIMULATION GATE: Pre-execution risk checks ---
+        console.log('CONFIRM_SWAP - Running pre-execution simulation...');
+        const simResult = await ethService.simulateSwap({
+            tokenIn: pendingData.inputTokenCA,
+            tokenOut: pendingData.outputTokenCA,
+            amountIn: pendingData.amountInWei,
+            amountOutMinimum: pendingData.amountOutMinimum,
+            fee: pendingData.fee,
+            privateKey: pendingData.privateKey,
+            chainName: pendingData.chainName,
+        });
+
+        if (!simResult.success) {
+            console.log('CONFIRM_SWAP - Simulation FAILED:', simResult.errorCode, simResult.error);
+            await deletePendingSwap(runtime, pendingComponent);
+            const responseText = formatSimulationFailed(simResult);
+            pushChatMessage(runtime, message, responseText, responses);
+            callback?.(takeItPrivate(runtime, message, responseText));
+            return { success: false, text: responseText, error: simResult.errorCode || 'SIMULATION_FAILED' };
+        }
+        console.log('CONFIRM_SWAP - Simulation PASSED, proceeding to execution');
+        // --- END SIMULATION GATE ---
+
         const swapResult = await ethService.executeSwap({
             tokenIn: pendingData.inputTokenCA,
             tokenOut: pendingData.outputTokenCA,

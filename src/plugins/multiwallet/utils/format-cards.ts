@@ -400,3 +400,77 @@ export function formatSwapCancelled(): string {
 export function formatSwapExpired(): string {
     return `⏰ Quote expired. Please request a new swap to get a fresh quote.`;
 }
+
+// ============================================
+// SIMULATION FAILED CARD
+// ============================================
+
+export interface SimulationResult {
+    success: boolean;
+    error?: string;
+    errorCode?: string;
+    details?: {
+        balance?: string;
+        required?: string;
+        estimatedGas?: string;
+        gasLimit?: string;
+        simulatedOutput?: string;
+        expectedOutput?: string;
+    };
+}
+
+export function formatSimulationFailed(simResult: SimulationResult): string {
+    const code = simResult.errorCode || 'UNKNOWN';
+    const details = simResult.details || {};
+
+    let card = `
+🛑 SIMULATION FAILED
+
+   ${simResult.error || 'Transaction would fail'}`;
+
+    switch (code) {
+        case 'INSUFFICIENT_BALANCE':
+            if (details.balance && details.required) {
+                card += `
+
+   You have: ${details.balance}
+   You need: ${details.required}`;
+            }
+            card += `
+
+   💡 Add more funds to your wallet before trying again.`;
+            break;
+
+        case 'MISSING_ALLOWANCE':
+            card += `
+
+   💡 Token approval will be requested automatically when you retry the swap.`;
+            break;
+
+        case 'GAS_EXCEEDS_LIMIT':
+            if (details.estimatedGas && details.gasLimit) {
+                card += `
+
+   Estimated gas: ${details.estimatedGas} units
+   Maximum allowed: ${details.gasLimit} units`;
+            }
+            card += `
+
+   💡 The transaction is too complex or network is congested. Try again later.`;
+            break;
+
+        case 'SLIPPAGE_EXCEEDED':
+            card += `
+
+   💡 The price has moved since your quote. Please request a new swap for a fresh quote.`;
+            break;
+
+        default:
+            card += `
+
+   💡 Please try again or request a new swap.`;
+            break;
+    }
+
+    return card.trim();
+}
