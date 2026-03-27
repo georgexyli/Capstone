@@ -1,0 +1,17 @@
+Individual Contribution — Youssef Fikry
+
+My primary contribution to this project was the design and implementation of the full execution pipeline, from the natural language parsing layer through to the on-chain transaction broadcast and post-trade rendering. I was responsible for writing the majority of the backend codebase, including all of the core swap functionality, safety mechanisms, and blockchain integration.
+
+I implemented the MULTIWALLET_SWAP action, which handles intent parsing, wallet detection, token address resolution, and quote generation via the Uniswap V3 QuoterV2 contract. This involved writing the logic to determine the correct chain and wallet from user input, fetch token decimals on-chain, convert amounts between human-readable and raw units, and select the best fee tier across Uniswap V3 pools.
+
+I designed and built the human confirmation gate, which required splitting the swap flow into two separate actions (MULTIWALLET_SWAP and CONFIRM_SWAP) connected by a pending swap component stored in the database. This followed a two-action pattern inspired by the existing email verification flow in the codebase. The confirmation gate enforces a 60-second expiry on quotes and ensures that no transaction is ever broadcast without explicit user approval.
+
+I implemented the pre-execution simulation and risk gate within the Ethereum chain service. This module runs four checks before any transaction is signed: balance verification (native ETH and ERC-20), ERC-20 allowance verification against the Uniswap router, gas estimation against a configurable ceiling, and a slippage check that re-quotes the swap to detect unfavorable price movement. Each check produces a specific error code and an actionable user-facing message when it fails.
+
+I also built the post-trade rendering system, which decodes Uniswap V3 Swap event logs from the transaction receipt to extract the actual output amount received on-chain. The trade receipt displayed to the user includes realized slippage, gas cost in ETH, and execution time, rather than relying on estimated values from the original quote. I added structured JSON audit logging that records every pipeline stage with timestamps and a unique run ID, while explicitly excluding private keys from all log output.
+
+Beyond the swap pipeline, I fixed a decimal handling bug that affected the entire EVM swap flow. The original code assumed all tokens had 18 decimals, which caused incorrect output estimates for tokens like USDC (6 decimals). I modified the quote engine to fetch and return token decimals on-chain, and updated all downstream calculations in the swap preview, confirmation, and receipt rendering to use the correct values.
+
+I also contributed to resolving Docker build issues that were blocking the team from testing, including fixing the Dockerfile layer ordering and resolving a dependency conflict with the Uniswap SDK packages under bun's workspace resolution.
+
+On the documentation side, I wrote the System-Level Overview and Module-Level Descriptions and Designs sections of the Final Design chapter, drawing directly from the codebase to ensure technical accuracy.

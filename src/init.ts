@@ -4,6 +4,8 @@ import type {
 import {
   logger, Role, ChannelType, createUniqueUuid, EventType, initializeOnboarding, ServiceTypeName
 } from '@elizaos/core';
+import { v4 as uuidv4 } from 'uuid';
+import CONSTANTS from './plugins/autonomous-trader/constants';
 import type { Guild } from 'discord.js';
 
 import { resolve } from 'path';
@@ -540,67 +542,154 @@ By pressing "Continue" you confirm that you accept our Terms of Use and Privacy 
   })
 
   runtime.registerEvent('TELEGRAM_SLASH_START', async (params) => {
-    //console.log('params', params)
-    const ctx = params.ctx
-    const botUsername = ctx.botInfo.username; // e.g. 'MyCoolBot'
-    console.log('multiwallet telegram /start handler fire!', botUsername)
+    const ctx = params.ctx;
+    console.log('telegram /start handler - user:', ctx.from?.id);
 
-    ctx.reply(
-      `
-⚠️ WARNING: DO NOT CLICK on any ADs at the top of Telegram,
-they are NOT from us and most likely SCAMS.
+    if (!ctx.from?.id) {
+      ctx.reply('Something went wrong. Please try again.');
+      return;
+    }
 
-Telegram now display ADS in our bots without our approval. Eliza Labs will NEVER advertise any links, airdrops, groups or discounts on fees.
+    try {
+      // Derive entity ID the same way the Telegram plugin does
+      const telegramUserId = String(ctx.from.id);
+      const entityId = createUniqueUuid(runtime, telegramUserId) as UUID;
 
-You can find all our official bots on elizalabs.ai. Please do not search telegram for our bots. there are many impersonators.
+      // Ensure the entity exists
+      let entity = await runtime.getEntityById(entityId);
+      if (!entity) {
+        await runtime.createEntity({
+          id: entityId,
+          names: [ctx.from.first_name || 'User'],
+          metadata: { telegram: { id: ctx.from.id, username: ctx.from.username } },
+          agentId: runtime.agentId,
+        });
+        entity = await runtime.getEntityById(entityId);
+      }
 
-===
+      // Check if already registered
+      const hasUserComponent = entity?.components?.find(
+        c => c.type === CONSTANTS.COMPONENT_USER_TYPE && c.data?.verified
+      );
 
-Welcome to Spartan, the Telegram bot. Spartan enables you to manage a wallet where you can put your funds.
+      if (hasUserComponent) {
+        // Already registered
+        const hasWallets = entity?.components?.find(
+          c => c.type === CONSTANTS.COMPONENT_ACCOUNT_TYPE && c.data?.metawallets?.length > 0
+        );
 
-By continuing you'll create a crypto wallet that interacts with Spartan to power it up with instant swaps and live data.
-By pressing "Continue" you confirm that you accept our Terms of Use and Privacy Policy
+        if (hasWallets) {
+          ctx.reply(
+            `Welcome back! You're all set up.\n\n` +
+            `You can trade by saying things like:\n` +
+            `”swap 0.001 ETH to USDC on Sepolia”\n\n` +
+            `Or import another wallet by sending me a private key in DM.`
+          );
+        } else {
+          ctx.reply(
+            `Welcome back! Your account is ready.\n\n` +
+            `To start trading, send me your Ethereum private key in a DM to import your wallet.\n\n` +
+            `Once imported, you can say things like:\n` +
+            `”swap 0.001 ETH to USDC on Sepolia”`
+          );
+        }
+        return;
+      }
 
-<b>Terms of Use:</b> https://spartan.elizaos.ai/tc.html
-<b>Privacy Policy:</b> https://spartan.elizaos.ai/pp.html
+      // Auto-register: create user component with verified=true
+      const demoEmail = `demo-${entityId.slice(0, 8)}@demo.local`;
+      const emailEntityId = createUniqueUuid(runtime, demoEmail);
 
-`,
-      { parse_mode: 'HTML' }
-    );
-    /*
-    ctx.replyWithMarkdownV2(`
-    *What can this bot do?*
+      // Use agent's world as default, ensure room exists for the Telegram chat
+      const agentEntityId = createUniqueUuid(runtime, runtime.agentId);
+      const defaultWorldId = agentEntityId; // fallback
+      const defaultRoomId = createUniqueUuid(runtime, String(ctx.chat?.id || telegramUserId)) as UUID;
 
-    “I trade. You cope.”
+      // Ensure the room exists in the database before creating components
+      await runtime.ensureRoomExists({
+        id: defaultRoomId,
+        name: `Telegram DM with ${ctx.from.first_name || 'User'}`,
+        source: 'telegram',
+        type: ChannelType.DM,
+        worldId: defaultWorldId as UUID,
+      });
 
-    no charts
-    no dreams
-    no wagmi
+      // Create user component
+      await runtime.createComponent({
+        id: uuidv4() as UUID,
+        agentId: runtime.agentId,
+        worldId: defaultWorldId,
+        roomId: defaultRoomId,
+        sourceEntityId: entityId,
+        entityId: entityId,
+        type: CONSTANTS.COMPONENT_USER_TYPE,
+        data: {
+          address: demoEmail,
+          code: 'DEMO00',
+          verified: true,
+        },
+        createdAt: Date.now(),
+      });
 
-    just cold, dead-eyed execution
-    front-running your emotions
-    and dumping on your confirmation bias
+      // Create account entity
+      const accountEntity = await runtime.getEntityById(emailEntityId);
+      if (!accountEntity) {
+        await runtime.createEntity({
+          id: emailEntityId,
+          names: [],
+          metadata: {},
+          agentId: runtime.agentId,
+        });
+      }
 
-    🧠 powered by rage
-    📉 trained on tears
-    🧾 0% empathy, 100% efficiency
+      // Create account component
+      await runtime.createComponent({
+        id: uuidv4() as UUID,
+        agentId: runtime.agentId as UUID,
+        worldId: defaultWorldId as UUID,
+        roomId: defaultRoomId,
+        sourceEntityId: entityId,
+        entityId: emailEntityId,
+        type: CONSTANTS.COMPONENT_ACCOUNT_TYPE,
+        data: {
+          metawallets: [],
+        },
+        createdAt: Date.now(),
+      });
 
-    you hold bags
-    i hold conviction
+      // Update spartan data
+      const agentEntity = await runtime.getEntityById(agentEntityId);
+      if (agentEntity?.components) {
+        const spartanData = agentEntity.components.find(c => c.type === CONSTANTS.SPARTAN_SERVICE_TYPE);
+        if (spartanData) {
+          if (!Array.isArray(spartanData.data.accounts)) spartanData.data.accounts = [];
+          if (!Array.isArray(spartanData.data.users)) spartanData.data.users = [];
+          if (!spartanData.data.accounts.includes(emailEntityId)) {
+            spartanData.data.accounts.push(emailEntityId);
+          }
+          if (!spartanData.data.users.includes(entityId)) {
+            spartanData.data.users.push(entityId);
+          }
+          await runtime.updateComponent({
+            ...spartanData,
+            data: spartanData.data,
+          });
+        }
+      }
 
-    subscribe now or keep LARPing
-    not responsible for feelings, girlfriends lost, or portfolio ruin
-    (this is not financial advice — this is a personality disorder with API access)
+      console.log('telegram /start - auto-registered user:', entityId);
 
-    Want to learn more about us?
-    Click here: [@${botUsername}](t.me/${botUsername})
-
-    Link Tree: https://bento.me/SpartanVersus
-
-    Bot Commands
-    /start
-    `);
-    */
+      ctx.reply(
+        `Welcome! Your account has been created.\n\n` +
+        `To start trading, send me your Ethereum private key in a DM to import your wallet.\n\n` +
+        `Once imported, you can say things like:\n` +
+        `”swap 0.001 ETH to USDC on Sepolia”\n\n` +
+        `Your keys are stored locally and never shared.`
+      );
+    } catch (err) {
+      console.error('telegram /start - auto-registration error:', err);
+      ctx.reply('Welcome! There was an issue setting up your account. Please try /start again.');
+    }
   })
 };
 

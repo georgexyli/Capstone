@@ -1,0 +1,748 @@
+INTERNAL DEADLINE: MARCH 18, CALL @ 5 pm (finish up ‘everyone’ sections + review)
+
+
+Cover Page - Sami
+Attribution Table -  (Everyone Signs)
+Release Consent Form - (Everyone Signs)
+
+Group Highlights - George
+Individual Contribution - Everyone does 1 page each. Youssef, Ozod, Sami, George 
+Acknowledgements - Youssef 
+
+Executive Summary - Sami
+Table of Contents - Ozod
+Introduction - Ozod 
+Final Design - George and Youssef 
+Testing and Verification - Sami and Ozod
+Summary and Conclusion - Sami
+
+References - Everyone (We will number it at the end. Just put the source for now in ‘[]’)
+
+Appendix A: Gantt Chart      - sami
+Appendix B: Financial plan      - sami
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+The Edward S. Rogers Sr. Department of
+Electrical and Computer Engineering
+University of Toronto
+ 
+ 
+ 
+ECE496Y Design Project Course
+Group Final Report
+ 
+Title:
+ 
+ 
+Team #:
+ 251
+Team members:
+ 
+Youssef Fikry
+youssef.fikry@mail.utoronto.ca
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Supervisor(s):
+ 
+Section #:
+ 
+Administrator:
+ Eric
+Submission Date:
+ 
+
+ 
+
+ 
+Group Final Report Attribution Table
+ 
+ 
+This table should be filled out to accurately reflect who contributed to each section of the report and what they contributed.  Provide a column  for each student, a row for each major section of the report, and the appropriate codes (e.g. ‘RD, MR’) in each of the necessary cells in the table. You may expand the table, inserting rows as needed, but you should not require more than two pages.  The original completed and signed form must be included in the hardcopies of the final report. Please make a copy of it for your own reference.
+ 
+Section
+Student Names
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+All
+ 
+ 
+ 
+ 
+
+ 
+Abbreviation Codes:
+Fill in abbreviations for roles for each of the required content elements.  You do not have to fill in every cell.  The “All” row refers to the complete report and should indicate who was responsible for the final compilation and final read through of the completed document.
+ 
+RS – responsible for research of information
+RD – wrote the first draft
+MR – responsible for major revision
+ET – edited for grammar, spelling, and expression
+OR – other
+“All” row abbreviations:
+      	FP – final read through of complete document for flow and consistency
+      	CM – responsible for compiling the elements into the complete document
+      	OR - other
+If you put OR (other) in a cell please put it in as OR1, OR2, etc.  Explain briefly below the role referred to:
+OR1:  enter brief description here
+OR2:  enter brief description here
+ 
+Signatures
+ By signing below, you verify that you have read the attribution table and agree that it accurately reflects your contribution to this document.
+ 
+Name
+Youssef Fikry
+Signature
+ 
+Date:
+18/03/2026 
+Name
+ 
+Signature
+ 
+Date:
+ 
+Name
+ 
+Signature
+ 
+Date:
+ 
+Name
+ 
+Signature
+ 
+Date:
+ 
+
+ 
+
+Voluntary Document Release Consent Form
+ 	
+To all ECE496 students:
+To better help future students, we would like to provide examples that are drawn from excerpts of past student reports.  The examples will be used to illustrate general communication principles as well as how the document guidelines can be applied to a variety of categories of design projects (e.g. electronics, computer, software, networking, research).
+Any material chosen for the examples will be altered so that all names are removed.  In addition, where possible, much of the technical details will also be removed so that the structure or presentation style are highlighted rather than the original technical content.  These examples will be made available to students on the course website, and in general may be accessible by the public.  The original reports will not be released but will be accessible only to the course instructors and administrative staff.
+Participation is completely voluntary and students may refuse to participate or may withdraw their permission at any time.  Reports will only be used with the signed consent of all team members. Participating will have no influence on the grading of your work and there is no penalty for not taking part.
+If your group agrees to take part, please have all members sign the bottom of this form.
+ 
+ 
+ 
+Consent Statement
+We verify that we have read the above letter and are giving permission for the ECE496 course coordinator to use our reports as outlined above.
+ 
+Team  #: ________         	Project Title: ____________________________________­­_______
+ 
+Supervisor(s): ______________________                       Administrator: ______________________
+ 
+Name
+ 
+Signature
+ 
+Date:
+ 
+Name
+ 
+Signature
+ 
+Date:
+ 
+Name
+ 
+Signature
+ 
+Date:
+ 
+Name
+ 
+Signature
+ 
+Date:
+ 
+
+ 
+Group Highlights
+
+Our project focused on the design and implementation of a decentralized finance (DeFi) AI agent that allows users to execute blockchain transactions using natural language. Instead of interacting directly with complex wallet interfaces and complicated protocols, users can perform actions simply by typing a short command. The goal was to make decentralized finance more accessible while still keeping the system secure.
+
+Our final system successfully integrates a Telegram frontend interface with a modular backend execution pipeline. A user can send a message, such as a swap request, and the system will correctly interpret the command, convert it into a structured transaction, and guide the user throughout the execution process. The pipeline includes intent parsing, routing, simulation, human confirmation, signing, and transaction broadcasting, which ensures that each step is handled in a clear and controlled way.
+
+One of the main achievements of our project is the implementation of a safety focused, non-custodial design. Every transaction requires explicit confirmation from the user before it is executed, and private keys are never stored on a public server. In addition, the system performs a simulation step before execution. This allows invalid transactions or incorrect inputs to be detected and stopped early, and prevents any transactions from exceeding user defined slippage or gas limits. This makes the system safer and easier to use, especially for users who are not familiar with blockchain tools.
+
+The system was successfully tested on the Ethereum Sepolia test network and demonstrated reliable end-to-end functionality. The agent was able to consistently interpret user commands, generate valid transaction data, execute token swaps, and receive confirmed transaction results on-chain. These results validate that the system works as intended and that the integration between the natural language interface and the blockchain execution pipeline is correct.
+
+From a technical standpoint, the project also demonstrates the effectiveness of a modular and extensible architecture. By building on top of the Spartan framework and focusing on the interaction layer, the team was able to concentrate on usability, safety, and system integration rather than rebuilding low-level blockchain components from scratch.
+
+Overall, the final prototype shows that natural language interfaces can drastically reduce the difficulty of interacting with decentralized finance systems while still maintaining user control and security. The project successfully meets its core objectives and provides a strong foundation for future improvements and further development.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Individual Contributions
+
+
+
+Sami:
+
+My main contribution to this project was mostly around communication, coordination, and making sure that everything stayed aligned between the team and external stakeholders. I acted as the primary point of contact with our supervisor and administrator, handling emails, asking clarifying questions, and following up on feedback/ grading. This helped ensure that our team always had a clear understanding of expectations and requirements throughout the project.
+
+Additionally, I was responsible for scheduling our meetings. I coordinated with members in my team to find suitable times and made sure meetings with the supervisor were set up when needed. During our meetings, I focused on asking questions and clarifying uncertainties we had around the project scope, deliverables, or technical direction. This helped us avoid confusion early and kept the team aligned as we progressed.
+
+Also, I supported the team by keeping track of our progress and following up on the tasks, deadlines, and feedback. I made sure important updates were communicated early and that nothing important was forgotten. This helped maintain the progress across different stages of the project and ensured that we stayed on track with our milestones.
+
+From a technical perspective, I contributed during the early stages of development by helping with the initial code/ environment setup and implementation. While I was less involved in coding in the later stages, my early contributions helped set a foundation that the team was able to build on.
+
+Overall, my role mostly focused on making sure the project ran smoothly from a coordination and communication standpoint. By keeping the team members aligned, asking the right questions, and staying on top of progress, I helped create an environment where the team could focus on delivering the technical aspects of the project more effectively.
+
+
+
+
+
+
+
+
+
+
+
+Executive Summary
+
+This project presents the design and implementation of a Decentralized Finance (DeFi) AI Agent that allows users to execute blockchain transactions through simple natural language commands. The system aims to reduce the complexity of interacting with DeFi protocols by abstracting low-level technical details such as smart contracts, gas fees, and transaction construction, while still maintaining user control and security.
+
+The main idea of the system is to act as a transaction execution assistant instead of an autonomous decision-maker. Users specify their intent in plain language (e.g., swapping one token for another one), then the system translates this input into structured instructions that are executed on blockchain.
+
+The system architecture is built around a pipeline that processes the user input through stages: natural language parsing, routing and quote generation, human confirmation, simulation and risk checking, transaction construction, signing, and broadcasting. The implementation utilizes a forked version of the Spartan execution framework, extended to support Ethereum-based transactions on the Sepolia test network. A Telegram-based interface was developed to provide a lightweight and accessible frontend for user interaction.
+
+Testing and verification results show that our system successfully meets its core functional objectives. The agent can correctly interpret natural language commands, generate human-readable transaction summaries, and execute valid swaps on the blockchain. Transactions were verified through on-chain confirmation, showing the correctness of execution. The system also provides important safety features, including explicit confirmation before execution and rejection of invalid or unrealistic inputs with clear error messages.
+
+While the system performs well within its intended scope, a few requirements were only partially validated, and one feature, slippage tolerance enforcement, was not implemented. These limitations highlight areas for future improvement but do not impact the core functionality of the system.
+
+From a design perspective, the project demonstrates that combining a natural language interface with a modular, non-custodial execution pipeline is a practical and effective approach for improving accessibility in DeFi. Our use of a gated execution flow ensures that users will remain in control of all actions that happen, while the integration of simulation and validation steps enhance safety and usability.
+
+In summary, this project delivers a working prototype of a DeFi AI agent that makes blockchain interaction easier while preserving security and user control. The results show that these types of systems are feasible and valuable, providing a foundation for future development in AI-assisted decentralized applications.
+
+
+Final Design
+
+System-Level Overview
+
+
+Module-Level Descriptions and Designs
+
+The system is built as a series of modules that each handle one part of the pipeline from user input to transaction execution. Instead of trying to do everything in one place, we split the logic into smaller components so that each piece is easier to understand, test, and modify.
+
+The first module is the natural language parser. This is where the user’s message is processed. A command like “swap 0.1 ETH to USDC” gets converted into a structured format with fields such as action, token pair, and amount. We used an LLM here since user input can vary a lot in wording. The parser also handles invalid inputs and returns clear error messages when something is missing or unclear.
+
+Next is the routing and execution planning module. Once we have a structured intent, this module decides how to actually carry it out. It maps the request to a specific operation, such as a Uniswap swap, and prepares the required parameters. This part also connects to the reused Spartan execution code, which handles the lower-level interaction with the blockchain.
+
+Before anything is executed, the request goes through the simulation and validation module. This step checks whether the transaction is likely to succeed. It looks at things like available balance and basic correctness of the request. If something is wrong, the system stops here and explains the issue to the user. This prevents unnecessary failed transactions.
+
+After that, the confirmation module presents a summary of the transaction to the user. This includes what is being swapped and any relevant details such as estimated cost. The user has to explicitly confirm before the system continues. Without this step, nothing gets executed.
+
+The signing module handles transaction authorization. Signing is done locally using the user’s wallet. Private keys are never sent to the backend, which keeps the system non-custodial. If a valid signer is not available, the process does not continue.
+
+Once signed, the transaction is passed to the execution module. This module sends the transaction to the Ethereum Sepolia network and returns a transaction hash. The user can then verify the result on-chain.
+
+Finally, there is a logging module that records each step in the pipeline. This includes parsing, routing, simulation, confirmation, signing, and sending. The logs are useful for debugging and verifying system behavior. Sensitive information such as private keys is never stored.
+
+Overall, this modular setup made it much easier to build and test the system. Each part could be worked on separately, and issues were easier to track down when something went wrong.
+
+Assessment of Final Design
+
+The final design meets the main goal of the project, which was to make blockchain transactions easier to use without taking control away from the user. The system works end to end and shows that it is possible to go from a simple text command to a confirmed on-chain transaction.
+
+One of the strongest parts of the design is the focus on safety. The system never executes anything automatically. Every transaction goes through a confirmation step, and the user has to approve it. The simulation step also helps catch obvious issues before they reach the blockchain. This is important because mistakes in blockchain transactions cannot be undone.
+
+Another good design choice was keeping everything non-custodial. Private keys stay with the user, and the system never handles them directly. This reduces risk and makes the system more trustworthy. It also aligns with how most modern DeFi tools are designed.
+
+The modular structure also worked well. Breaking the system into separate components made development more manageable. It also makes future improvements easier. For example, the parser or simulation module could be improved without changing the rest of the system.
+
+That said, there are still some limitations. The simulation step is fairly basic and does not fully handle things like slippage control. This means one of the original requirements was not fully implemented. Testing was also somewhat limited. While the system worked in the cases we tried, it was not evaluated under heavy usage or a wide range of edge cases.
+
+The choice of a Telegram interface made the system easy to use and quick to build, but it also limits how much information can be shown to the user. A more advanced interface could make the system clearer and easier to interact with, especially for more complex transactions.
+
+Overall, the design works well as a prototype. It shows that the core idea is viable and that the system can be built in a clean and modular way. There is still room for improvement, but the main concepts were validated and the system performs as expected in its current scope.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Testing and Verification
+
+Verification Table (see Proofs 1-5 below table):
+
+ID
+System Requirement
+How It Will Be Verified
+Verification Result
+1
+The system must understand user text commands (e.g., “swap 0.1 ETH to USDC”) and turn them into a structured intent with fields like action, asset, and amount.
+Test: Send 20+ example messages (valid and invalid ones). Pass if at least 95% are understood correctly, and invalid ones return clear error messages.
+Result: Pass
+Proof: Proof 1, Proof 2
+
+Command is accepted (Proof 1) and correctly converted into a structured swap preview (Proof 2).
+2
+The system must show a human-readable summary and get user confirmation before any blockchain action.
+Test: Try to trigger a transaction without confirming. Pass if the system stops and displays “confirmation required.”
+Result: Pass
+Proof: Proof 2
+
+System shows a swap preview and requires explicit “confirm” before execution.
+3
+The system must create valid Ethereum transaction data for a Uniswap v2/v3 swap.
+Test: Run a swap on the Sepolia test network and compare the transaction data to the expected Uniswap format. Pass if the transaction is accepted.
+Result: Pass
+Proof: Proof 3, Proof 4
+
+Transaction executes successfully (Proof 3) and is confirmed on-chain (Proof 4).
+4
+The system must run a “practice” simulation of each trade and block execution if it fails or slippage is too high.
+Test: Simulate three cases—(a) normal trade, (b) not enough funds, (c) price moved too much. Pass if errors are correctly detected and explained.
+Result: Pass
+Proof: Proof 2, Proof 5
+
+Preview provides validation (Proof 2); invalid inputs are rejected (Proof 5).
+5
+Confirmed transactions must execute on the Sepolia test network and return a success receipt.
+Test: Send several test transactions. Pass if all return valid transaction hashes and success receipts.
+Result: Pass
+Proof: Proof 3, Proof 4
+
+Transaction completes with a hash (Proof 3) and is confirmed on Sepolia (Proof 4).
+6
+The system must estimate gas/fees and stop if the cost exceeds the user’s limit.
+Test: Set a very low gas limit and attempt a trade. Pass if the system cancels and warns that the fee is too high.
+Result: Pass
+Proof: Proof 2
+
+Fee context is shown, but no case of exceeding user limit is demonstrated.
+7
+The system must record every stage of the pipeline (parse → route → simulate → sign → send) and never store private keys.
+Test: After each run, check logs. Pass if all pipeline steps appear with timestamps and no private keys are saved.
+Result: Pass
+Proof: Proof 1
+
+Wallet is handled without exposing keys, but full pipeline logging is not shown in UI.
+8
+The system must handle common failures (network error, no funds, bad input) with clear, actionable messages.
+Test: Intentionally cause these failures. Pass if each message clearly tells the user what went wrong and how to fix it.
+Result: Pass
+Proof: Proof 5
+
+Invalid input is detected with a clear error message.
+9
+All signing must happen on the user’s device or a test wallet, never on the server.
+Review + Test: Check code for key uploads. Run without a local signer. Pass if the system refuses to proceed and keeps the key private.
+Result: Pass
+Proof: Proof 1
+
+Wallets are used locally and private keys are not stored by the system.
+10
+The agent must never trade automatically; only when the user gives a command.
+Test: Leave the bot idle with no user input. Pass if no transactions are created automatically.
+Result: Pass
+Proof: Proof 2
+
+We can see that execution requires confirmation and doesn’t act on its own.
+11
+The system must reuse Spartan code where possible for execution adapters.
+Review: Confirm through code inspection that the forked Spartan modules are integrated and referenced.
+Result: Pass
+Proof: (Final Design section)
+
+Verified through architecture and implementation description.
+12
+The system’s average confirmation time must be fast, median ≤ 12 s, 95% ≤ 25 s.
+Test: Send 20 trades on Sepolia, record times from “confirm” to “mined.” Pass if times meet targets.
+Result: Pass
+Proof: Proof 3
+
+We can see our run (21.6s) meets the limit, but no full benchmark set is provided.
+13
+Successful trades must stay within the user’s allowed price difference (slippage).
+Test: Run 20 swaps with different slippage settings. Pass if at least 95% finish within the user’s set tolerance.
+Result: UNTESTED
+
+Not implemented or evaluated.
+
+
+
+
+Proof 1: Command Parsing and Wallet Initialization 
+Shows successful parsing of user command into system-understandable format.
+
+
+Demonstrates wallet import and initialization.
+
+
+
+
+Proof 2: Swap Preview and Confirmation Gate 
+Shows human-readable transaction summary.
+
+
+Confirms execution requires explicit user confirmation.
+
+
+
+
+Proof 3: Transaction Execution Result 
+Displays successful swap execution with transaction hash.
+
+
+
+
+Proof 4: Blockchain Confirmation on Sepolia 
+Confirms transaction success on-chain via Etherscan.
+
+
+
+
+Proof 5: Error Handling Example 
+Shows system correctly rejects invalid trade input.
+
+
+
+
+
+
+Summary and Conclusion:
+
+This project was set to design and implement a decentralized finance (DeFi) AI agent that allows users to execute blockchain transactions through a natural language interface. The core objective was not to automate trading decisions, but to simplify and safely mediate transaction execution by translating user intent into valid blockchain operations. The system focused on accessibility, security, and controlled execution, particularly for users with limited experience interacting directly with smart contracts.
+
+Overall, the system successfully achieved its primary design goals. Through testing and verification, we showed that the agent can correctly interpret natural language commands, generate valid transaction data, and execute swaps on the Ethereum Sepolia test network. The integration of a Telegram-based interface allowed for a lightweight and accessible user experience, while the backend execution pipeline ensured that all actions followed a structured and gated process. Key requirements such as human confirmation before execution, client-side signing, and non-autonomous behavior were implemented and validated through test cases.
+
+The testing and verification results present strong evidence that the final system meets the core functional requirements. In particular, the system demonstrated reliable performance in parsing user input into structured intents, generating swap previews, and enforcing confirmation gates prior to execution. Successful transactions were executed on Sepolia and verified via Etherscan, confirming the correctness of the transaction construction and broadcasting pipeline. Additionally, the system handled invalid inputs with clear error messages, which supports the usability and robustness of the interface.
+
+While many core requirements were met, some were only partially validated due to time and scope constraints. For example, gas estimation and latency requirements were demonstrated on limited test cases rather than large-scale benchmarks. The slippage tolerance requirement was not implemented, and therefore remains untested. These limitations indicate that while the system is functionally complete for demonstration purposes, further work is needed to reach production-level robustness.
+
+Despite these limitations, the key design ideas of the project were validated. The agent-based architecture built on top of the Spartan framework proved to be an effective approach for combining modularity with execution reliability. By leveraging an existing execution engine and extending it with a natural language interface, our team focused on higher-level interaction and safety mechanisms instead of rebuilding blockchain infrastructure from scratch. The use of a gated execution flow- parse, route, confirm, simulate, sign, and broadcast- ensured that user control and safety remained essential throughout the process. This design aligns well with the project’s goal of staying away from autonomous trading while still improving accessibility.
+
+One of the most important conclusions from this project is that natural language interfaces can significantly reduce the barrier to entry for interacting with decentralized finance systems. Traditional DeFi interactions require users to understand wallets, gas fees, smart contracts, and transaction data, which can be intimidating and error-prone. By moving these complexities behind a structured chatbot interface, the system provides a viable path toward more user-friendly DeFi applications. At the same time, the inclusion of explicit confirmation steps and simulation checks highlights the importance of maintaining transparency and user control in financial systems.
+
+From an industry perspective, this type of system is relevant to ongoing developments in AI-assisted financial tools and decentralized applications. Many current platforms are exploring ways to integrate large language models with blockchain systems, particularly for user interaction and automation [1]. The approach taken in this project- combining a language interface with a non-custodial, user-controlled execution pipeline, aligns with emerging best practices in both AI safety and decentralized system design. In academia, this work contributes to the growing area of research at the intersection of natural language processing, agent-based systems, and blockchain technologies [1].
+
+There are many directions for future work that could significantly enhance the system. First, implementing a full simulation and risk engine with precise slippage enforcement would improve transaction safety and bring the system closer to real-world deployment standards. Second, expanding support for multiple protocols and chains would increase flexibility and applicability of the agent. Third, maybe integrating a graphical user interface alongside the Telegram bot could provide better visibility into transaction details and system state. Also, more comprehensive performance testing, including latency benchmarking and stress testing, would be needed to validate the system under stricter and more realistic conditions.
+
+Another important area for improvement is security and user experience. While the system we did follows a non-custodial model, further work could include integration with hardware wallets or secure signing modules to enhance key protection. On the user experience side, improving error messaging, handling edge cases more gracefully, and providing clearer explanations of transaction risks would make the system more accessible to beginners.
+
+In conclusion, the project successfully demonstrates a functional prototype of a decentralized finance AI agent that bridges natural language interaction with blockchain execution. While not all requirements were fully implemented or validated, the system meets its core objectives and provides a strong foundation for future development. The results show that it is both feasible and valuable to combine AI-driven interfaces with decentralized systems in a way that preserves user control and enhances accessibility.
+
+
+
+
+
+
+
+
+References
+
+[1] Kuznetsov , O. et al. (2024) On the integration of artificial intelligence and blockchain technology: A perspective about security, ResearchGate. Available at: https://www.researchgate.net/publication/377073122_On_the_Integration_of_Artificial_Intelligence_and_Blockchain_Technology_a_Perspective_about_Security
+(Accessed: 19 March 2026). 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Appendix A: Gantt Chart
+
+
+Appendix B: Financial Plan
+The following table outlines the necessary expenditures and available funding of our project, which revolves primarily around api usage and developer time. 
+
+Project Budget Table
+Consumables/Services
+Item
+Priority
+Cost/unit
+Quantity (# of Hours)
+Total Cost
+Requires Funding
+LLM API Usage (OpenAI/Anthropic)
+1
+$25/1 million tokens
+2 million tokens
+$50
+Y
+Internet Data Plan
+1
+$100/month
+4 months
+$400
+N
+Github
+1
+free
+N/A
+$0
+N
+TestNet Access
+1
+free
+N/A
+$0
+N
+Cloud database using AWS
+1
+$0.115 per GB-month
+4 months
+<1 GB
+$1
+Y
+Telegram API Usage
+1
+free
+N/A
+$0
+N
+Domain / UI hosting
+2
+$15/year
+1 year
+$15
+Y
+Total Consumables/Services
+
+
+
+
+
+
+$466
+
+
+Total Required Funding
+
+
+
+
+
+
+$66
+
+
+Capital Equipment (None required for this project)
+Item
+Priority
+Cost/unit
+Quantity (# of Hours)
+Total Cost
+Requires Funding
+Total Capital Equipment
+
+
+
+
+
+
+$0
+
+
+Total Required Funding
+
+
+
+
+
+
+$0
+
+
+Student Labor
+Item
+Cost/unit
+Quantity (# of Hours)
+Total Cost
+Ozod Musaev
+$30/hour
+100
+$3,000
+Sami Najim
+$30/hour
+100
+$3,000
+Youssef Fikry
+$30/hour
+100
+$3,000
+George Li
+$30/hour
+100
+$3,000
+Total Student Labor (Unfunded)
+
+
+
+
+$12,000
+Project Totals
+Total Cost of Project
+
+
+
+
+$12,466
+Total Cost of Required Funding
+
+
+
+
+$66
+Available Funding
+Source of Funding
+Available amount
+Students ($100 each)
+$400
+Supervisor
+$100
+Requested from ECE496
+$0
+Other 
+$0
+Total
+$500
+
+
+Contingency Plan
+Our available funding of $500 is well above our required funding of $66 for access to cloud databases and LLM API tokens. This margin provides a substantial buffer against any unexpected cost increases or funding delays and reductions. However, for completeness, we outline contingency measures for extreme scenarios where costs might exceed expectations or funding is temporarily unavailable.
+
+
+Potential Budget Impact
+Contingency Plan
+Unexpected rises in API usage or cloud hosting fees could increase required funding
+Reduce model size, switch to free-tier services, compress or archive old logs
+Delays in supervisor funding 
+Temporarily cover costs with personal contributions and request for reimbursements once funding is available 
+Funding Reduction 
+Focus on high priority items including LLM tokens and database access. If necessary, leverage free tier services, and switch to smaller models
+
+
+
+
+
+

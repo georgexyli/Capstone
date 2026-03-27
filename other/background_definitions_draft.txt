@@ -1,0 +1,31 @@
+4.1 Background and Definitions (author: Y. Fikry)
+
+The following terms and concepts are used throughout this section and are defined here for clarity.
+
+Blockchain: A distributed, append-only ledger that records transactions across a network of computers. Once a transaction is confirmed, it cannot be reversed or altered.
+
+Ethereum: A public blockchain platform that supports programmable logic through smart contracts. Ethereum uses Ether (ETH) as its native currency.
+
+Sepolia: A public Ethereum test network (testnet) used for development and testing. Transactions on Sepolia use free test ETH and have no real monetary value.
+
+Smart Contract: A program deployed on a blockchain that executes automatically when predefined conditions are met. In this project, the Uniswap swap contracts are the primary smart contracts the system interacts with.
+
+Token: A digital asset on a blockchain. ETH is the native token of Ethereum. Other tokens (e.g., USDC) are implemented as smart contracts following the ERC-20 standard, which defines a common interface for transferring and querying balances.
+
+Token Swap: The exchange of one token for another (e.g., exchanging ETH for USDC) through a decentralized exchange protocol.
+
+Uniswap: A decentralized exchange protocol deployed on Ethereum that allows users to swap tokens without an intermediary. The system uses Uniswap V3, which organizes liquidity into pools with configurable fee tiers.
+
+Gas: The unit of computational cost on Ethereum. Every transaction requires gas, paid in ETH, to compensate the network for processing. Gas cost depends on the complexity of the transaction.
+
+Slippage: The difference between the expected price of a trade at the time of quoting and the actual price at the time of execution. Slippage tolerance defines the maximum acceptable deviation before a trade is rejected.
+
+Private Key: A secret cryptographic value that authorizes transactions from a blockchain wallet. Whoever holds the private key controls the associated funds. In a non-custodial system, the private key is held only by the user, never by the service.
+
+Non-Custodial: A design principle in which the system never takes ownership or persistent storage of a user's private keys. The user retains full control of their funds at all times.
+
+ABI (Application Binary Interface): A specification that defines how to encode function calls and decode responses when interacting with a smart contract. The system uses ABIs to construct valid transaction data for the Uniswap router contracts.
+
+JSON-RPC: A protocol for communicating with Ethereum nodes. The system uses JSON-RPC to read on-chain data (e.g., token balances) and submit signed transactions.
+
+LLM (Large Language Model): An AI model trained on large text datasets, used in this project to interpret natural language user commands and extract structured intent (e.g., token pair, amount, chain).

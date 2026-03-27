@@ -1,0 +1,7 @@
+Acknowledgements
+
+We would like to thank our supervisor, Srisht Fateh Singh, for his consistent technical guidance throughout the project. Srisht pointed us toward the right resources for understanding blockchain fundamentals and smart contract interactions, gave us a clear picture of what the project needed to achieve technically, and was always available to help us work through design decisions as they came up. His input was essential in keeping the project grounded and technically sound.
+
+We would also like to thank our administrator, Eric Lefebvre, for his feedback on how to present and communicate our work. Eric helped us learn how to explain our project clearly to audiences without a blockchain background, which improved both our written reports and our presentations.
+
+Finally, we would like to thank Professor Andreas Veneris for taking on our group and giving us the opportunity to work on this project. The problem space was challenging, but it turned out to be one of the most rewarding learning experiences of our undergraduate degree. Working at the intersection of AI and decentralized finance was something none of us had done before, and we came away from this project with a genuine interest in the field. We are grateful for the chance to explore it.

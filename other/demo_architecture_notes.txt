@@ -1,0 +1,118 @@
+ARCHITECTURE OVERVIEW FOR DEMO
+==============================
+
+WHAT THE SYSTEM IS
+------------------
+An AI agent that lets users execute blockchain token swaps by chatting in natural language on Telegram. Instead of using complex DeFi interfaces, users just say "swap 0.001 ETH to USDC on Sepolia" and the agent handles everything.
+
+
+THE THREE LAYERS
+----------------
+
+1. FRONT END — Telegram Bot
+   - User talks to a Telegram bot (@SpartanAgentBot)
+   - Built on ElizaOS framework
+   - /start auto-creates an account, user pastes a private key to import their wallet
+   - All sensitive info (wallet addresses, tx details) is sent via DM only
+
+2. EXECUTION MIDDLEWARE — The Pipeline
+   Every swap goes through 7 stages in order. If any stage fails, execution stops.
+
+   Stage 1 — Intent Parsing
+   LLM (GPT-4) extracts token pair, amount, and chain from natural language.
+   Code: act_wallet_swap.ts -> askLlmObject()
+
+   Stage 2 — Quote
+   Queries Uniswap V3 QuoterV2 contract across 3 fee tiers (0.05%, 0.3%, 1%), picks best price.
+   Fetches token decimals on-chain so amounts display correctly (e.g., USDC has 6 decimals, not 18).
+   Code: srv_ethereum.ts -> getSwapQuote()
+
+   Stage 3 — Confirmation Gate
+   Shows preview card with amount, rate, slippage, network.
+   Stores pending swap in database. Waits for user to reply "confirm" or "cancel".
+   60-second expiry on the quote.
+   Code: act_wallet_swap.ts -> act_confirm_swap.ts
+
+   Stage 4 — Simulation
+   4 pre-flight checks before any on-chain action:
+     (a) Balance check — does the user have enough tokens + gas?
+     (b) Allowance check — is the Uniswap router approved to spend the ERC-20?
+     (c) Gas estimation — is estimated gas within the 500k unit ceiling?
+     (d) Slippage re-check — re-quotes to see if price moved beyond tolerance
+   Blocks with a specific error code if any check fails.
+   Code: srv_ethereum.ts -> simulateSwap()
+
+   Stage 5 — Build & Sign
+   Constructs Uniswap V3 exactInputSingle calldata.
+   Signs locally with user's private key via viem. Key never leaves memory.
+   Code: srv_ethereum.ts -> executeSwap()
+
+   Stage 6 — Broadcast
+   Submits signed transaction to Sepolia via JSON-RPC. Waits for receipt.
+   Code: publicClient.waitForTransactionReceipt()
+
+   Stage 7 — Receipt
+   Decodes Uniswap Swap event logs for actual output amount.
+   Shows realized slippage, gas cost in ETH, execution time, explorer link.
+   Emits structured JSON audit log with unique run ID.
+   Code: act_confirm_swap.ts -> formatTradeReceipt()
+
+3. BLOCKCHAIN LAYER — External Systems
+   - Uniswap V3 on Sepolia: QuoterV2 (quotes) + SwapRouter02 (execution)
+   - RPC Provider: JSON-RPC via viem (defaults to public Sepolia RPC)
+   - Sepolia testnet: free test ETH, real Uniswap deployments, Etherscan verification
+
+
+KEY DESIGN PRINCIPLES
+---------------------
+- Non-custodial: Private keys are held in memory during signing only. Never stored to disk, never transmitted, never logged.
+- No autonomous trading: The agent never trades on its own. Every transaction requires explicit user confirmation.
+- Gated execution: Each stage must pass before the next runs. A failed simulation blocks the entire swap.
+- Two-action pattern: The swap is split into MULTIWALLET_SWAP (preview + store) and CONFIRM_SWAP (execute). Connected by a pending_swap_v0 component in the database.
+
+
+TECH STACK
+----------
+Agent framework:      ElizaOS (Spartan fork)
+LLM:                  GPT-4 via OpenAI API
+Blockchain client:    viem (TypeScript)
+DEX protocol:         Uniswap V3
+Network:              Ethereum Sepolia testnet
+Frontend:             Telegram Bot API
+Database:             MySQL 9
+Containerization:     Docker Compose
+Language:             TypeScript
+
+
+DEMO FLOW
+---------
+1. Scan QR code -> opens Telegram bot -> tap Start -> account auto-created
+2. Paste Sepolia private key -> wallet imported
+3. "swap 0.001 ETH to USDC on Sepolia" -> preview card shown
+4. "confirm" -> simulation runs -> tx signed -> broadcast -> receipt with actual output, slippage, gas, explorer link
+5. Can also demo: insufficient balance rejection, cancellation, quote expiry
+
+
+TOUGH QUESTIONS AND ANSWERS
+----------------------------
+
+Q: "Why not mainnet?"
+A: Sepolia is the standard Ethereum testnet. Same contracts, same flow, zero financial risk for testing. The architecture is chain-agnostic — switching to mainnet is a configuration change, not a code change.
+
+Q: "How are keys protected?"
+A: Non-custodial design. Keys exist in volatile memory only during the signing operation. Never persisted to disk, transmitted over the network, or recorded in any log. The user imports their own key and retains full control.
+
+Q: "What if the price moves?"
+A: Two protections. First, quotes expire after 60 seconds. Second, the simulation stage re-quotes the swap right before execution and blocks if the price moved beyond the user's slippage tolerance.
+
+Q: "What makes this different from just using Uniswap directly?"
+A: Natural language interface removes the need to understand wallets, gas, contract addresses, and DEX UIs. The confirmation gate and simulation add safety layers that Uniswap's raw interface doesn't have. A user can just say "swap 0.001 ETH to USDC" instead of navigating a complex web app.
+
+Q: "Can it trade autonomously?"
+A: No, by design. The agent never initiates a transaction. Every swap requires the user to explicitly confirm. If you leave the bot idle, nothing happens.
+
+Q: "What happens if a transaction fails?"
+A: The system produces specific, actionable error messages. Insufficient balance tells you exactly how much you have vs. how much you need. A reverted transaction links to the explorer. The simulation gate catches most failures before they reach the blockchain.
+
+Q: "How does the AI understand what I want?"
+A: GPT-4 parses the natural language into structured fields (input token, output token, amount, chain). It's prompted with the user's wallet context so it can resolve ambiguous references. If it can't parse the request, it asks for clarification instead of guessing.

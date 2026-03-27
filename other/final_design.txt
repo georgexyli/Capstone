@@ -1,0 +1,102 @@
+4 Final Design
+
+4.1 System-Level Overview
+
+The DeFi AI Agent is architected as a gated execution pipeline that transforms natural language user input into validated, confirmed, and broadcast blockchain transactions. The system follows a strict sequential flow in which each stage must complete successfully before the next stage begins, and no on-chain action can occur without explicit user approval. Figure 1 presents the system block diagram. The final system follows the nine-module architecture we laid out in the Implementation Plan, with all modules built and working in the delivered prototype. We did not deviate from the original design; the pipeline stages, their ordering, and the interfaces between them are the same as what was proposed.
+
+
+Figure 1: System Block Diagram
+At the highest level, the system comprises three layers. The messaging interface layer handles user-facing communication through a Telegram bot, receiving commands and returning previews, confirmations, and receipts. The core execution pipeline contains the business logic that parses intent, obtains quotes, enforces safety checks, and orchestrates transaction flow. The blockchain interaction layer manages direct communication with Ethereum nodes via JSON-RPC, including contract reads, transaction signing, and broadcast.
+
+The pipeline processes each swap request through seven stages:
+Intent parsing, where the user's natural language message is converted into structured fields by an LLM
+Routing and quote generation, where the Uniswap V3 QuoterV2 contract is queried for the best price across fee tiers
+Human confirmation, where a preview is shown and execution halts until the user explicitly approves
+Pre-execution simulation, where balance, allowance, gas, and slippage are verified before signing
+Transaction construction and signing, where calldata is built and signed locally using the user's private key
+Broadcast and receipt, where the signed transaction is submitted and confirmed on-chain
+Post-trade rendering, where the actual output is decoded from event logs and a detailed receipt is returned to the user.
+
+Each stage is described in detail in Section 4.2.
+
+4.2 Module-Level Descriptions and Designs
+
+This section describes the design and implementation of each module in the system, organized by the four architectural groups shown in Figure 1: Front End, Execution Middleware, External Systems, and Outputs.
+
+4.2.1 Front End
+
+The front end is responsible for receiving user input and delivering system responses. In the current implementation, a Telegram bot serves as the primary interface.
+
+
+Figure 2: Front-End Block Diagram
+
+Telegram Bot Client: The Telegram bot is provided by the ElizaOS framework's Telegram plugin, which listens for incoming messages and routes them to the agent runtime for processing. 
+
+Figure 3: Successful swap preview example
+When a user sends a message such as "swap 0.001 ETH to USDC on Sepolia," the bot forwards the raw text to the execution middleware. Responses from the pipeline, including swap previews, confirmation prompts, error messages, and trade receipts, are sent back to the user as formatted text messages within the same Telegram conversation. The bot also supports private message routing via a utility function (takeItPrivate) that ensures sensitive information such as wallet addresses and transaction details is only visible to the requesting user.
+
+A web-based GUI was originally planned as a Phase 2 frontend but was not implemented within the project timeline. However, because the front end is decoupled from the execution pipeline through the ElizaOS runtime, adding additional interfaces would not require changes to the middleware or blockchain layers.
+
+4.2.2 Execution Middleware
+
+The execution middleware contains the core pipeline logic. It is implemented as a set of ElizaOS plugin modules, primarily within the Multiwallet plugin (src/plugins/multiwallet) and the Account plugin (src/plugins/account). Each module corresponds to a discrete pipeline stage.
+
+
+Figure 4: Execution Middleware Block Diagram
+
+Module 1 — NLU and Intent Parser: When a user message arrives, the ElizaOS runtime evaluates all registered actions by calling their validate functions. If the MULTIWALLET_SWAP action is selected, the handler uses a large language model (via the askLlmObject utility) to extract structured fields from the natural language input: input token symbol, output token symbol, token contract addresses (if provided), and amount. The LLM is prompted with the user's recent messages and a list of their available wallets, enabling it to resolve ambiguous references. If the LLM cannot extract the required fields, the system returns an error message to the user and does not proceed. The parser also performs automatic wallet detection: if the user mentions an EVM chain name (e.g., "Sepolia," "Base") and has exactly one wallet on that chain, the system selects it without requiring the user to specify an address.
+
+Module 2 — Router and Quote Engine (EVM): After parsing, the system resolves token contract addresses using a lookup table of common tokens per chain (ETH, WETH, USDC) and falls back to the LLM-extracted addresses when available. The input amount is converted from human-readable units to raw token units using the correct decimal count fetched on-chain via the ERC-20 decimals() function. The Ethereum chain service then queries the Uniswap V3 QuoterV2 contract using viem's simulateContract method. Three fee tiers are evaluated (500, 3000, and 10000 basis points, corresponding to 0.05%, 0.3%, and 1% pool fees), and the tier producing the highest output amount is selected. The quote result includes the raw output amount, the minimum acceptable output after slippage, the selected fee tier, and the input and output token decimal counts.
+
+Module 3 — Human Confirmation Gate: Once a quote is obtained, the system constructs a swap preview card showing the input amount, estimated output (converted to human-readable units using the output token's decimal count), exchange rate, slippage tolerance, network, and wallet address. This preview is displayed to the user along with a prompt: "Reply 'confirm' to execute or 'cancel' to abort. This quote expires in 60 seconds." The pending swap parameters are stored as a component (of type pending_swap_v0) on the user's entity in the ElizaOS runtime database. The MULTIWALLET_SWAP action then returns without executing anything. A separate action, CONFIRM_SWAP, handles the user's response. Its validate function checks whether the user has a non-deleted, non-expired pending swap component; if so, the action becomes a candidate for the LLM router. This two-action pattern follows the same design used by the email verification flow in the Account plugin and ensures that the confirmation step is handled as a first-class interaction rather than an inline prompt within a single action handler.
+
+Module 4 — Simulation and Risk Gate (Sepolia): When the user confirms, the CONFIRM_SWAP handler calls ethService.simulateSwap() before any on-chain transaction is submitted. This method performs four sequential checks:
+  (a) Balance Check: For native ETH inputs, the user's ETH balance is compared against the swap amount plus a gas buffer. For ERC-20 inputs, the token balance is read via balanceOf() and the native ETH balance is separately verified to cover gas fees.
+  (b) Allowance Check: For ERC-20 inputs, the current spending allowance granted to the Uniswap SwapRouter02 contract is read via the allowance() function. If insufficient, the user is informed that approval will be required.
+  (c) Gas Estimation: The swap calldata is passed to viem's estimateContractGas method, which performs an eth_estimateGas call against the router contract. The estimated gas is compared against a ceiling of 500,000 gas units, which provides a generous margin above the typical Uniswap V3 swap cost of 150,000 to 300,000 units.
+  (d) Slippage Check: A fresh quote is obtained by re-calling getSwapQuote() with the same parameters. If the fresh output amount falls below the stored amountOutMinimum (the original quote minus the user's slippage tolerance), the system concludes that the price has moved unfavorably and blocks execution.
+Each check produces a specific error code (INSUFFICIENT_BALANCE, MISSING_ALLOWANCE, GAS_EXCEEDS_LIMIT, or SLIPPAGE_EXCEEDED) and an actionable error message if it fails. Only transactions that pass all four checks proceed to signing.
+
+Modules 5 and 6 — Spartan-EVM Interop Layer and Transaction Builder (ABI): These modules are combined within the Ethereum chain service's executeSwap() method. The service constructs the swap parameters for the Uniswap V3 SwapRouter02 exactInputSingle function, including the resolved token addresses (with native ETH mapped to WETH), the amount, minimum output, fee tier, recipient address, and deadline (defaulting to 30 minutes). For ERC-20 inputs, the service checks the current router allowance and, if insufficient, submits an approve transaction for twice the required amount before proceeding with the swap. The calldata is encoded using viem's type-safe contract interaction, which validates the parameters against the Uniswap ABI at construction time.
+
+Module 7 — Client-Side Signature: Transaction signing is performed using viem's privateKeyToAccount function, which derives the signing account from the user's private key in memory. The walletClient.writeContract() call handles nonce management, gas price estimation, signing, and submission in a single operation. The private key is never written to disk, transmitted over the network, or included in any log output.
+
+Module 8 — Broadcaster (RPC): After signing, the transaction is submitted to the Ethereum Sepolia network via the configured RPC endpoint. The system calls publicClient.waitForTransactionReceipt() to block until the transaction is mined and a receipt is available. The receipt's status field is checked to determine success or revert. On success, the transaction hash and a block explorer URL are returned to the caller.
+
+Module 9 — Run Logger and Telemetry: After each trade completes (whether successfully or not), a structured JSON log entry is emitted via the ElizaOS logger. The log includes a unique run ID (UUID), ISO timestamps, the final verdict (success or failure), chain, token pair, input and output amounts, realized slippage, gas cost, execution time, and the transaction hash. For failed trades, the error message and failure stage are recorded. Private keys and signing material are explicitly excluded from all log output. These logs are captured by Docker's logging driver and can be inspected via docker compose logs for debugging and auditing purposes.
+
+4.2.3 External Systems
+
+
+Figure 4: External Systems Block Diagram
+
+The execution middleware interacts with three categories of external systems:
+
+Protocol Adapters (Uniswap): The system interacts with two Uniswap V3 smart contracts: the QuoterV2 contract (for obtaining price quotes without executing transactions) and the SwapRouter02 contract (for executing swaps). Contract addresses are configured per chain in a central configuration file.
+
+RPC Provider: All on-chain reads and writes are performed through JSON-RPC calls via viem's HTTP transport. The RPC endpoint is configurable per chain through environment variables (e.g., RPC_URL for Ethereum mainnet, SOLANA_RPC_URL for Solana). If no custom endpoint is configured, the system falls back to public RPC endpoints (e.g., https://rpc.sepolia.org for Sepolia). The system does not depend on any proprietary or paid RPC infrastructure for its core functionality.
+
+Blockchain (Sepolia): All testing and verification was performed on the Ethereum Sepolia test network. Sepolia was chosen because it is the recommended Ethereum testnet with reliable Uniswap V3 deployments, free test ETH from public faucets, and block explorer support through Etherscan.
+
+4.2.4 Outputs
+
+
+Figure 5: Outputs Block Diagram
+
+Post-Trade Rendering and Audit: After a successful transaction, the system decodes the Uniswap V3 Pool Swap event from the transaction receipt logs to extract the actual output amount (rather than relying on the estimated quote). A trade receipt is then rendered showing: the input token and amount spent, the output token and actual amount received, the realized slippage (percentage difference between the quoted and actual output), the gas consumed (converted to ETH), the execution time in seconds from confirmation to mined receipt, the transaction hash, and a link to the transaction on Etherscan. For failed transactions, the system produces actionable error messages categorized by failure type: insufficient balance, network error, or transaction revert, each with a specific suggestion for resolution.
+
+4.3 Assessment of Final Design
+
+The final design meets the main goal of the project, which was to make blockchain transactions easier to use without taking control away from the user. The system works end to end and shows that it is possible to go from a simple text command to a confirmed on-chain transaction.
+
+One of the strongest parts of the design is the focus on safety. The system never executes anything automatically. Every transaction goes through a confirmation step, and the user has to approve it. The simulation step also helps catch obvious issues before they reach the blockchain. This is important because mistakes in blockchain transactions cannot be undone.
+
+Another good design choice was keeping everything non-custodial. Private keys stay with the user, and the system never handles them directly. This reduces risk and makes the system more trustworthy. It also aligns with how most modern DeFi tools are designed.
+
+The modular structure also worked well. Breaking the system into separate components made development more manageable. It also makes future improvements easier. For example, the parser or simulation module could be improved without changing the rest of the system.
+
+That said, there are still some limitations. The simulation step is fairly basic and does not fully handle things like slippage control. This means one of the original requirements was not fully implemented. Testing was also somewhat limited. While the system worked in the cases we tried, it was not evaluated under heavy usage or a wide range of edge cases.
+
+The choice of a Telegram interface made the system easy to use and quick to build, but it also limits how much information can be shown to the user. A more advanced interface could make the system clearer and easier to interact with, especially for more complex transactions.
+
+Overall, the design works well as a prototype. It shows that the core idea is viable and that the system can be built in a clean and modular way. There is still room for improvement, but the main concepts were validated and the system performs as expected in its current scope.
