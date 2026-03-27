@@ -18,8 +18,15 @@ import { formatWalletBalance } from '../utils/format-cards'
 export const userMetawalletList: Action = {
   name: 'USER_METAWALLET_LIST',
   similes: [
+    'CHECK_BALANCE',
+    'WALLET_BALANCE',
+    'LIST_WALLETS',
+    'SHOW_WALLETS',
+    'MY_WALLETS',
+    'GET_BALANCE',
+    'SHOW_BALANCE',
   ],
-  description: 'Allows a user to list all wallet addresses they have ' + CONSTANTS.DESCONLYCALLME,
+  description: 'MUST be used when the user asks about their wallet balance, wants to see their wallets, or asks how much they have. This action shows wallet addresses and token balances. Use this instead of REPLY when the user says things like "what is my balance", "show my wallets", "how much ETH do I have", "list wallets", etc.',
   validate: async (runtime: IAgentRuntime, message: Memory) => {
     //console.log('USER_METAWALLET_LIST validate', message?.metadata?.fromId)
     if (!await HasEntityIdFromMessage(runtime, message)) {
@@ -73,35 +80,52 @@ export const userMetawalletList: Action = {
       }
     }
 
-    // Build formatted wallet cards
+    // Build plain text wallet list with balances
     let walletCount = 0;
+    let responseText = '';
+
     for (const mw of account.metawallets) {
       for (const chainName in mw.keypairs) {
         const kp = mw.keypairs[chainName];
         walletCount++;
 
-        // Get network display name
         const networkName = chainName.charAt(0).toUpperCase() + chainName.slice(1);
+        const shortAddr = kp.publicKey.length > 14
+          ? `${kp.publicKey.slice(0, 6)}...${kp.publicKey.slice(-4)}`
+          : kp.publicKey;
 
-        // Format wallet card (without balances for now - could add balance fetching later)
-        const walletCard = formatWalletBalance({
-          address: kp.publicKey,
-          network: networkName,
-          tokens: [], // Empty for now - will show "No tokens found"
-          totalUsdValue: undefined,
-        });
+        responseText += `Wallet ${walletCount} — ${networkName}\n`;
+        responseText += `Address: ${shortAddr}\n`;
 
-        // Send each wallet as a separate message
-        const output = takeItPrivate(runtime, message, walletCard);
-        await callback?.(output);
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Fetch EVM balances
+        if (['ethereum', 'sepolia', 'base', 'polygon', 'arbitrum', 'optimism'].includes(chainName)) {
+          try {
+            const ethService = runtime.getService('chain_ethereum') as any;
+            if (ethService) {
+              const nativeAssetId = `${chainName}:mainnet/native:eth`;
+              const balanceResults = await ethService.getBalances([kp.publicKey], [nativeAssetId]);
+              if (balanceResults && balanceResults.length > 0) {
+                for (const bal of balanceResults) {
+                  responseText += `${bal.symbol || 'ETH'}: ${bal.uiAmount || '0'}\n`;
+                }
+              } else {
+                responseText += `ETH: 0\n`;
+              }
+            }
+          } catch (e) {
+            console.log('wallet list - EVM balance fetch failed:', e);
+            responseText += `Balance: unable to fetch\n`;
+          }
+        }
+
+        responseText += '\n';
       }
     }
 
-    // Send summary
-    const summaryText = `\n${walletCount} wallet${walletCount !== 1 ? 's' : ''} found.`;
-    const summaryOutput = takeItPrivate(runtime, message, summaryText);
-    await callback?.(summaryOutput);
+    responseText += `${walletCount} wallet${walletCount !== 1 ? 's' : ''} found.`;
+
+    const output = takeItPrivate(runtime, message, responseText);
+    await callback?.(output);
 
     //const output = takeItPrivate(runtime, message, wStr)
     //callback(output)
@@ -145,13 +169,29 @@ export const userMetawalletList: Action = {
       {
         name: '{{name1}}',
         content: {
-          text: 'I want list all my wallets for you',
+          text: "what's my balance",
         },
       },
       {
         name: '{{name2}}',
         content: {
-          text: 'What?',
+          text: 'Here are your wallets',
+          actions: ['USER_METAWALLET_LIST'],
+        },
+      },
+    ],
+    [
+      {
+        name: '{{name1}}',
+        content: {
+          text: 'how much ETH do I have',
+        },
+      },
+      {
+        name: '{{name2}}',
+        content: {
+          text: 'Here are your wallets',
+          actions: ['USER_METAWALLET_LIST'],
         },
       },
     ],
